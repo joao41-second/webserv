@@ -1,0 +1,27 @@
+o que e um request de htttp?
+Basicamente  e o ficheiro que o site envia para o servidor e vise versa.
+
+
+um request e dividio em algumas partes como.
+
+
+na start line vem nos segintes formantos 
+
+GET /hello.htm HTTP/1.1 - no casso e uma requesisao do  navegador a pedir o html.
+
+HTTP/1.1 200 OK - sendo  agora a restpostas do server web
+
+---
+
+os header resebem informasao sobre o pedido ou a restposta.
+
+sendo que essa informasao sera enviada para o cgi.
+
+-- 
+
+
+os methods sao tipos de envio que fazem usao funcionalidades diferentes - sendo todos com letras maiusculas
+
+
+
+

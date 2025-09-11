@@ -19,8 +19,8 @@ sendo que essa informasao sera enviada para o cgi.
 
 -- 
 
-
 os methods sao tipos de envio que fazem usao funcionalidades diferentes - sendo todos com letras maiusculas
+
 
 
 

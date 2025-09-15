@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
+/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:32 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/13 19:19:43 by cereais          ###   ########.fr       */
+/*   Updated: 2025/09/15 19:08:15 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#pragma once
 
 /*
 transform a raw HTTP request:
@@ -29,5 +31,7 @@ headers[host]			= "localhost:8080"
 headers["user-Agent"]	= "curl/7.68.0"
 hearders["Accept"]		= "* / *"
 body					= ""
+
+gets help form HttpParser
 
 */

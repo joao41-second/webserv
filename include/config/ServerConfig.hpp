@@ -1,13 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HttpStatus.hpp                                     :+:      :+:    :+:   */
+/*   ServerConfig.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/13 18:45:25 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/15 19:12:55 by joseoliv         ###   ########.fr       */
+/*   Created: 2025/09/15 16:49:50 by joseoliv          #+#    #+#             */
+/*   Updated: 2025/09/15 18:53:28 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//regista mensagens padrão para códigos
+#pragma once
+
+#include <vector>
+
+class ServerConfig {
+	
+};

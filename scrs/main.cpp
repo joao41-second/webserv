@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/15 17:04:34 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/09/16 13:39:16 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 int	main(int argc, char *argv[]) {
 	
 	if (argc != 2) {
-		std::cout << "ERROR! Please introduce only one argument." << std::endl;
+		std::cout << "ERROR! This program requires exactly one argument." << std::endl;
 	}
 
 	std::vector<ServerConfig> configs = //ConfigParser::parse("webserv.conf");

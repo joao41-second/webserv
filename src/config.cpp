@@ -34,37 +34,11 @@ bool	isDigit(char c)
 	return (false);
 }
 
-bool	isDate(std::string str)
-{
-	// Syntax validation
-	if (str.size() != 10)
-		return (false);
-	for (unsigned int i = 0; i < 10; i++) {
-		if ((i == 4 || i == 7) && str[i] != '-')
-			return (false);
-		else if ((i == 4 || i == 7) && str[i] == '-')
-			;
-		else if (!isDigit(str[i]))
-			return (false);
-	}
-
-	// Calendar validation
-	int month = std::atoi(str.substr(5, 2).c_str());
-	int day = std::atoi(str.substr(8, 2).c_str());
-	if (month > 12 || day > 31 || (month == 2 && day > 29)
-		|| (day == 31 && (month == 4 || month == 6 || month == 9 || month == 11 )))
-		return (false);
-	if (month == 2 && day == 29 && (std::atoi(str.substr(0, 4).c_str()) % 4 != 0))
-		return (false);
-
-	return (true);
-}
-
 // |----------------------
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	Config::print_values(std::string input)
+/*void	Config::print_values(std::string input)
 {
 	std::ifstream	inp(input.c_str());
 	std::string		line;
@@ -121,13 +95,13 @@ void	Config::print_values(std::string input)
 	}
 	// Close input file
 	inp.close();
-}
+}*/
 
 // |----------------------
 // | GETTERS & SETTERS
 // |----------------------
 
-void	Config::set_data(void)
+/*void	Config::set_data(void)
 {
 	std::ifstream	data("./data.csv");
 	std::string		line;
@@ -155,7 +129,7 @@ void	Config::set_data(void)
 	}
 	// Close data.csv
 	data.close();
-}
+}*/
 
 // |----------------------
 // | CONSTRUCTORS & DESTRUCTORS
@@ -174,9 +148,15 @@ Config::Config(const Config &orig): _data(orig._data)
 	//std::cout << "Config copy-constructed." << std::endl;
 }
 
+Config::Config(std::string filename)
+{
+	//this->set_data(); // TODO
+	//std::cout << "Config constructed." << std::endl;
+}
+
 Config::Config(void)
 {
-	this->set_data();
+	//this->set_data(); // TODO
 	//std::cout << "Config constructed." << std::endl;
 }
 

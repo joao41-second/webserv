@@ -21,17 +21,17 @@ class Config
 {
 public:
 	Config();
-	//Config(std::string input);
+	Config(std::string filename);
 	Config(const Config &orig);
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
 	//unsigned int const	&size(void) const;
 	//void					incSize(void);
-	void				set_data(void);
+	//void				set_data(void);
 	//void				set_input(std::string input);
 
-	void		print_values(std::string input);
+	//void		print_values(std::string input);
 
 	class BadConfigException: public std::exception
 	{
@@ -43,8 +43,8 @@ public:
 		virtual const char *what() const throw();
 	};
 private:
-	std::map<std::string, float> _data;
-	unsigned int	 _size;
+	//std::map<std::string, float> _data;
+	//unsigned int	 _size;
 };
 
 class InputException: public std::exception

@@ -13,9 +13,12 @@
 #include <climits>
 #include <stdint.h>
 
-#include <map>
+#include <vector>
 #include <algorithm>
 #include <typeinfo>
+
+class Server;
+//class Location;
 
 class Config
 {
@@ -26,12 +29,11 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	//unsigned int const	&size(void) const;
-	//void					incSize(void);
-	//void				set_data(void);
-	//void				set_input(std::string input);
+	unsigned int const	&getServNum(void) const;
+	Server				&getServer(unsigned int num) const; // TODO Should the return be const Server?
+	void				setServer(Server serv);
 
-	//void		print_values(std::string input);
+	void	parse_file(std::string filename); // TODO Write function...
 
 	class BadConfigException: public std::exception
 	{
@@ -43,8 +45,8 @@ public:
 		virtual const char *what() const throw();
 	};
 private:
-	//std::map<std::string, float> _data;
-	//unsigned int	 _size;
+	std::vector<Server>	_servers;
+	unsigned int	 _server_num;
 };
 
 class InputException: public std::exception

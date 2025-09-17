@@ -38,7 +38,7 @@ bool	isDigit(char c)
 // | MEMBER FUNCTIONS
 // |----------------------
 
-/*void	Config::print_values(std::string input)
+/*void	Config::parse_file(std::string filename) // TODO Write function
 {
 	std::ifstream	inp(input.c_str());
 	std::string		line;
@@ -101,35 +101,23 @@ bool	isDigit(char c)
 // | GETTERS & SETTERS
 // |----------------------
 
-/*void	Config::set_data(void)
+void	Config::setServer(Server serv)
 {
-	std::ifstream	data("./data.csv");
-	std::string		line;
+	this->_servers.push_back(serv);
+	this->_server_num++;
+}
 
-	// Check data.csv header
-	getline(data, line);
-	if (line != "date,exchange_rate")
-		throw InputException("data.csv lacks proper header (date,exchange_rate)");
+Server const	&getServer(unsigned int num) const
+{
+	if (num >= this->getServNum())
+		throw BadConfigException("Out of bounds", " - Servers");
+	return(this->_servers[num]);
+}
 
-	// Setting loop, once per line in input file
-	while(getline(data, line))
-	{
-		// Validate separator
-		size_t	sep = line.find(',');
-		if (sep == std::string::npos)
-			continue ;
-
-		// Validate and register date and value
-		std::string date = trim_whitespace(line.substr(0, sep));
-		char* safeguard;
-		this->_data[date] = std::strtof(trim_whitespace(line.substr(sep + 1, line.size() - sep)).c_str(), &safeguard); // Map-specific insertion method
-		//this->_data.insert(std::make_pair(date, std::strtof(trim_whitespace(line.substr(sep + 1, line.size() - sep)).c_str(), &safeguard)));
-		if (date == safeguard || *safeguard != '\0')
-			throw InputException("data.csv is not properly formatted");
-	}
-	// Close data.csv
-	data.close();
-}*/
+unsigned int const	&getServNum(void) const
+{
+	return (this->_server_num);
+}
 
 // |----------------------
 // | CONSTRUCTORS & DESTRUCTORS
@@ -138,25 +126,29 @@ bool	isDigit(char c)
 Config &Config::operator = (const Config &orig)
 {
 	if (this != &orig)
-		this->_data = orig._data;
+	{
+		this->_server_num = orig._server_num;
+		this->_servers = orig._servers;
+	}
 	//std::cout << "Config assignment copy-constructed." << std::endl;
 	return (*this);
 }
 
-Config::Config(const Config &orig): _data(orig._data)
+Config::Config(const Config &orig): _server_num(orig._server_num), _servers(orig._servers)
 {
 	//std::cout << "Config copy-constructed." << std::endl;
 }
 
-Config::Config(std::string filename)
+Config::Config(std::string filename): _server_num(0)
 {
-	//this->set_data(); // TODO
+	this->_server_num = 0;
+	this->parse_file(filename);
 	//std::cout << "Config constructed." << std::endl;
 }
 
 Config::Config(void)
 {
-	//this->set_data(); // TODO
+	this->setServer(NULL);
 	//std::cout << "Config constructed." << std::endl;
 }
 

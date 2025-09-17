@@ -50,6 +50,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 
 	// TODO While loop, trim all whitespace and ignore empty lines
 	// TODO Start building a Server when finding "server {"
+		// TODO BUILD THE SERVER CLASS
 	// TODO Make sure that the line is at the right spot after building the server
 	// TODO Set the server (function is done) and continue the loop
 	// TODO Stop after reaching the end of the file

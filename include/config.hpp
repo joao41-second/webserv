@@ -11,11 +11,13 @@
 #include <cstdlib>
 #include <cmath>
 #include <climits>
-#include <stdint.h>
 
 #include <vector>
 #include <algorithm>
 #include <typeinfo>
+
+#include <sys/socket.h> // TODO Ver se ha melhor
+#include <netinet/in.h> // TODO Ver se ha melhor
 
 class Server;
 //class Location;

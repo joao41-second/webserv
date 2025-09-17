@@ -27,34 +27,38 @@ const std::string	trim_whitespace(const std::string& str)
 	return (str.substr(i, j - i + 1));
 }
 
-bool	isDigit(char c)
+/*bool	isDigit(char c)
 {
 	if (c >= '0' && c <= '9')
 		return (true);
 	return (false);
-}
+}*/
 
 // |----------------------
 // | MEMBER FUNCTIONS
 // |----------------------
 
-/*void	Config::parse_file(std::string filename) // TODO Write function
+void	Config::parse_file(std::string filename) // TODO Write function
 {
-	std::ifstream	inp(input.c_str());
+	std::ifstream	config_file(filename.c_str());
 	std::string		line;
 
-	// Check input header
-	getline(inp, line);
-	if (line != "date | value")
-		throw InputException("Argument file lacks proper header (date | value)");
+	// Basic checks in configuration file
+	getline(config_file, line);
+	if (line != "date | value") // TODO Adequate checks
+		throw BadConfigException("Config file is not properly formatted");
 
-	// Printing loop, once per line in input file
-	while (getline(inp, line))
-	{
-	try
+	// TODO While loop, trim all whitespace and ignore empty lines
+	// TODO Start building a Server when finding "server {"
+	// TODO Make sure that the line is at the right spot after building the server
+	// TODO Set the server (function is done) and continue the loop
+	// TODO Stop after reaching the end of the file
+
+	// Printing loop, once per line in configuration file
+	while (getline(config_file, line))
 	{
 		// Register date and value
-		std::string	date;
+		/*std::string	date;
 		float		value;
 		size_t	sep = line.find('|');
 		if (sep == std::string::npos)
@@ -73,7 +77,7 @@ bool	isDigit(char c)
 
 		// Validate date and value
 		if (!isDate(date) || value == 0)
-			throw BadConfigException("bad input => ", date);
+			throw BadConfigException("bad config_fileut => ", date);
 		else if (value < 0)
 			throw BadConfigException("not a positive number.", "");
 		else if (value > 1000)
@@ -83,19 +87,15 @@ bool	isDigit(char c)
 		std::map<std::string, float>::iterator it_data = this->_data.lower_bound(date);
 		if (it_data->first != date && it_data != this->_data.begin())
 			it_data--;
-		float exchanged = value * it_data->second;
+		float exchanged = value * it_data->second;*/
 
-		// Print valid results
-		std::cout << date << " => " << value << " => " << exchanged << std::endl;
+		// Set the server into the vector
+		this->setServer(curr_server);
 	}
-	catch (std::exception &e)
-	{
-		std::cerr << "Error: " << e.what() << std::endl;
-	}
-	}
-	// Close input file
-	inp.close();
-}*/
+
+	// Close configuration file
+	config_file.close();
+}
 
 // |----------------------
 // | GETTERS & SETTERS
@@ -182,19 +182,19 @@ const char *Config::BadConfigException::what() const throw()
 	return (this->_msg.c_str());
 }
 
-InputException::InputException(std::string msg)
+config_fileutException::config_fileutException(std::string msg)
 {
 	std::ostringstream out;
 	out << msg;
 	_msg = out.str();
 }
 
-InputException::~InputException() throw()
+config_fileutException::~config_fileutException() throw()
 {
 	//std::cout << "Error message destroyed" << std::endl;
 }
 
-const char *InputException::what() const throw()
+const char *config_fileutException::what() const throw()
 {
 	return (this->_msg.c_str());
 }

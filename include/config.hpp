@@ -3,6 +3,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// TODO Considerar meter estas libraries num unico ficheiro
 #include <iostream>
 #include <sstream>
 #include <fstream>

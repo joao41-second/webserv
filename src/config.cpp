@@ -104,8 +104,15 @@ void	Config::parse_file(std::string filename) // TODO Write function
 
 void	Config::setServer(Server serv)
 {
-	this->_servers.push_back(serv);
-	this->_server_num++;
+	if (!serv)
+	{
+		this->_server_num = 0;
+	}
+	else
+	{
+		this->_servers.push_back(serv);
+		this->_server_num++;
+	}
 }
 
 Server const	&getServer(unsigned int num) const
@@ -183,19 +190,19 @@ const char *Config::BadConfigException::what() const throw()
 	return (this->_msg.c_str());
 }
 
-config_fileutException::config_fileutException(std::string msg)
+InputException::InputException(std::string msg)
 {
 	std::ostringstream out;
 	out << msg;
 	_msg = out.str();
 }
 
-config_fileutException::~config_fileutException() throw()
+InputException::~InputException() throw()
 {
 	//std::cout << "Error message destroyed" << std::endl;
 }
 
-const char *config_fileutException::what() const throw()
+const char *InputException::what() const throw()
 {
 	return (this->_msg.c_str());
 }

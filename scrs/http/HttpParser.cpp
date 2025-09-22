@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/22 15:50:54 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/22 16:17:59 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <ostream>
 #include <string>
+#include <vector>
 
 HttpParser::HttpParser(void)
 {
@@ -57,15 +58,25 @@ void HttpParser::parsing_env(std::string buffer)
 		return;
 	else
 	{
-		std::cout << "line "<< line <<std::endl;
-		size = 	line.find(":");
+
+		line = buffer.substr(0,size );
+		size = 	line.find(':');
 		if(size == std::string::npos && get == false)
 		{
 			get = true;
+			// treat the get our poust line 
 			parsing_env(buffer_new);
+			return;
 		}
-		else if(size == std::string::npos)
+		else if(size == std::string::npos || size == 0)
 			throw Badd_Request_400();
+
+		if(size == 0)
+			throw Badd_Request_400();
+		std::string var = line.substr(0,size);	
+		std::string content = line.substr(size+1,line.size());
+		std::replace(var.begin(), var.end(), '-', '_');
+		this->env.push_back("HTTP_"+var+"='"+ content+"'");
 		parsing_env(buffer_new);
 	}
 }
@@ -73,6 +84,11 @@ void HttpParser::new_request(std::string buffer)
 {
 	HTTP_MSG("Parse the new request");
 	parsing_env(buffer);
+	for (int i = 0; i < (int)this->env.size(); i++) 
+	{
+		HTTP_MSG(this->env[i]);
+	}
+	
 	
 }
 

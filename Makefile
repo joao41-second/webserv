@@ -1,13 +1,14 @@
 NAME     := webserv
 CXX      := c++
-CXXFLAGS := -Wall -Wextra -Werror -std=c++98
+CXXPATH	 := -I./include/
+CXXFLAGS := -Wall -Wextra -Werror -std=c++98 $(CXXPATH)
 
 SRC_DIR  := srcs
 OBJ_DIR  := obj
 
-SRCS     := $(SRC_DIR)/main.cpp
+SRCS     := ./scrs/main.cpp
 
-OBJS     := $(OBJ_DIR)/main.o
+OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 all: $(NAME)
 
@@ -16,9 +17,7 @@ $(NAME): $(OBJS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-clean:
+	$(CXX) $(CXXFLAGS) -c $< -o $@clean:
 	@rm -rf $(OBJ_DIR)
 
 fclean: clean

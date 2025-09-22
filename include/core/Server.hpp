@@ -14,6 +14,8 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include <sys/socket.h>
 
 class Socket;
 class ServerConfig;

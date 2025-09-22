@@ -1,4 +1,5 @@
-#include "Server.hpp"
+#include "../include/Server.hpp"
+#include "../include/Location.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -31,64 +32,39 @@ const std::string	trim_whitespace(const std::string& str)
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	Server::parse_server(std::string filename) // TODO Write function
+void	Server::parse_server(std::istream& server_file) // TODO Write function
 {
-	std::ifstream	Server_file(filename.c_str());
 	std::string		line;
 
-	// Basic checks in Serveruration file
-	getline(Server_file, line);
-	if (line != "date | value") // TODO Adequate checks
-		throw BadConfigException("Server file is not properly formatted");
-
-	// TODO While loop, trim all whitespace and ignore empty lines
-	// TODO Start building a Location when finding "Location {"
-		// TODO BUILD THE Location CLASS
-	// TODO Make sure that the line is at the right spot after building the Location
-	// TODO Set the Location (function is done) and continue the loop
-	// TODO Stop after reaching the end of the file
+	// TODO Adequate checks
+	// Basic checks in Configuration file
+	//getline(server_file, line);
+	//if (line != "date | value")
+	//	throw BadConfigException("Server file is not properly formatted");
 
 	// Printing loop, once per line in Serveruration file
-	while (getline(Server_file, line))
+	while (getline(config_file, line))
 	{
-		// Register date and value
-		/*std::string	date;
-		float		value;
-		size_t	sep = line.find('|');
-		if (sep == std::string::npos)
+		line = trim_whitespace(line);
+		// End function if server segment ends
+		if (line == "}")
+			break ;
+
+		if (line.substr(0,8) == "location")
 		{
-			date = line.substr(0, line.size());
-			value = 0;
+			// Only create a location when one is declared
+			Location curr_Location;
+			curr_Location.parse_location(config_file); // TODO BUILD THE LOCATION CLASS
+
+			// Set the Location into the vector
+			this->setLocation(curr_Location);
+			// TODO Make sure that the line is at the right spot after building the Location
 		}
 		else
 		{
-			date = trim_whitespace(line.substr(0, sep));
-			char* safeguard;
-			value = std::strtof(trim_whitespace(line.substr(sep + 1, line.size() - sep)).c_str(), &safeguard);
-			if (date == safeguard || *safeguard != '\0')
-				value = 0;
+			//parse_other_info(); // TODO Incorporate remaining types of information
 		}
-
-		// Validate date and value
-		if (!isDate(date) || value == 0)
-			throw BadConfigException("bad Server_fileut => ", date);
-		else if (value < 0)
-			throw BadConfigException("not a positive number.", "");
-		else if (value > 1000)
-			throw BadConfigException("too large a number.", "");
-
-		// Find corresponding date (or lower) in data.csv
-		std::map<std::string, float>::iterator it_data = this->_data.lower_bound(date);
-		if (it_data->first != date && it_data != this->_data.begin())
-			it_data--;
-		float exchanged = value * it_data->second;*/
-
-		// Set the Location into the vector
-		this->setLocation(curr_Location);
 	}
-
-	// Close Serveruration file
-	Server_file.close();
 }
 
 // |----------------------

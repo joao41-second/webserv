@@ -35,7 +35,7 @@ public:
 	Location			&getLocation(unsigned int num) const;
 	void				setLocation(Location loc);
 
-	//void	parse_server(std::string filename);
+	void	parse_server(std::string filename);
 
 private:
 	std::vector<Location>	_locations;

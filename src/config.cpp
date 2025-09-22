@@ -1,4 +1,5 @@
-#include "Config.hpp"
+#include "../include/Config.hpp"
+#include "../include/Server.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -41,57 +42,31 @@ const std::string	trim_whitespace(const std::string& str)
 void	Config::parse_file(std::string filename) // TODO Write function
 {
 	std::ifstream	config_file(filename.c_str());
+	if (!config_file.is_open())
+		throw BadConfigException("Could not open file ", filename);
+
 	std::string		line;
 
+	// TODO Adequate checks
 	// Basic checks in configuration file
-	getline(config_file, line);
-	if (line != "date | value") // TODO Adequate checks
-		throw BadConfigException("Config file is not properly formatted");
-
-	// TODO While loop, trim all whitespace and ignore empty lines
-	// TODO Start building a Server when finding "server {"
-		// TODO BUILD THE SERVER CLASS
-	// TODO Make sure that the line is at the right spot after building the server
-	// TODO Set the server (function is done) and continue the loop
-	// TODO Stop after reaching the end of the file
+	//getline(config_file, line);
+	//if (line != "date | value")
+	//	throw BadConfigException("Config file is not properly formatted");
 
 	// Printing loop, once per line in configuration file
 	while (getline(config_file, line))
 	{
-		// Register date and value
-		/*std::string	date;
-		float		value;
-		size_t	sep = line.find('|');
-		if (sep == std::string::npos)
-		{
-			date = line.substr(0, line.size());
-			value = 0;
-		}
-		else
-		{
-			date = trim_whitespace(line.substr(0, sep));
-			char* safeguard;
-			value = std::strtof(trim_whitespace(line.substr(sep + 1, line.size() - sep)).c_str(), &safeguard);
-			if (date == safeguard || *safeguard != '\0')
-				value = 0;
-		}
+		// Only create a server when one is declared
+		line = trim_whitespace(line);
+		if (line != "server {")
+			continue ;
 
-		// Validate date and value
-		if (!isDate(date) || value == 0)
-			throw BadConfigException("bad config_fileut => ", date);
-		else if (value < 0)
-			throw BadConfigException("not a positive number.", "");
-		else if (value > 1000)
-			throw BadConfigException("too large a number.", "");
-
-		// Find corresponding date (or lower) in data.csv
-		std::map<std::string, float>::iterator it_data = this->_data.lower_bound(date);
-		if (it_data->first != date && it_data != this->_data.begin())
-			it_data--;
-		float exchanged = value * it_data->second;*/
+		Server curr_server;
+		curr_server.parse_server(config_file); // TODO BUILD THE SERVER CLASS
 
 		// Set the server into the vector
 		this->setServer(curr_server);
+		// TODO Make sure that the line is at the right spot after building the server
 	}
 
 	// Close configuration file

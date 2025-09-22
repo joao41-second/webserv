@@ -6,14 +6,16 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/22 15:32:31 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/22 15:36:44 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <algorithm>
 #include <core/Server.hpp>
 #include <config/ServerConfig.hpp>
+#include <exception>
 #include <fstream>
+#include <iostream>
 #include <net/Socket.hpp>
 #include <http/HttpParser.hpp>
 #include <string>
@@ -29,8 +31,13 @@ int	main(int argc, char **argv)
 	std::string line;
 	std::string char_file;
 	while (std::getline(file,line))
-		char_file+= "\n"+line;
-	std::cout << char_file << std::endl;
+		char_file+= line+"\n";
 	HttpParser ok;
-	ok.new_request(char_file);
+	try{
+		ok.new_request(char_file);
+	}
+	catch(std::exception &e)
+	{
+		std::cout << e.what() <<std::endl;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/22 15:28:53 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/22 15:50:54 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,24 @@ HttpParser::~HttpParser()
 
 void HttpParser::parsing_env(std::string buffer)
 {
+	static bool get = false;
 	size_t size = buffer.find('\n');
 	std::string line = buffer.substr(0,size + 1);
 	std::string buffer_new = buffer.substr(size+1,buffer.size()); 
 
-	std::cout << "line "<< line <<std::endl;
 
 	if( size == std::string::npos || line == "\n" )
 		return;
 	else
 	{
+		std::cout << "line "<< line <<std::endl;
 		size = 	line.find(":");
-		if(size == std::string::npos)
+		if(size == std::string::npos && get == false)
+		{
+			get = true;
+			parsing_env(buffer_new);
+		}
+		else if(size == std::string::npos)
 			throw Badd_Request_400();
 		parsing_env(buffer_new);
 	}

@@ -3,7 +3,7 @@
 
 int	main(int argc, char **argv)
 {
-try TODO write exception
+try // TODO write exception
 {
 	if (argc != 2)
 	{

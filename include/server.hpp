@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef Server_H
-#define Server_H
+#ifndef SERVER_H
+#define SERVER_H
 
 // TODO Considerar meter estas libraries num unico ficheiro
 #include <iostream>

@@ -42,7 +42,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 	//if (line != "date | value")
 	//	throw BadConfigException("Server file is not properly formatted");
 
-	// Printing loop, once per line in Serveruration file
+	// Printing loop, once per line in Configuration file
 	while (getline(config_file, line))
 	{
 		line = trim_whitespace(line);
@@ -116,12 +116,12 @@ Server::Server(const Server &orig): _location_num(orig._location_num), _location
 	//std::cout << "Server copy-constructed." << std::endl;
 }
 
-Server::Server(std::string filename): _location_num(0)
+/*Server::Server(std::string filename): _location_num(0)
 {
 	this->_location_num = 0;
 	this->parse_server(filename); //TODO review function...
 	//std::cout << "Server constructed." << std::endl;
-}
+}*/
 
 Server::Server(void)
 {

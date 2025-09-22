@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/22 16:17:59 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/22 16:18:58 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void HttpParser::parsing_env(std::string buffer)
 		return;
 	else
 	{
-
 		line = buffer.substr(0,size );
 		size = 	line.find(':');
 		if(size == std::string::npos && get == false)

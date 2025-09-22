@@ -6,7 +6,7 @@ CXXFLAGS := -Wall -Wextra -Werror -std=c++98 $(CXXPATH)
 SRC_DIR  := srcs
 OBJ_DIR  := obj
 
-SRCS     := ./scrs/main.cpp ./scrs/http/HttpParser.cpp
+SRCS     := ./scrs/main.cpp ./scrs/http/HttpParser.cpp ./scrs/http/HttpParser_thorw.cpp
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 all: $(NAME)

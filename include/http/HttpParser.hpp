@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/22 14:00:33 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/22 15:23:25 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define  HTTPPARSER_HPP
 #include <config/debug.hpp>
 
+#include <exception>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -30,6 +31,7 @@ class HttpParser
 	private:
 		std::vector<std::string> env;
 		std::string mensage;
+		void parsing_env(std::string buffer);
 	public: 
 	      HttpParser();
 	      HttpParser(const HttpParser &vuale);
@@ -37,6 +39,12 @@ class HttpParser
 	      HttpParser& operator=(const HttpParser &vuale);
 	      void new_request(std::string buffer); 
 	      std::string get_request_msg();
+
+	class   Badd_Request_400 : public std::exception
+	{
+		public:
+			virtual const char *what()const throw();
+	};
 		
 };
 

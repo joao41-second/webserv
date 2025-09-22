@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/22 14:21:58 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/22 15:32:31 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,5 @@ int	main(int argc, char **argv)
 		char_file+= "\n"+line;
 	std::cout << char_file << std::endl;
 	HttpParser ok;
+	ok.new_request(char_file);
 }

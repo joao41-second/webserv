@@ -7,9 +7,13 @@ SRC_DIR  := srcs
 OBJ_DIR  := obj
 
 # List of specific source files
-SRCS := $(SRC_DIR)/main.cpp \
-        $(SRC_DIR)/http/HttpParser.cpp \
-        $(SRC_DIR)/http/HttpParser_thorw.cpp
+
+SRCS_ALL := $(SRC_DIR)/http/HttpParser.cpp \
+	    $(SRC_DIR)/http/HttpParser_thorw.cpp 
+
+SRCS := $(SRC_DIR)/main.cpp  $(SRCS_ALL)
+
+SRCS_T := ./text/main.cpp 
 
 # Convert source files to object files
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
@@ -36,3 +40,8 @@ re: fclean all
 leaks:
 	$(CXX) $(CXXFLAGS) -fsanitize=address -g $(SRCS) -o leaks.out
 	./leaks.out
+tests:
+	$(CXX) $(CXXFLAGS) -g $(SRCS_T) $(SRCS_ALL) -o web_tester
+	./web_tester
+	
+

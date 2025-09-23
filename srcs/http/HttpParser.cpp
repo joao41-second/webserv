@@ -6,16 +6,15 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/22 16:18:58 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/23 15:42:08 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "config/color.hpp"
 #include <algorithm>
 #include <core/Server.hpp>
 #include <http/HttpParser.hpp>
-#include <iostream>
-#include <ostream>
-#include <string>
+#include <config/debug.hpp>
 
 HttpParser::HttpParser(void)
 {
@@ -59,6 +58,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 	buffer = buffer.substr(size+1,buffer.size());
 	// set paht info
 	size = buffer.find('?');
+
 	if (size == std::string::npos || size == 0)
 	{
 		query_string = false;
@@ -68,6 +68,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 	}
 	method = buffer.substr(0,size);
 	buffer = buffer.substr(size+1,buffer.size());
+
 	this->env.push_back("PATH_INFO='" + method + "'");
 	// set query_string if true
 	if(query_string == true)
@@ -89,7 +90,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 
 void HttpParser::parsing_env(std::string buffer)
 {
-	static bool get = false;
+	bool get = false;
 	size_t size = buffer.find('\n');
 	std::string line = buffer.substr(0,size + 1);
 	std::string buffer_new = buffer.substr(size+1,buffer.size()); 
@@ -99,6 +100,7 @@ void HttpParser::parsing_env(std::string buffer)
 	if( size == std::string::npos || line == "\n" )
 	{
 		this->mensage = buffer_new;
+		get = false;
 		return;
 	}
 	else
@@ -110,6 +112,7 @@ void HttpParser::parsing_env(std::string buffer)
 			get = true;
 			parsing_request_line(line);
 			parsing_env(buffer_new);
+			get = false;
 			return;
 		}
 		if (size == std::string::npos || size == 0)
@@ -120,13 +123,18 @@ void HttpParser::parsing_env(std::string buffer)
 		this->env.push_back("HTTP_"+var+"='"+ content+"'");
 		parsing_env(buffer_new);
 	}
+
 }
 void HttpParser::new_request(std::string buffer)
 {
+	this->env.clear();
+	this->mensage = "";
 	HTTP_MSG("Parse the new request");
 	parsing_env(buffer);
 	for (int i = 0; i < (int)this->env.size(); i++) 
 		HTTP_MSG(this->env[i]);	
 	HTTP_MSG(this->mensage);
+	T_MSG("ok",GREEN);
+
 }
 

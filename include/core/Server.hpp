@@ -6,17 +6,15 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:46 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/15 19:11:53 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/09/23 15:27:37 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <string>
-#include <iostream>
+#include <config/debug.hpp>
 #include <vector>
 #include <sys/socket.h>
-#include <exception>
 #include <fstream>
 #include <algorithm>
 

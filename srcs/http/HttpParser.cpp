@@ -105,9 +105,9 @@ void HttpParser::parsing_env(std::string buffer)
 	{
 		line = buffer.substr(0,size );
 		size = 	line.find(':');
-		if(size == std::string::npos && _header == false)
+		if(size == std::string::npos && _request == false)
 		{
-			this->_header = true;
+			this->_request = true;
 			parsing_request_line(line);
 			parsing_env(buffer_new);
 			return;
@@ -124,7 +124,7 @@ void HttpParser::parsing_env(std::string buffer)
 }
 void HttpParser::new_request(std::string buffer)
 {
-	this->_header = false;
+	this->_request = false;
 	this->env.clear();
 	this->mensage = "";
 	HTTP_MSG("Parse the new request");

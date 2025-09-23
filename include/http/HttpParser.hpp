@@ -28,10 +28,13 @@
 
 class HttpParser
 {
+	protected: 
+		int _http_page_error;
 	private:
 		std::vector<std::string> env;
 		std::string mensage;
 		void parsing_env(std::string buffer);
+		void parsing_request_line(std::string buffer);
 	public: 
 	      HttpParser();
 	      HttpParser(const HttpParser &vuale);
@@ -40,7 +43,18 @@ class HttpParser
 	      void new_request(std::string buffer); 
 	      std::string get_request_msg();
 
-	class   Badd_Request_400 : public std::exception
+	class   Badd_Request_400 : public std::exception 
+	{
+		public:
+			virtual const char *what()const throw();
+	};
+
+	class   Not_Implemented_501 : public std::exception
+	{
+		public:
+			virtual const char *what()const throw();
+	};
+	class   Version_Not_Supported_505 : public std::exception
 	{
 		public:
 			virtual const char *what()const throw();

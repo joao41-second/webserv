@@ -10,15 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <algorithm>
 #include <core/Server.hpp>
 #include <config/ServerConfig.hpp>
-#include <exception>
-#include <fstream>
-#include <iostream>
 #include <net/Socket.hpp>
 #include <http/HttpParser.hpp>
-#include <string>
 
 int	main(int argc, char **argv) 
 {

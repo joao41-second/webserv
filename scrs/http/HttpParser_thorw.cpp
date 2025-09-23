@@ -15,5 +15,15 @@
 
 const char *HttpParser::Badd_Request_400::what(void) const throw()
 {
-	return "Badd_Request_400";
+	return "400";
+};
+
+const char *HttpParser::Not_Implemented_501::what(void) const throw()
+{
+	return "501";
+};
+
+const char *HttpParser::Version_Not_Supported_505::what(void) const throw()
+{
+	return "505";
 };

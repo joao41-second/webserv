@@ -16,6 +16,9 @@
 #include <iostream>
 #include <vector>
 #include <sys/socket.h>
+#include <exception>
+#include <fstream>
+#include <algorithm>
 
 class Socket;
 class ServerConfig;

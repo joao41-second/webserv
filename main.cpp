@@ -1,16 +1,17 @@
 //#include "./include/*.hpp" TODO header names
-#include "./include/*.hpp"
+#include "./include/config.hpp"
+#include "./include/server.hpp"
+#include "./include/location.hpp"
 
 int	main(int argc, char **argv)
 {
-try // TODO write exception
+try // TODO write general exceptions?
 {
 	if (argc != 2)
 	{
 		throw InputException("The program should use the template './webserv [configuration file]'");
 	}
 
-	/*
 	// Create a socket (IPv4, TCP)
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0); // int socket(int domain, int type, int protocol);
 	if (sockfd == -1) {
@@ -34,7 +35,6 @@ try // TODO write exception
 		std::cout << "Failed to listen on socket. errno: " << errno << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	*/
 }
 catch (std::exception &e)
 {

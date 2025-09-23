@@ -62,7 +62,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 			continue ;
 
 		Server* curr_server;
-		curr_server->parse_server(config_file); // TODO BUILD THE SERVER CLASS
+		curr_server->parse_server(config_file); // TODO Add error case (ex.: bool)
 
 		// Set the server into the vector
 		this->setServer(curr_server);

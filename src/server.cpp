@@ -55,7 +55,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		{
 			// Only create a location when one is declared
 			Location* curr_Location;
-			curr_Location->parse_location(server_file); // TODO BUILD THE LOCATION CLASS
+			curr_Location->parse_location(server_file); // TODO Add error case (ex.: bool)
 
 			// Set the Location into the vector
 			this->setLocation(curr_Location);

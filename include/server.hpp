@@ -38,6 +38,12 @@ public:
 	void	parse_server(std::istream& server_file);
 
 private:
+	std::string		_name;
+	std::string		_port;
+	std::string		_root;
+	std::string		_index;
+	std::string		_allow_methods;  // TODO enum?
+
 	std::vector<Location>	_locations;
 	unsigned int			_location_num;
 };

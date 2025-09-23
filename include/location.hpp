@@ -36,8 +36,15 @@ public:
 	void	parse_location(std::istream& location_file);
 
 private:
-	//std::vector<placeholder>	_placeholders;
-	//unsigned int			_placeholder_num;
+	std::string		_name;
+	std::string		_allow_methods; // TODO enum?
+	std::string		_root;
+	std::string		_index;
+	std::string		_cgi_pass;
+	unsigned int	_client_body_buffer_size;
+	bool			_alias;
+
+	Location*		_sub_location;
 };
 
 #endif

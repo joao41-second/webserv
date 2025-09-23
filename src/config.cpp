@@ -1,5 +1,5 @@
-#include "../include/Config.hpp"
-#include "../include/Server.hpp"
+#include "../include/config.hpp"
+#include "../include/server.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -61,8 +61,8 @@ void	Config::parse_file(std::string filename) // TODO Write function
 		if (line != "server {")
 			continue ;
 
-		Server curr_server;
-		curr_server.parse_server(config_file); // TODO BUILD THE SERVER CLASS
+		Server* curr_server;
+		curr_server->parse_server(config_file); // TODO BUILD THE SERVER CLASS
 
 		// Set the server into the vector
 		this->setServer(curr_server);
@@ -77,7 +77,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
-void	Config::setServer(Server serv)
+void	Config::setServer(Server* serv)
 {
 	if (!serv)
 	{
@@ -85,19 +85,19 @@ void	Config::setServer(Server serv)
 	}
 	else
 	{
-		this->_servers.push_back(serv);
+		this->_servers.push_back(*serv);
 		this->_server_num++;
 	}
 }
 
-Server const	&getServer(unsigned int num) const
+Server const	&Config::getServer(unsigned int num) const
 {
 	if (num >= this->getServNum())
 		throw BadConfigException("Out of bounds", " - Servers");
 	return(this->_servers[num]);
 }
 
-unsigned int const	&getServNum(void) const
+unsigned int const	&Config::getServNum(void) const
 {
 	return (this->_server_num);
 }

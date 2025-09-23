@@ -1,5 +1,6 @@
-#include "../include/Server.hpp"
-#include "../include/Location.hpp"
+#include "../include/config.hpp"
+#include "../include/server.hpp"
+#include "../include/location.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -43,7 +44,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 	//	throw BadConfigException("Server file is not properly formatted");
 
 	// Printing loop, once per line in Configuration file
-	while (getline(config_file, line))
+	while (getline(server_file, line))
 	{
 		line = trim_whitespace(line);
 		// End function if server segment ends
@@ -53,8 +54,8 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		if (line.substr(0,8) == "location")
 		{
 			// Only create a location when one is declared
-			Location curr_Location;
-			curr_Location.parse_location(config_file); // TODO BUILD THE LOCATION CLASS
+			Location* curr_Location;
+			curr_Location->parse_location(server_file); // TODO BUILD THE LOCATION CLASS
 
 			// Set the Location into the vector
 			this->setLocation(curr_Location);
@@ -71,7 +72,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
-void	Server::setLocation(Location loc)
+void	Server::setLocation(Location* loc)
 {
 	if (!loc)
 	{
@@ -79,19 +80,19 @@ void	Server::setLocation(Location loc)
 	}
 	else
 	{
-		this->_locations.push_back(loc);
+		this->_locations.push_back(*loc);
 		this->_location_num++;
 	}
 }
 
-Location const	&getLocation(unsigned int num) const
+Location const	&Server::getLocation(unsigned int num) const
 {
 	if (num >= this->getLocNum())
-		throw BadConfigException("Out of bounds", " - Locations");
+		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
 	return(this->_locations[num]);
 }
 
-unsigned int const	&getLocNum(void) const
+unsigned int const	&Server::getLocNum(void) const
 {
 	return (this->_location_num);
 }

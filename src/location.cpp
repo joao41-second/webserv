@@ -1,4 +1,4 @@
-#include "../include/Location.hpp"
+#include "../include/location.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -31,7 +31,7 @@ const std::string	trim_whitespace(const std::string& str)
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	Location::parse_Location(std::istream& location_file) // TODO Write function
+void	Location::parse_location(std::istream& location_file) // TODO Write function
 {
 	std::string		line;
 
@@ -42,7 +42,7 @@ void	Location::parse_Location(std::istream& location_file) // TODO Write functio
 	//	throw BadConfigException("Location file is not properly formatted");
 
 	// Printing loop, once per line in Configuration file
-	while (getline(config_file, line))
+	while (getline(location_file, line))
 	{
 		line = trim_whitespace(line);
 		// End function if Location segment ends

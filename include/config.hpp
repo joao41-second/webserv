@@ -33,8 +33,8 @@ public:
 	virtual ~Config();
 
 	unsigned int const	&getServNum(void) const;
-	Server				&getServer(unsigned int num) const; // TODO Should the return be const Server?
-	void				setServer(Server serv);
+	Server const		&getServer(unsigned int num) const; // TODO Should the return be const Server?
+	void				setServer(Server* serv);
 
 	void	parse_file(std::string filename); // TODO Write function...
 

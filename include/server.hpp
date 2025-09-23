@@ -32,10 +32,10 @@ public:
 	virtual ~Server();
 
 	unsigned int const	&getLocNum(void) const;
-	Location			&getLocation(unsigned int num) const;
-	void				setLocation(Location loc);
+	Location const		&getLocation(unsigned int num) const;
+	void				setLocation(Location* loc);
 
-	void	parse_server(std::string filename);
+	void	parse_server(std::istream& server_file);
 
 private:
 	std::vector<Location>	_locations;

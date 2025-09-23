@@ -33,7 +33,7 @@ public:
 	//placeholder			&getplaceholder(unsigned int num) const;
 	//void				setplaceholder(placeholder loc);
 
-	void	parse_Location(std::string filename);
+	void	parse_location(std::istream& location_file);
 
 private:
 	//std::vector<placeholder>	_placeholders;

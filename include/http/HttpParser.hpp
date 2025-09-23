@@ -33,6 +33,7 @@ class HttpParser
 	private:
 		std::vector<std::string> env;
 		std::string mensage;
+		bool 	    _header;
 		void parsing_env(std::string buffer);
 		void parsing_request_line(std::string buffer);
 	public: 

@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/24 11:30:01 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 14:28:29 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
     #define HTTP_MSG(x) /* nada */
 #endif
 
+
+
 class HttpParser
 {
 	protected: 
@@ -40,29 +42,13 @@ class HttpParser
 	       ~HttpParser();
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
-	public:  
+	public:   
+	     static std::string _type;
+	     static std::string _pach_info; 
+
 	      static void new_request(std::string buffer); 
 	      static std::string get_request_msg();
-	      static std::vector<std::string> get_request_env();
-
-	class   Badd_Request_400 : public std::exception 
-	{
-		public:
-			virtual const char *what()const throw();
-	};
-
-	class   Not_Implemented_501 : public std::exception
-	{
-		public:
-			virtual const char *what()const throw();
-	};
-	class   Version_Not_Supported_505 : public std::exception
-	{
-		public:
-			virtual const char *what()const throw();
-	};
-
-		
+	      static std::vector<std::string> get_request_env();		
 };
 
 

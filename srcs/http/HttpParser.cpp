@@ -6,20 +6,21 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 11:40:55 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 14:29:33 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config/color.hpp"
-#include <algorithm>
 #include <core/Server.hpp>
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>
-#include <string>
+#include <http/Http_thow.hpp>
 
 std::vector<std::string> HttpParser::env;
 bool HttpParser::_request = false;
 std::string HttpParser::mensage = "";
+std::string HttpParser::_pach_info = "";
+std::string HttpParser::_type = "";
 
 HttpParser::HttpParser(void)
 {
@@ -129,8 +130,9 @@ void HttpParser::new_request(std::string buffer)
 	_request = false;
 	env.clear();
 	mensage = "";
+	_pach_info = "";
+	_type = "";
 	HTTP_MSG("Parse the new request");
-	(void)buffer;
 	parsing_env(buffer);
 	T_MSG("ok",GREEN);
 

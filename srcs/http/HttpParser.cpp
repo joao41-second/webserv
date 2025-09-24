@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/23 15:42:08 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 11:40:55 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,21 @@
 #include <core/Server.hpp>
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>
+#include <string>
+
+std::vector<std::string> HttpParser::env;
+bool HttpParser::_request = false;
+std::string HttpParser::mensage = "";
 
 HttpParser::HttpParser(void)
 {
 	HTTP_MSG("start_parser");
-	this->mensage = "";
 }
 
 HttpParser::HttpParser(const HttpParser &value)
 {
 	HTTP_MSG("start_parser_used_privios_HttpParser");
-	this->mensage =  value.mensage;
-	this->env =  value.env;
+	(void) value;
 }
 
 HttpParser& HttpParser::operator=(const HttpParser &value)
@@ -34,8 +37,6 @@ HttpParser& HttpParser::operator=(const HttpParser &value)
 	HTTP_MSG("iqual operator used");
 	if(&value == this)
 		return (*this);
-	this->mensage =  value.mensage;
-	this->env =  value.env;
 	return (*this);
 }
 
@@ -54,7 +55,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 		throw  Badd_Request_400();
 	if(method != "GET" && method != "POST" && method != "DELETE")
 		throw Not_Implemented_501();
-	this->env.push_back("REQUEST_METHOD='" + method + "'");	
+	env.push_back("REQUEST_METHOD='" + method + "'");	
 	buffer = buffer.substr(size+1,buffer.size());
 	// set paht info
 	size = buffer.find('?');
@@ -69,7 +70,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 	method = buffer.substr(0,size);
 	buffer = buffer.substr(size+1,buffer.size());
 
-	this->env.push_back("PATH_INFO='" + method + "'");
+	env.push_back("PATH_INFO='" + method + "'");
 	// set query_string if true
 	if(query_string == true)
 	{
@@ -77,12 +78,12 @@ void HttpParser::parsing_request_line(std::string buffer)
 		if (size == std::string::npos || size == 0)
 			throw  Badd_Request_400();
 		method = buffer.substr(0,size);
-		this->env.push_back("QUERY_STRING='" + method + "'");
+		env.push_back("QUERY_STRING='" + method + "'");
 		buffer = buffer.substr(size+1,buffer.size());
 	}
 	//set protocl
 	if(buffer == "HTTP/1.1")
-		this->env.push_back("SERVER_PROTOCOL='" + buffer + "'");
+		env.push_back("SERVER_PROTOCOL='" + buffer + "'");
 	else
 	   throw Version_Not_Supported_505();
 	
@@ -98,7 +99,7 @@ void HttpParser::parsing_env(std::string buffer)
 
 	if( size == std::string::npos || line == "\n" )
 	{
-		this->mensage = buffer_new;
+		mensage = buffer_new;
 		return;
 	}
 	else
@@ -107,7 +108,7 @@ void HttpParser::parsing_env(std::string buffer)
 		size = 	line.find(':');
 		if(size == std::string::npos && _request == false)
 		{
-			this->_request = true;
+			_request = true;
 			parsing_request_line(line);
 			parsing_env(buffer_new);
 			return;
@@ -117,22 +118,32 @@ void HttpParser::parsing_env(std::string buffer)
 		var = line.substr(0,size);	
 		content = line.substr(size+1,line.size());
 		std::replace(var.begin(), var.end(), '-', '_');
-		this->env.push_back("HTTP_"+var+"='"+ content+"'");
+		env.push_back("HTTP_"+var+"='"+ content+"'");
 		parsing_env(buffer_new);
 	}
 
 }
+
 void HttpParser::new_request(std::string buffer)
 {
-	this->_request = false;
-	this->env.clear();
-	this->mensage = "";
+	_request = false;
+	env.clear();
+	mensage = "";
 	HTTP_MSG("Parse the new request");
+	(void)buffer;
 	parsing_env(buffer);
-	for (int i = 0; i < (int)this->env.size(); i++) 
-		HTTP_MSG(this->env[i]);	
-	HTTP_MSG(this->mensage);
 	T_MSG("ok",GREEN);
 
+}
+
+
+std::string HttpParser::get_request_msg()
+{
+	return (mensage);
+}
+
+std::vector <std::string> HttpParser::get_request_env()
+{
+      return (env);
 }
 

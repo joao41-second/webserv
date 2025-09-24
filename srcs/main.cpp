@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/23 15:07:55 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 11:40:17 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <config/ServerConfig.hpp>
 #include <net/Socket.hpp>
 #include <http/HttpParser.hpp>
+#include <string>
+#include <vector>
 
 int	main(int argc, char **argv) 
 {
@@ -31,9 +33,12 @@ int	main(int argc, char **argv)
 		char_file+= line+"\n";
 	
 	file.close();
-	HttpParser ok;
-	try{
-		ok.new_request(char_file);
+	try{	
+		HttpParser::new_request(char_file);
+		std::vector<std::string> env = HttpParser::get_request_env();
+		for (int i = 0; i < (int)env.size(); i++) 
+			HTTP_MSG(env[i]);	
+		HTTP_MSG(HttpParser::get_request_msg());
 	}
 	catch(std::exception &e)
 	{

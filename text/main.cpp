@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:03:54 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/23 15:37:15 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 11:19:36 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "config/color.hpp"
@@ -20,7 +20,6 @@
 void HTTP_test_parser()
 {
 
-	HttpParser ok;
 	std::string pasta = "./HTTP_request_files";  // caminho da pasta
     DIR *dir;
     struct dirent *entry;
@@ -52,7 +51,7 @@ void HTTP_test_parser()
 
         file.close();
 	try{
-		ok.new_request(conteudo);
+		HttpParser::new_request(conteudo);
 	}
 	catch(std::exception &e)
 	{

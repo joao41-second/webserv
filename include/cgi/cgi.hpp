@@ -22,6 +22,7 @@
 class Cgi
 {
 	private:
+	
 
 	public:
 		Cgi();

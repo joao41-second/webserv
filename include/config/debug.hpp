@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:55:56 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/23 15:30:38 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 11:32:47 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #define TESTER 1
 
-#define DEBUG_HTTP 0
+#define DEBUG_HTTP 1
 
 #define DEBUG_CGI 0
 

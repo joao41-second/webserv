@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/22 15:23:25 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 11:30:01 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,21 @@
 class HttpParser
 {
 	protected: 
-		int _http_page_error;
+		static	int _http_page_error;
+	        static std::vector<std::string> env;
+		static std::string mensage;
+		static bool 	    _request;
 	private:
-		std::vector<std::string> env;
-		std::string mensage;
-		bool 	    _request;
-		void parsing_env(std::string buffer);
-		void parsing_request_line(std::string buffer);
-	public: 
-	      HttpParser();
-	      HttpParser(const HttpParser &vuale);
-	      ~HttpParser();
-	      HttpParser& operator=(const HttpParser &vuale);
-	      void new_request(std::string buffer); 
-	      std::string get_request_msg();
+		static void parsing_env(std::string buffer);
+		static void parsing_request_line(std::string buffer);
+		HttpParser();
+	       ~HttpParser();
+		HttpParser(const HttpParser &vuale);
+	      	HttpParser& operator=(const HttpParser &vuale);
+	public:  
+	      static void new_request(std::string buffer); 
+	      static std::string get_request_msg();
+	      static std::vector<std::string> get_request_env();
 
 	class   Badd_Request_400 : public std::exception 
 	{
@@ -60,8 +61,10 @@ class HttpParser
 		public:
 			virtual const char *what()const throw();
 	};
+
 		
 };
+
 
 #endif
 

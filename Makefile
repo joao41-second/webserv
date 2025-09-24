@@ -9,7 +9,9 @@ OBJ_DIR  := obj
 # List of specific source files
 
 SRCS_ALL := $(SRC_DIR)/http/HttpParser.cpp \
+	    $(SRC_DIR)/http/HttpResponse.cpp \
 	    $(SRC_DIR)/http/HttpParser_thorw.cpp 
+
 
 SRCS := $(SRC_DIR)/main.cpp  $(SRCS_ALL)
 

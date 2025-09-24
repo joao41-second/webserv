@@ -6,10 +6,11 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:03:54 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 11:19:36 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 15:43:55 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "config/color.hpp"
+#include <config/color.hpp>
+#include <http/HttpResponse.hpp>
 #include <core/Server.hpp>
 #include <config/ServerConfig.hpp>
 #include <net/Socket.hpp>
@@ -61,10 +62,23 @@ void HTTP_test_parser()
     closedir(dir);
 }
 
+void test_httprespons()
+{
+	HttpResponse ok;	
+	try{
+		
+	 T_MSG( ok.open_static_file("./index.html"),GREEN);
+	}
+	catch(std::exception &e)
+	{
+		std::cout << RED << "error: "<< e.what() << RESET << std::endl;
+	}
 
+}
 
 int main() {
 	HTTP_test_parser();	
+	test_httprespons();
         return 0;
 }
 

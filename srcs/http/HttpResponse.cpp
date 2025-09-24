@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:38 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 15:28:58 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/24 15:54:12 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,23 @@
 #include <http/HttpParser.hpp>
 #include <http/Http_thow.hpp>
 #include <core/Server.hpp>
+#include <iostream>
 #include <net/Socket.hpp>
+#include <ostream>
 #include <string>
 #include <sstream>
+#include <vector>
+
+HttpResponse::HttpResponse(){}
+
+HttpResponse::~HttpResponse(){}
 
 
 std::string HttpResponse::open_static_file(std::string file)
 {
-	char *data;
+	size_max = 500;
 	std::string request = "HTTP/1.1 200 OK\r\n";
-	std::string temp;
+	std::vector<char> temp(size_max);
 
 	// adicionar data  info do server 
 	std::ifstream file_fd(file.c_str());
@@ -32,9 +39,9 @@ std::string HttpResponse::open_static_file(std::string file)
 		throw Not_found_404();
 	}
 	request += "Content-Type: application/" + file.substr(file.size()-4,file.size()) + ";\r\n"; 
-	file_fd.read(data, this->size_max);
+	file_fd.read(&temp[0], this->size_max);
 	std::stringstream ss;
-    	ss <<  std::atoi(data); 
+    	ss <<  (int)temp.size();
 	request +=  "Content-Length: " + ss.str() + "\r\n";
 	if(file_fd.eof())
 	{
@@ -44,7 +51,9 @@ std::string HttpResponse::open_static_file(std::string file)
 	{		
 		request += "Connection: keep-alive\r\n";
 	}
-	return (data);
+	//request += "\r\n" + temp[1] + "\r\n";
+	std::cout << request << std::endl;
+	return (request);
 }
 
 

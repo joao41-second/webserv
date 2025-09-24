@@ -20,29 +20,42 @@
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
 
+enum t_methods
+{
+	GET,	// Retrieve a resource
+	HEAD,	// Retrieve a header from a resource
+	POST,	// Send data to server
+	PUT,	// Upload a resource to a specific URL
+	DELETE,	// Remove a resource
+	OPTIONS,// Inquire server about available methods
+	PATCH,	// Partially modify a resource
+	TRACE,	// Echo a request
+	CONNECT	// Establish a proxy tunnel
+};
+
 class Location
 {
 public:
-	Location(); // TODO Class isn't well defined yet
-	//Location(std::string filename);
-	Location(const Location &orig); // TODO Class isn't well defined yet
-	Location &operator = (const Location &orig); // TODO Class isn't well defined yet
+	Location();
+	//Location(std::istream& location_file);
+	Location(const Location &orig);
+	Location &operator = (const Location &orig);
 	virtual ~Location();
 
 	//unsigned int const	&getLocNum(void) const;
 	//placeholder			&getplaceholder(unsigned int num) const;
-	//void				setplaceholder(placeholder loc);
+	Location*	clone(void) const;
 
 	void	parse_location(std::istream& location_file);
 
 private:
 	std::string		_name;
-	std::string		_allow_methods; // TODO enum?
 	std::string		_root;
 	std::string		_index;
 	std::string		_cgi_pass;
+	t_methods		_methods;
 	unsigned int	_client_body_buffer_size;
-	bool			_alias;
+	bool			_alias; // TODO should accept string?
 
 	Location*		_sub_location;
 };

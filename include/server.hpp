@@ -20,13 +20,22 @@
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
 
-class Location;
+#include "../include/location.hpp"
+
+/*enum t_methods
+{
+	TIME_1,
+	TIME_2,
+	TIME_START
+};
+
+class Location;*/
 
 class Server
 {
 public:
 	Server();
-	//Server(std::string filename);
+	//Server(std::istream& server_file);
 	Server(const Server &orig);
 	Server &operator = (const Server &orig);
 	virtual ~Server();
@@ -39,10 +48,11 @@ public:
 
 private:
 	std::string		_name;
+	std::string		_interface;
 	std::string		_port;
 	std::string		_root;
 	std::string		_index;
-	std::string		_allow_methods;  // TODO enum?
+	t_methods		_methods;
 
 	std::vector<Location>	_locations;
 	unsigned int			_location_num;

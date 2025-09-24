@@ -57,19 +57,7 @@ void	Location::parse_location(std::istream& location_file) // TODO Write functio
 // | GETTERS & SETTERS
 // |----------------------
 
-/*void	Location::setplaceholder(placeholder loc)
-{
-	if (!loc)
-	{
-		this->_placeholder_num = 0;
-	}
-	else
-	{
-		this->_placeholders.push_back(loc);
-		this->_placeholder_num++;
-	}
-}
-
+/*
 placeholder const	&getplaceholder(unsigned int num) const
 {
 	if (num >= this->getLocNum())
@@ -82,41 +70,67 @@ unsigned int const	&getLocNum(void) const
 	return (this->_placeholder_num);
 }*/
 
+Location*	Location::clone(void) const
+{
+	//std::cout << "Location was cloned" << std::endl;
+	return (new Location(*this));
+}
+
 // |----------------------
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
 
-Location &Location::operator = (const Location &orig) // TODO Class isn't well defined yet
+Location &Location::operator = (const Location &orig)
 {
 	if (this != &orig)
 	{
-		this->_placeholder_num = orig._placeholder_num;
-		this->_placeholders = orig._placeholders;
+		if (orig._sub_location)
+			this->_sub_location = orig._sub_location.clone();
+		else
+			this->_sub_location = NULL;
+
+		this->_name = orig._name;
+		this->_root = orig._root;
+		this->_index = orig._index;
+		this->_cgi_pass = orig._cgi_pass;
+		this->_methods = orig._methods;
+		this->_client_body_buffer_size = orig._client_body_buffer_size;
+		this->_alias = orig._alias;
 	}
 	//std::cout << "Location assignment copy-constructed." << std::endl;
 	return (*this);
 }
 
-Location::Location(const Location &orig): _placeholder_num(orig._placeholder_num), _placeholders(orig._placeholders) // TODO Class isn't well defined yet
+Location::Location(const Location &orig)
 {
+	*this = orig;
 	//std::cout << "Location copy-constructed." << std::endl;
 }
 
-/*Location::Location(std::string filename): _placeholder_num(0)
+/*Location::Location(std::istream& location_file): _placeholder_num(0)
 {
 	this->_placeholder_num = 0;
 	this->parse_Location(filename); //TODO review function...
 	//std::cout << "Location constructed." << std::endl;
 }*/
 
-Location::Location(void) // TODO Class isn't well defined yet
+Location::Location(void)
 {
-	//this->setplaceholder(NULL);
+	this->_sub_location = NULL;
+	this->_name = NULL;
+	this->_root = NULL;
+	this->_index = NULL;
+	this->_cgi_pass = NULL;
+	this->_methods = NULL;
+	this->_client_body_buffer_size = 0;
+	this->_alias = false;
 	//std::cout << "Location constructed." << std::endl;
 }
 
 Location::~Location(void)
 {
+	if (this->_sub_location)
+		delete this->_sub_location;
 	//std::cout << "Location destructed." << std::endl;
 }
 

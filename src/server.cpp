@@ -61,10 +61,11 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 			this->setLocation(curr_Location);
 			// TODO Make sure that the line is at the right spot after building the Location
 		}
-		else
+		else if (line.substr(0,11) == "server_name")
 		{
-			//parse_other_info(); // TODO Incorporate remaining types of information
+			this->_name = trim_whitespace(line.substr(12, line.size())); // TODO escrever setName()?
 		}
+		//parse_other_info(); // TODO Incorporate remaining types of information
 	}
 }
 
@@ -107,17 +108,24 @@ Server &Server::operator = (const Server &orig)
 	{
 		this->_location_num = orig._location_num;
 		this->_locations = orig._locations;
+		this->_name = orig._name;
+		this->_interface = orig._interface;
+		this->_port = orig._port;
+		this->_root = orig._root;
+		this->_index = orig._index;
+		this->_methods = orig._methods;
 	}
 	//std::cout << "Server assignment copy-constructed." << std::endl;
 	return (*this);
 }
 
-Server::Server(const Server &orig): _location_num(orig._location_num), _locations(orig._locations)
+Server::Server(const Server &orig)
 {
+	*this = orig;
 	//std::cout << "Server copy-constructed." << std::endl;
 }
 
-/*Server::Server(std::string filename): _location_num(0)
+/*Server::Server(std::istream& server_file): _location_num(0)
 {
 	this->_location_num = 0;
 	this->parse_server(filename); //TODO review function...
@@ -127,6 +135,12 @@ Server::Server(const Server &orig): _location_num(orig._location_num), _location
 Server::Server(void)
 {
 	this->setLocation(NULL);
+	_name = NULL;
+	_interface = NULL;
+	_port = NULL;
+	_root = NULL;
+	_index = NULL;
+	_methods = NULL;
 	//std::cout << "Server constructed." << std::endl;
 }
 

@@ -39,12 +39,12 @@ public:
 
 	class BadConfigException: public std::exception
 	{
-	private:
-		std::string _msg;
 	public:
 		BadConfigException(std::string msg, std::string value);
 		virtual ~BadConfigException() throw();
 		virtual const char *what() const throw();
+	private:
+		std::string _msg;
 	};
 private:
 	std::vector<Server>	_servers;
@@ -52,12 +52,12 @@ private:
 
 class InputException: public std::exception
 {
-private:
-	std::string _msg;
 public:
 	InputException(std::string msg);
 	virtual ~InputException() throw();
 	virtual const char *what() const throw();
+private:
+	std::string _msg;
 };
 
 #endif

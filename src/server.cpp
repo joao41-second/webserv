@@ -29,6 +29,16 @@ const std::string	trim_whitespace(const std::string& str)
 	return (str.substr(i, j - i + 1));
 }
 
+std::string capitalize(std::string str)
+{
+	for (unsigned int i = 0; i < str.length(); i++)
+	{
+		if (std::isalpha(str[i]))
+			str[i] = std::toupper(str[i]);
+	}
+	return (str);
+}
+
 // |----------------------
 // | MEMBER FUNCTIONS
 // |----------------------
@@ -60,6 +70,8 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 			// Set the Location into the vector
 			this->setLocation(curr_Location);
 			// TODO Make sure that the line is at the right spot after building the Location
+			if (this->_locations.empty())
+				throw InputException("Input error (location)");
 		}
 		else if (line.compare(0, 11, server_name) == 0)
 		{
@@ -85,7 +97,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		else if (line.substr(0,13) == "allow_methods") // TODO
 		{
 			this->setMethods(trim_whitespace(line.substr(11))); // TODO escrever setMethods()
-			if (this->_method == INVALID) // TODO escrever findMethod()
+			if (this->_methods.empty())
 				throw InputException("Empty field (allow_methods)");
 		}
 	}
@@ -95,29 +107,61 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
+void	Server::setMethods(std::string str)
+{
+	const std::string method_name[] = 
+	{
+		"GET",
+		"HEAD",
+		"POST",
+		"PUT",
+		"DELETE",
+		"OPTIONS",
+		"PATCH",
+		"TRACE",
+		"CONNECT"
+	};
+
+	unsigned int method_num = sizeof(method_name) / sizeof(method_name[0]);
+	for (unsigned int i = 0; i < method_num ; i++)
+	{
+		if (capitalize(str) == method_name[i])
+		{
+			/*switch (i)
+			{
+			case 0:
+				this->_methods.push_back(GET);
+				break;
+			case 1:
+				this->_methods.push_back(HEAD);
+				break;
+			case 2:
+				this->_methods.push_back(POST);
+				break;
+			(...)
+			default:
+				throw InputException("Invalid method");
+			}*/
+			this->_methods.push_back(i);
+			return ;
+		}
+	}
+	throw InputException("Invalid method");
+}
+
 void	Server::setLocation(Location* loc)
 {
-	if (!loc)
-	{
-		this->_location_num = 0;
-	}
-	else
+	if (loc)
 	{
 		this->_locations.push_back(*loc);
-		this->_location_num++;
 	}
 }
 
 Location const	&Server::getLocation(unsigned int num) const
 {
-	if (num >= this->getLocNum())
+	if (num >= this->_locations.size())
 		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
 	return(this->_locations[num]);
-}
-
-unsigned int const	&Server::getLocNum(void) const
-{
-	return (this->_location_num);
 }
 
 // |----------------------
@@ -128,7 +172,6 @@ Server &Server::operator = (const Server &orig)
 {
 	if (this != &orig)
 	{
-		this->_location_num = orig._location_num;
 		this->_locations = orig._locations;
 		this->_methods = orig._methods;
 		this->_name = orig._name;
@@ -147,9 +190,8 @@ Server::Server(const Server &orig)
 	//std::cout << "Server copy-constructed." << std::endl;
 }
 
-/*Server::Server(std::istream& server_file): _location_num(0)
+/*Server::Server(std::istream& server_file)
 {
-	this->_location_num = 0;
 	this->parse_server(filename); //TODO review function...
 	//std::cout << "Server constructed." << std::endl;
 }*/
@@ -157,7 +199,7 @@ Server::Server(const Server &orig)
 Server::Server(void)
 {
 	this->setLocation(NULL);
-	this->setMethods("INVALID"); // TODO escrever setMethods()
+	this->setMethods(""); // TODO escrever setMethods()
 	_name = ""; // TODO escrever setName()?
 	_interface = ""; // TODO escrever setPort()?
 	_port = ""; // TODO escrever setPort()?

@@ -31,7 +31,6 @@ public:
 	Server &operator = (const Server &orig);
 	virtual ~Server();
 
-	unsigned int const	&getLocNum(void) const;
 	Location const		&getLocation(unsigned int num) const;
 	void				setLocation(Location* loc);
 	void				setMethods(std::string str);
@@ -47,7 +46,6 @@ private:
 
 	std::vector<t_methods>	_methods;
 	std::vector<Location>	_locations;
-	unsigned int			_location_num;
 };
 
 #endif

@@ -32,7 +32,6 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	unsigned int const	&getServNum(void) const;
 	Server const		&getServer(unsigned int num) const; // TODO Should the return be const Server?
 	void				setServer(Server* serv);
 
@@ -49,7 +48,6 @@ public:
 	};
 private:
 	std::vector<Server>	_servers;
-	unsigned int	 _server_num;
 };
 
 class InputException: public std::exception

@@ -79,27 +79,17 @@ void	Config::parse_file(std::string filename) // TODO Write function
 
 void	Config::setServer(Server* serv)
 {
-	if (!serv)
-	{
-		this->_server_num = 0;
-	}
-	else
+	if (serv)
 	{
 		this->_servers.push_back(*serv);
-		this->_server_num++;
 	}
 }
 
 Server const	&Config::getServer(unsigned int num) const
 {
-	if (num >= this->getServNum())
+	if (num >= this->_servers.size())
 		throw BadConfigException("Out of bounds", " - Servers");
 	return(this->_servers[num]);
-}
-
-unsigned int const	&Config::getServNum(void) const
-{
-	return (this->_server_num);
 }
 
 // |----------------------
@@ -110,21 +100,19 @@ Config &Config::operator = (const Config &orig)
 {
 	if (this != &orig)
 	{
-		this->_server_num = orig._server_num;
 		this->_servers = orig._servers;
 	}
 	//std::cout << "Config assignment copy-constructed." << std::endl;
 	return (*this);
 }
 
-Config::Config(const Config &orig): _server_num(orig._server_num), _servers(orig._servers)
+Config::Config(const Config &orig): _servers(orig._servers)
 {
 	//std::cout << "Config copy-constructed." << std::endl;
 }
 
-Config::Config(std::string filename): _server_num(0)
+Config::Config(std::string filename)
 {
-	this->_server_num = 0;
 	this->parse_file(filename);
 	//std::cout << "Config constructed." << std::endl;
 }

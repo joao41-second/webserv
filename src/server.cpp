@@ -61,11 +61,12 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		if (line == "}")
 			break ;
 
-		if (line.substr(0,8) == "location")
+		// TODO Consider using a switch for this
+		if (line.compare(0, 8, "location") == 0)
 		{
 			// Only create a location when one is declared
 			Location* curr_Location;
-			curr_Location->parse_location(server_file); // TODO Add error case (ex.: bool)
+			curr_Location->parse_location(server_file, line); // TODO Add error case (ex.: bool)
 
 			// Set the Location into the vector
 			this->setLocation(curr_Location);
@@ -73,30 +74,33 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 			if (this->_locations.empty())
 				throw InputException("Input error (location)");
 		}
-		else if (line.compare(0, 11, server_name) == 0)
+		else if (line.compare(0, 11, "server_name") == 0)
 		{
 			this->_name = trim_whitespace(line.substr(11)); // TODO escrever setName()?
 			if (this->_name == "") // TODO escrever getName()?
 				throw InputException("Empty field (server_name)");
 		}
-		else if (line.substr(0,6) == "listen") // TODO
+		else if (line.compare(0, 6, "listen") == 0) // TODO
 		{
+			this->setPort(trim_whitespace(line.substr(6)));
+			if (this->_port == "" || this->_interface == "") // TODO escrever getPort/Interface()?
+				throw InputException("Empty field (listen)");
 		}
-		else if (line.substr(0,4) == "root")
+		else if (line.compare(0, 4, "root") == 0)
 		{
-			this->_root = trim_whitespace(line.substr(11)); // TODO escrever setRoot()?
+			this->_root = trim_whitespace(line.substr(4)); // TODO escrever setRoot()?
 			if (this->_root == "") // TODO escrever getRoot()?
 				throw InputException("Empty field (root)");
 		}
-		else if (line.substr(0,5) == "index")
+		else if (line.compare(0, 5, "index") == 0)
 		{
-			this->_index = trim_whitespace(line.substr(11)); // TODO escrever setIndex()?
+			this->_index = trim_whitespace(line.substr(5)); // TODO escrever setIndex()?
 			if (this->_index == "") // TODO escrever getIndex()?
 				throw InputException("Empty field (index)");
 		}
-		else if (line.substr(0,13) == "allow_methods") // TODO
+		else if (line.compare(0, 13, "allow_methods") == 0)
 		{
-			this->setMethods(trim_whitespace(line.substr(11))); // TODO escrever setMethods()
+			this->setMethods(trim_whitespace(line.substr(13)));
 			if (this->_methods.empty())
 				throw InputException("Empty field (allow_methods)");
 		}
@@ -107,7 +111,36 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
-void	Server::setMethods(std::string str)
+void	Server::setPort(std::string str)
+{
+	for(unsigned int i = 0; i < str.size() ; i++)
+	{
+		if (str[i] == ':')
+		{
+			this->_interface = trim_whitespace(line.substr(0, i));
+			this->_port = trim_whitespace(line.substr(i));
+			return ;
+		}
+	}
+	throw InputException("Invalid syntax (listen)");
+}
+
+void	Server::setMethods(std::string const str)
+{
+	for(unsigned int i = 0; i < str.size() ; i++)
+	{
+		if (!isDelim(str[i]))
+		{
+			size_t k = 0;
+			while (i + k < str.size() && !isDelim(str[i + k]))
+				k++;
+			this->setOneMethod(str.substr(i, k));
+			i += k - 1;
+		}
+	}
+}
+
+void	Server::setOneMethod(std::string word)
 {
 	const std::string method_name[] = 
 	{
@@ -125,7 +158,7 @@ void	Server::setMethods(std::string str)
 	unsigned int method_num = sizeof(method_name) / sizeof(method_name[0]);
 	for (unsigned int i = 0; i < method_num ; i++)
 	{
-		if (capitalize(str) == method_name[i])
+		if (capitalize(word) == method_name[i])
 		{
 			/*switch (i)
 			{
@@ -142,7 +175,8 @@ void	Server::setMethods(std::string str)
 			default:
 				throw InputException("Invalid method");
 			}*/
-			this->_methods.push_back(i);
+			this->_methods.push_back(i); // TODO push_back(static_cast<t_methods>(i)) funciona melhor?
+			// TODO Prevenir duplicados. Potencialmente usar um container "set", ou simplesmente escrever findMethod()
 			return ;
 		}
 	}

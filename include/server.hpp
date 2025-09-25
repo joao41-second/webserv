@@ -32,8 +32,10 @@ public:
 	virtual ~Server();
 
 	Location const		&getLocation(unsigned int num) const;
-	void				setLocation(Location* loc);
-	void				setMethods(std::string str);
+	void	setLocation(Location* loc);
+	void	setMethods(std::string const str);
+	void	setOneMethod(std::string word);
+	void	setPort(std::string str);
 
 	void	parse_server(std::istream& server_file);
 

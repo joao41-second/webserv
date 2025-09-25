@@ -42,22 +42,24 @@ public:
 	Location &operator = (const Location &orig);
 	virtual ~Location();
 
-	//unsigned int const	&getLocNum(void) const;
-	//placeholder			&getplaceholder(unsigned int num) const;
+	void		setSubLocation(Location* loc);
+	void		setMethods(std::string const str);
+	void		setOneMethod(std::string word);
 	Location*	clone(void) const;
 
-	void	parse_location(std::istream& location_file);
+	void	parse_location(std::istream& location_file, std::string line);
 
 private:
 	std::string		_name;
 	std::string		_root;
 	std::string		_index;
 	std::string		_cgi_pass;
-	t_methods		_methods;
-	unsigned int	_client_body_buffer_size;
+	unsigned long	_client_body_buffer_size; // TODO appropriate type?
 	bool			_alias; // TODO should accept string?
 
 	Location*		_sub_location;
+
+	std::vector<t_methods>	_methods;
 };
 
 #endif

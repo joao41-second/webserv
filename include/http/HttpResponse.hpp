@@ -6,10 +6,12 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:37 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/15 19:17:13 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/09/25 22:25:55 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-//works with HttpStatus
+class HttpResponse {
+	
+};

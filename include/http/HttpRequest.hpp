@@ -6,12 +6,15 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:32 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/15 19:08:15 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/09/25 22:24:31 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+class HttpRequest {
+	
+};
 /*
 transform a raw HTTP request:
 

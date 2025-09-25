@@ -22,15 +22,6 @@
 
 #include "../include/location.hpp"
 
-/*enum t_methods
-{
-	TIME_1,
-	TIME_2,
-	TIME_START
-};
-
-class Location;*/
-
 class Server
 {
 public:
@@ -43,6 +34,7 @@ public:
 	unsigned int const	&getLocNum(void) const;
 	Location const		&getLocation(unsigned int num) const;
 	void				setLocation(Location* loc);
+	void				setMethods(std::string str);
 
 	void	parse_server(std::istream& server_file);
 
@@ -52,8 +44,8 @@ private:
 	std::string		_port;
 	std::string		_root;
 	std::string		_index;
-	t_methods		_methods;
 
+	std::vector<t_methods>	_methods;
 	std::vector<Location>	_locations;
 	unsigned int			_location_num;
 };

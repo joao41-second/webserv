@@ -61,23 +61,32 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 			this->setLocation(curr_Location);
 			// TODO Make sure that the line is at the right spot after building the Location
 		}
-		else if (line.substr(0,11) == "server_name")
+		else if (line.compare(0, 11, server_name) == 0)
 		{
-			this->_name = trim_whitespace(line.substr(12, line.size())); // TODO escrever setName()?
-			if (this->_name == "")
+			this->_name = trim_whitespace(line.substr(11)); // TODO escrever setName()?
+			if (this->_name == "") // TODO escrever getName()?
 				throw InputException("Empty field (server_name)");
 		}
 		else if (line.substr(0,6) == "listen") // TODO
 		{
 		}
-		else if (line.substr(0,4) == "root") // TODO
+		else if (line.substr(0,4) == "root")
 		{
+			this->_root = trim_whitespace(line.substr(11)); // TODO escrever setRoot()?
+			if (this->_root == "") // TODO escrever getRoot()?
+				throw InputException("Empty field (root)");
 		}
-		else if (line.substr(0,5) == "index") // TODO
+		else if (line.substr(0,5) == "index")
 		{
+			this->_index = trim_whitespace(line.substr(11)); // TODO escrever setIndex()?
+			if (this->_index == "") // TODO escrever getIndex()?
+				throw InputException("Empty field (index)");
 		}
 		else if (line.substr(0,13) == "allow_methods") // TODO
 		{
+			this->setMethods(trim_whitespace(line.substr(11))); // TODO escrever setMethods()
+			if (this->_method == INVALID) // TODO escrever findMethod()
+				throw InputException("Empty field (allow_methods)");
 		}
 	}
 }
@@ -121,12 +130,12 @@ Server &Server::operator = (const Server &orig)
 	{
 		this->_location_num = orig._location_num;
 		this->_locations = orig._locations;
+		this->_methods = orig._methods;
 		this->_name = orig._name;
 		this->_interface = orig._interface;
 		this->_port = orig._port;
 		this->_root = orig._root;
 		this->_index = orig._index;
-		this->_methods = orig._methods;
 	}
 	//std::cout << "Server assignment copy-constructed." << std::endl;
 	return (*this);
@@ -148,12 +157,12 @@ Server::Server(const Server &orig)
 Server::Server(void)
 {
 	this->setLocation(NULL);
-	_name = "";
-	_interface = "";
-	_port = "";
-	_root = "";
-	_index = "";
-	_methods = NULL; // TODO find a valid equivalence
+	this->setMethods("INVALID"); // TODO escrever setMethods()
+	_name = ""; // TODO escrever setName()?
+	_interface = ""; // TODO escrever setPort()?
+	_port = ""; // TODO escrever setPort()?
+	_root = ""; // TODO escrever setRoot()?
+	_index = ""; // TODO escrever setIndex()?
 	//std::cout << "Server constructed." << std::endl;
 }
 

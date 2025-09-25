@@ -30,7 +30,8 @@ enum t_methods
 	OPTIONS,// Inquire server about available methods
 	PATCH,	// Partially modify a resource
 	TRACE,	// Echo a request
-	CONNECT	// Establish a proxy tunnel
+	CONNECT,// Establish a proxy tunnel
+	INVALID	// Error case
 };
 
 class Location

@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:44:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/25 19:51:53 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/09/26 00:07:56 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #include <map>
 #include <vector>
+#include <poll.h>
+#include <unistd.h>
 
 class Server;
 class Connection;
@@ -21,31 +23,33 @@ class Connection;
 class EventLoop {
 
 public:
-    EventLoop();
-    ~EventLoop();
+	EventLoop();
+	~EventLoop();
 
-    void addListeningSocket(const Socket& socket, Server& server);
-    void run();
+	void addListeningSocket(const Socket& socket, Server& server);
+	void run();
 
 private:
-    // listening sockets: fd -> Server
-    std::map<int, Server*> _listeningSockets;
+	struct PollEntry {
 
-    // active client connections: fd -> Connection
-    std::map<int, Connection*> _connections;
+		struct pollfd	pfd;
+		Server*			server;
+		Connection*		conn;
+	};
 
-    fd_set _readFds;
-    fd_set _writeFds;
-    int _maxFd;
+	std::vector<PollEntry>	_pollEntries;
 
-    void	handleNewConnection(int fd, Server& server);
-    void	handleClientRead(int fd);
-    void	handleClientWrite(int fd);
-    void	closeConnection(int fd);
+	void	handleNewConnection(PollEntry& entry);
+	void	closeConnection(PollEntry& entry);
 };
 
 
 /*
+pollfd struct:
+int    fd       The following descriptor being polled. 
+short  events   The input event flags (see below). 
+short  revents  The output event flags (see below).
+
 
 LOOP PRINCIPAL
 

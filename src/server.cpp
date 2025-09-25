@@ -117,8 +117,8 @@ void	Server::setPort(std::string str)
 	{
 		if (str[i] == ':')
 		{
-			this->_interface = trim_whitespace(line.substr(0, i));
-			this->_port = trim_whitespace(line.substr(i));
+			this->_interface = trim_whitespace(str.substr(0, i));
+			this->_port = trim_whitespace(str.substr(i));
 			return ;
 		}
 	}
@@ -175,7 +175,7 @@ void	Server::setOneMethod(std::string word)
 			default:
 				throw InputException("Invalid method");
 			}*/
-			this->_methods.push_back(i); // TODO push_back(static_cast<t_methods>(i)) funciona melhor?
+			this->_methods.push_back(static_cast<t_methods>(i));
 			// TODO Prevenir duplicados. Potencialmente usar um container "set", ou simplesmente escrever findMethod()
 			return ;
 		}
@@ -233,7 +233,7 @@ Server::Server(const Server &orig)
 Server::Server(void)
 {
 	this->setLocation(NULL);
-	this->setMethods(""); // TODO escrever setMethods()
+	this->setMethods("");
 	_name = ""; // TODO escrever setName()?
 	_interface = ""; // TODO escrever setPort()?
 	_port = ""; // TODO escrever setPort()?

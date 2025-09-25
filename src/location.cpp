@@ -1,3 +1,5 @@
+#include "../include/config.hpp"
+#include "../include/server.hpp"
 #include "../include/location.hpp"
 
 // |----------------------
@@ -25,6 +27,16 @@ const std::string	trim_whitespace(const std::string& str)
 	while (isDelim(str[j]))
 		j--;
 	return (str.substr(i, j - i + 1));
+}
+
+std::string capitalize(std::string str)
+{
+	for (unsigned int i = 0; i < str.length(); i++)
+	{
+		if (std::isalpha(str[i]))
+			str[i] = std::toupper(str[i]);
+	}
+	return (str);
 }
 
 // |----------------------
@@ -83,6 +95,12 @@ void	Location::parse_location(std::istream& location_file, std::string line) // 
 			this->_index = trim_whitespace(line.substr(5)); // TODO escrever setIndex()?
 			if (this->_index == "") // TODO escrever getIndex()?
 				throw InputException("Empty field (index)");
+		}
+		else if (line.compare(0, 8, "cgi_pass") == 0)
+		{
+			this->_cgi_pass = trim_whitespace(line.substr(5)); // TODO escrever setPass()?
+			if (this->_cgi_pass == "") // TODO escrever getPass()?
+				throw InputException("Empty field (cgi_pass)");
 		}
 		else if (line.compare(0, 13, "allow_methods") == 0)
 		{
@@ -162,7 +180,7 @@ void	Location::setOneMethod(std::string word)
 			default:
 				throw InputException("Invalid method");
 			}*/
-			this->_methods.push_back(i); // TODO push_back(static_cast<t_methods>(i)) funciona melhor?
+			this->_methods.push_back(static_cast<t_methods>(i));
 			// TODO Prevenir duplicados. Potencialmente usar um container "set", ou simplesmente escrever findMethod()
 			return ;
 		}
@@ -193,7 +211,7 @@ Location &Location::operator = (const Location &orig)
 	if (this != &orig)
 	{
 		if (orig._sub_location)
-			this->_sub_location = orig._sub_location.clone();
+			this->_sub_location = orig._sub_location->clone();
 		else
 			this->_sub_location = NULL;
 
@@ -224,12 +242,12 @@ Location::Location(const Location &orig)
 
 Location::Location(void)
 {
+	this->setMethods("");
 	this->_sub_location = NULL;
-	this->_name = NULL;
-	this->_root = NULL;
-	this->_index = NULL;
-	this->_cgi_pass = NULL;
-	this->_methods = NULL;
+	this->_name = ""; // TODO escrever setName()?
+	this->_root = ""; // TODO escrever setRoot()?
+	this->_index = ""; // TODO escrever setIndex()?
+	this->_cgi_pass = ""; // TODO escrever setPass()?
 	this->_client_body_buffer_size = 0;
 	this->_alias = false;
 	//std::cout << "Location constructed." << std::endl;

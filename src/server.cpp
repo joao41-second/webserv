@@ -64,8 +64,21 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		else if (line.substr(0,11) == "server_name")
 		{
 			this->_name = trim_whitespace(line.substr(12, line.size())); // TODO escrever setName()?
+			if (this->_name == "")
+				throw InputException("Empty field (server_name)");
 		}
-		//parse_other_info(); // TODO Incorporate remaining types of information
+		else if (line.substr(0,6) == "listen") // TODO
+		{
+		}
+		else if (line.substr(0,4) == "root") // TODO
+		{
+		}
+		else if (line.substr(0,5) == "index") // TODO
+		{
+		}
+		else if (line.substr(0,13) == "allow_methods") // TODO
+		{
+		}
 	}
 }
 
@@ -135,12 +148,12 @@ Server::Server(const Server &orig)
 Server::Server(void)
 {
 	this->setLocation(NULL);
-	_name = NULL;
-	_interface = NULL;
-	_port = NULL;
-	_root = NULL;
-	_index = NULL;
-	_methods = NULL;
+	_name = "";
+	_interface = "";
+	_port = "";
+	_root = "";
+	_index = "";
+	_methods = NULL; // TODO find a valid equivalence
 	//std::cout << "Server constructed." << std::endl;
 }
 

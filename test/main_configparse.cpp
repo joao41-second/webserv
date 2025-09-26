@@ -12,6 +12,8 @@ try // TODO write general exceptions?
 		throw InputException("The program should use the template './webserv [configuration file]'");
 	}
 
+	Config test(argv[1]);
+
 	/*// Create a socket (IPv4, TCP)
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0); // int socket(int domain, int type, int protocol);
 	if (sockfd == -1) {

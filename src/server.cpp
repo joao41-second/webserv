@@ -65,7 +65,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		if (line.compare(0, 8, "location") == 0)
 		{
 			// Only create a location when one is declared
-			Location* curr_Location;
+			Location* curr_Location = Location();
 			curr_Location->parse_location(server_file, line); // TODO Add error case (ex.: bool)
 
 			// Set the Location into the vector

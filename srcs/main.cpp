@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/24 11:40:17 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/26 14:03:15 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 #include <config/ServerConfig.hpp>
 #include <net/Socket.hpp>
 #include <http/HttpParser.hpp>
-#include <string>
-#include <vector>
 
-int	main(int argc, char **argv) 
+int	main(int argc, char **argv, char **env) 
 {
 	
 	(void )(argv);

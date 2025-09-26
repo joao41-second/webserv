@@ -11,7 +11,9 @@ OBJ_DIR  := obj
 
 SRCS_ALL := $(SRC_DIR)/http/HttpParser.cpp \
 	    $(SRC_DIR)/http/HttpResponse.cpp \
-	    $(SRC_DIR)/http/HttpParser_thorw.cpp 
+	    $(SRC_DIR)/http/HttpParser_thorw.cpp \
+	    $(SRC_DIR)/cgi/CgiHandler.cpp \
+
 
 
 SRCS := $(SRC_DIR)/main.cpp  $(SRCS_ALL)

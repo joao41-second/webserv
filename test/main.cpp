@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:03:54 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/26 13:35:17 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/26 14:41:50 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <config/color.hpp>
@@ -17,6 +17,7 @@
 #include <http/HttpParser.hpp>
 #include <dirent.h>
 #include <config/debug.hpp>
+#include <cgi/cgi.hpp>
 #include <string>
 
 void HTTP_test_parser()
@@ -88,9 +89,18 @@ void test_httprespons()
 	}
 }
 
+
+void execute()
+{
+	Cgi ok;
+	ok.execute("ola.chg");
+
+}
+
 int main() {
 //	HTTP_test_parser();	
-	test_httprespons();
+//test_httprespons();
+	execute();
         return 0;
 }
 

@@ -15,7 +15,7 @@ SRCS_ALL := $(SRC_DIR)/http/HttpParser.cpp \
 
 SRCS := $(SRC_DIR)/main.cpp  $(SRCS_ALL)
 
-SRCS_T := ./text/main.cpp 
+SRCS_T := ./test/main.cpp 
 
 # Convert source files to object files
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))

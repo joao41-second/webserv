@@ -40,8 +40,8 @@ public:
 	void	parse_server(std::istream& server_file);
 
 private:
-	std::string		_name;
-	std::string		_interface;
+	std::string		_name; // ex: joao-rib
+	std::string		_interface; // ex: 0.0.0.0
 	std::string		_port;
 	std::string		_root;
 	std::string		_index;

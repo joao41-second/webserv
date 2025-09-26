@@ -12,7 +12,7 @@ try // TODO write general exceptions?
 		throw InputException("The program should use the template './webserv [configuration file]'");
 	}
 
-	// Create a socket (IPv4, TCP)
+	/*// Create a socket (IPv4, TCP)
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0); // int socket(int domain, int type, int protocol);
 	if (sockfd == -1) {
 		std::cout << "Failed to create socket. errno: " << errno << std::endl;
@@ -34,7 +34,7 @@ try // TODO write general exceptions?
 	if (listen(sockfd, 10) < 0) {
 		std::cout << "Failed to listen on socket. errno: " << errno << std::endl;
 		exit(EXIT_FAILURE);
-	}
+	}*/
 }
 catch (std::exception &e)
 {

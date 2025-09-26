@@ -50,6 +50,9 @@ private:
 	std::vector<Server>	_servers;
 };
 
+bool	isDelim(char c);
+const std::string	trim_whitespace(const std::string& str);
+
 class InputException: public std::exception
 {
 public:

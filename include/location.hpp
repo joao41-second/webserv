@@ -37,7 +37,7 @@ class Location
 {
 public:
 	Location();
-	//Location(std::istream& location_file);
+	Location(std::istream& location_file, std::string line);
 	Location(const Location &orig);
 	Location &operator = (const Location &orig);
 	virtual ~Location();

@@ -13,6 +13,12 @@ try // TODO write general exceptions?
 	}
 
 	Config test(argv[1]);
+	std::cout << "Name: " << test.getServer(0).getName() << std::endl;
+	std::cout << "Port: " << test.getServer(0).getPort() << std::endl;
+	std::cout << "Interface: " << test.getServer(0).getInterface() << std::endl;
+	std::cout << "Root: " << test.getServer(0).getRoot() << std::endl;
+	std::cout << "Index: " << test.getServer(0).getIndex() << std::endl;
+	//std::cout << "Methods: " << test.getServer(0).getPort() << std::endl;
 
 	/*// Create a socket (IPv4, TCP)
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0); // int socket(int domain, int type, int protocol);
@@ -40,7 +46,7 @@ try // TODO write general exceptions?
 }
 catch (std::exception &e)
 {
-	std::cerr << "Error" << e.what() << std::endl;
+	std::cerr << "Error: " << e.what() << std::endl;
 	return 1;
 }
 	return 0;

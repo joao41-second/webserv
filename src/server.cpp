@@ -6,7 +6,7 @@
 // | HELPER FUNCTIONS
 // |----------------------
 
-bool	isDelim(char c)
+/*bool	isDelim(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n'
 		|| c == '\v' || c == '\f' || c == '\r')
@@ -27,7 +27,7 @@ const std::string	trim_whitespace(const std::string& str)
 	while (isDelim(str[j]))
 		j--;
 	return (str.substr(i, j - i + 1));
-}
+}*/
 
 std::string capitalize(std::string str)
 {
@@ -65,12 +65,13 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		if (line.compare(0, 8, "location") == 0)
 		{
 			// Only create a location when one is declared
-			Location* curr_Location = Location();
-			curr_Location->parse_location(server_file, line); // TODO Add error case (ex.: bool)
-
+			//Location* curr_location = new Location();
+			//curr_location->parse_location(server_file, line); // TODO Add error case (ex.: bool)
 			// Set the Location into the vector
-			this->setLocation(curr_Location);
+			//this->setLocation(curr_location);
+			this->setLocation(new Location(server_file, line)); // TODO testar
 			// TODO Make sure that the line is at the right spot after building the Location
+
 			if (this->_locations.empty())
 				throw InputException("Input error (location)");
 		}
@@ -118,7 +119,7 @@ void	Server::setPort(std::string str)
 		if (str[i] == ':')
 		{
 			this->_interface = trim_whitespace(str.substr(0, i));
-			this->_port = trim_whitespace(str.substr(i));
+			this->_port = trim_whitespace(str.substr(i + 1));
 			return ;
 		}
 	}
@@ -198,6 +199,31 @@ Location const	&Server::getLocation(unsigned int num) const
 	return(this->_locations[num]);
 }
 
+std::string const	&Server::getName(void) const
+{
+	return(this->_name);
+}
+
+std::string const	&Server::getPort(void) const
+{
+	return(this->_port);
+}
+
+std::string const	&Server::getInterface(void) const
+{
+	return(this->_interface);
+}
+
+std::string const	&Server::getRoot(void) const
+{
+	return(this->_root);
+}
+
+std::string const	&Server::getIndex(void) const
+{
+	return(this->_index);
+}
+
 // |----------------------
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
@@ -224,11 +250,11 @@ Server::Server(const Server &orig)
 	//std::cout << "Server copy-constructed." << std::endl;
 }
 
-/*Server::Server(std::istream& server_file)
+Server::Server(std::istream& server_file)
 {
-	this->parse_server(filename); //TODO review function...
+	this->parse_server(server_file);
 	//std::cout << "Server constructed." << std::endl;
-}*/
+}
 
 Server::Server(void)
 {
@@ -244,6 +270,7 @@ Server::Server(void)
 
 Server::~Server(void)
 {
+	//delete[] _locations;
 	//std::cout << "Server destructed." << std::endl;
 }
 

@@ -28,13 +28,6 @@ const std::string	trim_whitespace(const std::string& str)
 	return (str.substr(i, j - i + 1));
 }
 
-/*bool	isDigit(char c)
-{
-	if (c >= '0' && c <= '9')
-		return (true);
-	return (false);
-}*/
-
 // |----------------------
 // | MEMBER FUNCTIONS
 // |----------------------
@@ -61,7 +54,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 		if (line != "server {")
 			continue ;
 
-		Server* curr_server;
+		Server* curr_server = new Server();
 		curr_server->parse_server(config_file); // TODO Add error case (ex.: bool)
 
 		// Set the server into the vector
@@ -125,6 +118,7 @@ Config::Config(void)
 
 Config::~Config(void)
 {
+	//delete[] this->_servers;
 	//std::cout << "Config destructed." << std::endl;
 }
 

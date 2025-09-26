@@ -6,7 +6,7 @@
 // | HELPER FUNCTIONS
 // |----------------------
 
-bool	isDelim(char c)
+/*bool	isDelim(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n'
 		|| c == '\v' || c == '\f' || c == '\r')
@@ -37,7 +37,7 @@ std::string capitalize(std::string str)
 			str[i] = std::toupper(str[i]);
 	}
 	return (str);
-}
+}*/
 
 // |----------------------
 // | MEMBER FUNCTIONS
@@ -75,11 +75,12 @@ void	Location::parse_location(std::istream& location_file, std::string line) // 
 		if (line.compare(0, 8, "location") == 0)
 		{
 			// Only create a location when one is declared
-			Location* curr_Location = Location();
-			curr_Location->parse_location(location_file, line); // TODO Add error case (ex.: bool)
+			//Location* curr_location = new Location();
+			//curr_location->parse_location(location_file, line); // TODO Add error case (ex.: bool)
 
 			// Set the Location into _sub_location
-			this->setSubLocation(curr_Location);
+			//this->setSubLocation(curr_location);
+			this->setSubLocation(new Location(location_file, line));
 			if (this->_sub_location == NULL)
 				throw InputException("Input error (location)");
 			// TODO Make sure that the line is at the right spot after building the Location
@@ -233,12 +234,11 @@ Location::Location(const Location &orig)
 	//std::cout << "Location copy-constructed." << std::endl;
 }
 
-/*Location::Location(std::istream& location_file): _placeholder_num(0)
+Location::Location(std::istream& location_file, std::string line)
 {
-	this->_placeholder_num = 0;
-	this->parse_Location(filename); //TODO review function...
+	this->parse_location(location_file, line);
 	//std::cout << "Location constructed." << std::endl;
-}*/
+}
 
 Location::Location(void)
 {

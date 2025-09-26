@@ -26,11 +26,16 @@ class Server
 {
 public:
 	Server();
-	//Server(std::istream& server_file);
+	Server(std::istream& server_file);
 	Server(const Server &orig);
 	Server &operator = (const Server &orig);
 	virtual ~Server();
 
+	std::string const	&getName(void) const;
+	std::string const	&getInterface(void) const;
+	std::string const	&getPort(void) const;
+	std::string const	&getRoot(void) const;
+	std::string const	&getIndex(void) const;
 	Location const		&getLocation(unsigned int num) const;
 	void	setLocation(Location* loc);
 	void	setMethods(std::string const str);
@@ -40,14 +45,16 @@ public:
 	void	parse_server(std::istream& server_file);
 
 private:
-	std::string		_name; // ex: joao-rib
-	std::string		_interface; // ex: 0.0.0.0
-	std::string		_port;
-	std::string		_root;
-	std::string		_index;
+	std::string		_name;		// ex: joao-rib
+	std::string		_interface;	// ex: 0.0.0.0
+	std::string		_port;		// ex: 8000
+	std::string		_root;		// ex: 
+	std::string		_index;		// ex: 
 
 	std::vector<t_methods>	_methods;
 	std::vector<Location>	_locations;
 };
+
+std::string capitalize(std::string str);
 
 #endif

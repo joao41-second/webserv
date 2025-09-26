@@ -1,7 +1,7 @@
 //#include "./include/*.hpp" TODO header names
-#include "./include/config.hpp"
-#include "./include/server.hpp"
-#include "./include/location.hpp"
+#include "../include/config.hpp"
+#include "../include/server.hpp"
+#include "../include/location.hpp"
 
 int	main(int argc, char **argv)
 {

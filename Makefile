@@ -1,7 +1,7 @@
 NAME = webserv
 CPP = c++
 FLAGS = -Wall -Werror -Wextra -std=c++98
-MAIN = main.cpp
+MAIN = test/main_configparse.cpp
 SRC = src/*.cpp # TODO tbd
 RM = rm -fr
 

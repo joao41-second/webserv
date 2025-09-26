@@ -40,8 +40,11 @@ std::string HttpResponse::open_static_file(std::string file)
 	}
 	request += "Content-Type: application/" + file.substr(file.size()-4,file.size()) + ";\r\n"; 
 	file_fd.read(&temp[0], this->size_max);
+	std::string data;
+	for(int i = 0; i < (int)temp.size() && temp[i] != '\0';i++  )
+		data += temp[i];
 	std::stringstream ss;
-    	ss <<  (int)temp.size();
+    	ss <<  (int)data.size();
 	request +=  "Content-Length: " + ss.str() + "\r\n";
 	if(file_fd.eof())
 	{
@@ -51,11 +54,9 @@ std::string HttpResponse::open_static_file(std::string file)
 	{		
 		request += "Connection: keep-alive\r\n";
 	}
-	//request += "\r\n" + temp[1] + "\r\n";
-	std::cout << request << std::endl;
+	request += "\r\n" + data + "\r\n";
 	return (request);
 }
-
 
 std::string HttpResponse::request_and_response(std::string request)
 {

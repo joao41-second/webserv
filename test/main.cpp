@@ -77,7 +77,7 @@ void test_httprespons()
 }
 
 int main() {
-	HTTP_test_parser();	
+//	HTTP_test_parser();	
 	test_httprespons();
         return 0;
 }

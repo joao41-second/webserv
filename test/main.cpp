@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:03:54 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 15:43:55 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/26 13:35:17 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <config/color.hpp>
@@ -17,6 +17,7 @@
 #include <http/HttpParser.hpp>
 #include <dirent.h>
 #include <config/debug.hpp>
+#include <string>
 
 void HTTP_test_parser()
 {
@@ -64,16 +65,27 @@ void HTTP_test_parser()
 
 void test_httprespons()
 {
+	std::string  request;
 	HttpResponse ok;	
-	try{
-		
-	 T_MSG( ok.open_static_file("./index.html"),GREEN);
+	try
+	{	
+	  while (ok._request_status == false)
+	  {	 
+ 		request += ok.open_static_file("./HTTP_request_files/index.html");
+	  }
+	  T_MSG(request,GREEN);
+	  request = "";
+	  ok._request_status = false;
+	  while (ok._request_status == false)
+	  {
+		  request += ok.open_static_file("./HTTP_request_files/index_simple.html");
+	  }
+	  T_MSG(request,GREEN);
 	}
 	catch(std::exception &e)
 	{
 		std::cout << RED << "error: "<< e.what() << RESET << std::endl;
 	}
-
 }
 
 int main() {

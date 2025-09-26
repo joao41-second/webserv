@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:38 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 15:54:12 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/26 13:33:19 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,26 @@
 #include <sstream>
 #include <vector>
 
-HttpResponse::HttpResponse(){}
+HttpResponse::HttpResponse():_request_status(false){}
 
 HttpResponse::~HttpResponse(){}
 
 
 std::string HttpResponse::open_static_file(std::string file)
 {
-	size_max = 500;
+	size_max = 500; // var do jota
 	std::string request = "HTTP/1.1 200 OK\r\n";
 	std::vector<char> temp(size_max);
 
 	// adicionar data  info do server 
-	std::ifstream file_fd(file.c_str());
+	static std::ifstream file_fd(file.c_str());	
+	static bool status = false;
+	static bool index = false; 
+	if(status == true)
+	{
+		index = false;
+		file_fd.open(file.c_str());
+	}
 	if(!file_fd.is_open())
 	{
 		throw Not_found_404();
@@ -43,18 +50,34 @@ std::string HttpResponse::open_static_file(std::string file)
 	std::string data;
 	for(int i = 0; i < (int)temp.size() && temp[i] != '\0';i++  )
 		data += temp[i];
+	if(data[data.size()-1] == '\n')
+		data[data.size()-1] = '\n';
 	std::stringstream ss;
     	ss <<  (int)data.size();
 	request +=  "Content-Length: " + ss.str() + "\r\n";
+	//request += "Connection: close\r\n";
+	request += "Connection: keep-alive\r\n";
+	if(index == true )
+		request = "";
+	if(index == false)
+	{
+	 T_MSG("oi", RED);
+	 index = true;
+	}
+	
 	if(file_fd.eof())
 	{
-		request += "Connection: close\r\n";
+		file_fd.close();
+		status = true;
+		_request_status = true;
+	 	index = false;
 	}
 	else 
 	{		
-		request += "Connection: keep-alive\r\n";
+		_request_status = false;
+		status = false;
 	}
-	request += "\r\n" + data + "\r\n";
+	request +=   data ;
 	return (request);
 }
 

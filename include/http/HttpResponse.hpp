@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:37 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/24 14:21:59 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/26 12:22:06 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class HttpResponse
 	private:
 		int size_max;
 	public:
+		bool _request_status;
 		HttpResponse();
 		~HttpResponse();
 		std::string request_and_response(std::string request);

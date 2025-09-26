@@ -1,6 +1,7 @@
 
 NAME     := webserv
-CXX      := c++
+T_NAME   := web_tester
+CXX      := c++ 
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -I./include
 
 SRC_DIR  := srcs
@@ -35,6 +36,7 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
+	@rm -f $(T_NAME)
 	@rm -f leaks.out
 
 re: fclean all
@@ -43,7 +45,7 @@ leaks:
 	$(CXX) $(CXXFLAGS) -fsanitize=address -g $(SRCS) -o leaks.out
 	./leaks.out
 tests:
-	$(CXX) $(CXXFLAGS) -g $(SRCS_T) $(SRCS_ALL) -o web_tester
-	./web_tester
+	$(CXX) $(CXXFLAGS) -g $(SRCS_T) $(SRCS_ALL) -o $(T_NAME)
+	./$(T_NAME)
 	
 

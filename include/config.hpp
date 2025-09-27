@@ -32,7 +32,7 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	size_t const	&getServNum(void) const;
+	size_t			getServNum(void) const;
 	Server const	&getServer(unsigned int num) const; // TODO Should the return be const Server?
 	void			setServer(Server* serv);
 

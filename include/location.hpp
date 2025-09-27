@@ -42,6 +42,9 @@ public:
 	Location &operator = (const Location &orig);
 	virtual ~Location();
 
+	std::string const	&getName(void) const;
+	std::string const	&getRoot(void) const;
+	std::string const	&getIndex(void) const;
 	void		setSubLocation(Location* loc);
 	void		setMethods(std::string const str);
 	void		setOneMethod(std::string word);

@@ -36,7 +36,7 @@ public:
 	std::string const	&getPort(void) const;
 	std::string const	&getRoot(void) const;
 	std::string const	&getIndex(void) const;
-	size_t const		&getLocNum(void) const;
+	size_t				getLocNum(void) const;
 	Location const		&getLocation(unsigned int num) const;
 	void	setLocation(Location* loc);
 	void	setMethods(std::string const str);

@@ -197,6 +197,21 @@ void	Location::setSubLocation(Location* loc)
 	}
 }
 
+std::string const	&Location::getName(void) const
+{
+	return(this->_name);
+}
+
+std::string const	&Location::getRoot(void) const
+{
+	return(this->_root);
+}
+
+std::string const	&Location::getIndex(void) const
+{
+	return(this->_index);
+}
+
 Location*	Location::clone(void) const
 {
 	//std::cout << "Location was cloned" << std::endl;

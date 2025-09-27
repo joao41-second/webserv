@@ -23,18 +23,18 @@ try // TODO write general exceptions?
 		std::cout << "\tIndex: " << test.getServer(i).getIndex() << std::endl;
 		//std::cout << "\tMethods: " << test.getServer(i).getMethods("all") << std::endl;
 		std::cout << std::endl;
-		/*for (unsigned int j = 0; j < test.getServer(i).getLocNum(); j++)
+		for (unsigned int j = 0; j < test.getServer(i).getLocNum(); j++)
 		{
-			std::cout << "Location " << j << ":" << std::endl;
-			std::cout << "\tName: " << test.getServer(i).getLocation(j).getName() << std::endl;
-			std::cout << "\tRoot: " << test.getServer(i).getLocation(j).getRoot() << std::endl;
-			std::cout << "\tIndex: " << test.getServer(i).getLocation(j).getIndex() << std::endl;
-			std::cout << "\tCGI Pass: " << test.getServer(i).getLocation(j).getPass() << std::endl;
-			std::cout << "\tClient body buffer size: " << test.getServer(i).getLocation(j).getClientBuffSize() << std::endl;
-			std::cout << "\tAlias: " << test.getServer(i).getLocation(j).getAlias() << std::endl;
-			std::cout << "\tSub-Location: " << test.getServer(i).getLocation(j).getSubLocation() << std::endl;
-			//std::cout << "\tMethods: " << test.getServer(i).getLocation(j).getMethods("all") << std::endl;
-		}*/
+			std::cout << "\tLocation " << j << ":" << std::endl;
+			std::cout << "\t\tName: " << test.getServer(i).getLocation(j).getName() << std::endl;
+			std::cout << "\t\tRoot: " << test.getServer(i).getLocation(j).getRoot() << std::endl;
+			std::cout << "\t\tIndex: " << test.getServer(i).getLocation(j).getIndex() << std::endl;
+			//std::cout << "\t\tCGI Pass: " << test.getServer(i).getLocation(j).getPass() << std::endl;
+			//std::cout << "\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getClientBuffSize() << std::endl;
+			//std::cout << "\t\tAlias: " << test.getServer(i).getLocation(j).getAlias() << std::endl;
+			//std::cout << "\t\tSub-Location: " << test.getServer(i).getLocation(j).getSubLocation() << std::endl;
+			//std::cout << "\t\tMethods: " << test.getServer(i).getLocation(j).getMethods("all") << std::endl;
+		}
 	}
 
 	/*// Create a socket (IPv4, TCP)

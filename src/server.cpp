@@ -199,6 +199,11 @@ Location const	&Server::getLocation(unsigned int num) const
 	return(this->_locations[num]);
 }
 
+size_t const	&Server::getLocNum(void) const
+{
+	return(this->_locations.size());
+}
+
 std::string const	&Server::getName(void) const
 {
 	return(this->_name);

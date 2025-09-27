@@ -85,6 +85,11 @@ Server const	&Config::getServer(unsigned int num) const
 	return(this->_servers[num]);
 }
 
+size_t const	&Config::getServNum(void) const
+{
+	return(this->_servers.size());
+}
+
 // |----------------------
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------

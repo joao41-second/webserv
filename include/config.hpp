@@ -32,8 +32,9 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	Server const		&getServer(unsigned int num) const; // TODO Should the return be const Server?
-	void				setServer(Server* serv);
+	size_t const	&getServNum(void) const;
+	Server const	&getServer(unsigned int num) const; // TODO Should the return be const Server?
+	void			setServer(Server* serv);
 
 	void	parse_file(std::string filename); // TODO Write function...
 

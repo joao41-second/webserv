@@ -13,12 +13,29 @@ try // TODO write general exceptions?
 	}
 
 	Config test(argv[1]);
-	std::cout << "Name: " << test.getServer(0).getName() << std::endl;
-	std::cout << "Port: " << test.getServer(0).getPort() << std::endl;
-	std::cout << "Interface: " << test.getServer(0).getInterface() << std::endl;
-	std::cout << "Root: " << test.getServer(0).getRoot() << std::endl;
-	std::cout << "Index: " << test.getServer(0).getIndex() << std::endl;
-	//std::cout << "Methods: " << test.getServer(0).getPort() << std::endl;
+	for (unsigned int i = 0; i < test.getServNum(); i++)
+	{
+		std::cout << "Server " << i << ":" << std::endl;
+		std::cout << "\tName: " << test.getServer(i).getName() << std::endl;
+		std::cout << "\tPort: " << test.getServer(i).getPort() << std::endl;
+		std::cout << "\tInterface: " << test.getServer(i).getInterface() << std::endl;
+		std::cout << "\tRoot: " << test.getServer(i).getRoot() << std::endl;
+		std::cout << "\tIndex: " << test.getServer(i).getIndex() << std::endl;
+		//std::cout << "\tMethods: " << test.getServer(i).getMethods("all") << std::endl;
+		std::cout << std::endl;
+		/*for (unsigned int j = 0; j < test.getServer(i).getLocNum(); j++)
+		{
+			std::cout << "Location " << j << ":" << std::endl;
+			std::cout << "\tName: " << test.getServer(i).getLocation(j).getName() << std::endl;
+			std::cout << "\tRoot: " << test.getServer(i).getLocation(j).getRoot() << std::endl;
+			std::cout << "\tIndex: " << test.getServer(i).getLocation(j).getIndex() << std::endl;
+			std::cout << "\tCGI Pass: " << test.getServer(i).getLocation(j).getPass() << std::endl;
+			std::cout << "\tClient body buffer size: " << test.getServer(i).getLocation(j).getClientBuffSize() << std::endl;
+			std::cout << "\tAlias: " << test.getServer(i).getLocation(j).getAlias() << std::endl;
+			std::cout << "\tSub-Location: " << test.getServer(i).getLocation(j).getSubLocation() << std::endl;
+			//std::cout << "\tMethods: " << test.getServer(i).getLocation(j).getMethods("all") << std::endl;
+		}*/
+	}
 
 	/*// Create a socket (IPv4, TCP)
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0); // int socket(int domain, int type, int protocol);

@@ -45,6 +45,11 @@ public:
 	std::string const	&getName(void) const;
 	std::string const	&getRoot(void) const;
 	std::string const	&getIndex(void) const;
+	std::string const	&getPass(void) const;
+	unsigned long		getClientBuffSize(void) const;
+	bool const			&getAlias(void) const;
+	bool				checkSubLocation(void) const;
+	Location const		&getSubLocation(void) const;
 	void		setSubLocation(Location* loc);
 	void		setMethods(std::string const str);
 	void		setOneMethod(std::string word);

@@ -57,7 +57,7 @@ void	Location::parse_location(std::istream& location_file, std::string line) // 
 	{
 		range--;
 	}
-	this->_name = trim_whitespace(line.substr(8, range)); // TODO escrever setName()?
+	this->_name = trim_whitespace(line.substr(8, range - 8)); // TODO escrever setName()?
 	if (this->_name == "") // TODO escrever getName()?
 	{
 		throw InputException("Empty field (server_name)");
@@ -99,7 +99,7 @@ void	Location::parse_location(std::istream& location_file, std::string line) // 
 		}
 		else if (line.compare(0, 8, "cgi_pass") == 0)
 		{
-			this->_cgi_pass = trim_whitespace(line.substr(5)); // TODO escrever setPass()?
+			this->_cgi_pass = trim_whitespace(line.substr(9)); // TODO escrever setPass()?
 			if (this->_cgi_pass == "") // TODO escrever getPass()?
 				throw InputException("Empty field (cgi_pass)");
 		}
@@ -166,21 +166,6 @@ void	Location::setOneMethod(std::string word)
 	{
 		if (capitalize(word) == method_name[i])
 		{
-			/*switch (i)
-			{
-			case 0:
-				this->_methods.push_back(GET);
-				break;
-			case 1:
-				this->_methods.push_back(HEAD);
-				break;
-			case 2:
-				this->_methods.push_back(POST);
-				break;
-			(...)
-			default:
-				throw InputException("Invalid method");
-			}*/
 			this->_methods.push_back(static_cast<t_methods>(i));
 			// TODO Prevenir duplicados. Potencialmente usar um container "set", ou simplesmente escrever findMethod()
 			return ;
@@ -210,6 +195,37 @@ std::string const	&Location::getRoot(void) const
 std::string const	&Location::getIndex(void) const
 {
 	return(this->_index);
+}
+
+std::string const	&Location::getPass(void) const
+{
+	return(this->_cgi_pass);
+}
+
+unsigned long	Location::getClientBuffSize(void) const
+{
+	return(this->_client_body_buffer_size);
+}
+
+bool const	&Location::getAlias(void) const
+{
+	return(this->_alias);
+}
+
+bool	Location::checkSubLocation(void) const
+{
+	if (this->_sub_location)
+	{
+		return(true);
+	}
+	return(false);
+}
+
+Location const	&Location::getSubLocation(void) const
+{
+	//if (!this->_sub_location)
+	//	throw InputException("Sub_Location cannot contain another sub_location");
+	return(*this->_sub_location);
 }
 
 Location*	Location::clone(void) const
@@ -249,7 +265,7 @@ Location::Location(const Location &orig)
 	//std::cout << "Location copy-constructed." << std::endl;
 }
 
-Location::Location(std::istream& location_file, std::string line)
+Location::Location(std::istream& location_file, std::string line): _sub_location(NULL)
 {
 	this->parse_location(location_file, line);
 	//std::cout << "Location constructed." << std::endl;

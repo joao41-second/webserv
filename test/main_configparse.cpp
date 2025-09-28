@@ -16,23 +16,32 @@ try // TODO write general exceptions?
 	for (unsigned int i = 0; i < test.getServNum(); i++)
 	{
 		std::cout << "Server " << i << ":" << std::endl;
-		std::cout << "\tName: " << test.getServer(i).getName() << std::endl;
-		std::cout << "\tPort: " << test.getServer(i).getPort() << std::endl;
-		std::cout << "\tInterface: " << test.getServer(i).getInterface() << std::endl;
-		std::cout << "\tRoot: " << test.getServer(i).getRoot() << std::endl;
-		std::cout << "\tIndex: " << test.getServer(i).getIndex() << std::endl;
+		std::cout << "\tName: " << test.getServer(i).getName() << "$" << std::endl;
+		std::cout << "\tPort: " << test.getServer(i).getPort() << "$" << std::endl;
+		std::cout << "\tInterface: " << test.getServer(i).getInterface() << "$" << std::endl;
+		std::cout << "\tRoot: " << test.getServer(i).getRoot() << "$" << std::endl;
+		std::cout << "\tIndex: " << test.getServer(i).getIndex() << "$" << std::endl;
 		//std::cout << "\tMethods: " << test.getServer(i).getMethods("all") << std::endl;
 		std::cout << std::endl;
 		for (unsigned int j = 0; j < test.getServer(i).getLocNum(); j++)
 		{
 			std::cout << "\tLocation " << j << ":" << std::endl;
-			std::cout << "\t\tName: " << test.getServer(i).getLocation(j).getName() << std::endl;
-			std::cout << "\t\tRoot: " << test.getServer(i).getLocation(j).getRoot() << std::endl;
-			std::cout << "\t\tIndex: " << test.getServer(i).getLocation(j).getIndex() << std::endl;
-			//std::cout << "\t\tCGI Pass: " << test.getServer(i).getLocation(j).getPass() << std::endl;
-			//std::cout << "\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getClientBuffSize() << std::endl;
-			//std::cout << "\t\tAlias: " << test.getServer(i).getLocation(j).getAlias() << std::endl;
-			//std::cout << "\t\tSub-Location: " << test.getServer(i).getLocation(j).getSubLocation() << std::endl;
+			std::cout << "\t\tName: " << test.getServer(i).getLocation(j).getName() << "$" << std::endl;
+			std::cout << "\t\tRoot: " << test.getServer(i).getLocation(j).getRoot() << "$" << std::endl;
+			std::cout << "\t\tIndex: " << test.getServer(i).getLocation(j).getIndex() << "$" << std::endl;
+			std::cout << "\t\tCGI Pass: " << test.getServer(i).getLocation(j).getPass() << "$" << std::endl;
+			std::cout << "\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getClientBuffSize() << "$" << std::endl;
+			std::cout << "\t\tAlias: " << test.getServer(i).getLocation(j).getAlias() << "$" << std::endl;
+			if (test.getServer(i).getLocation(j).checkSubLocation())
+			{
+				std::cout << "\n\t\tSub-Location:" << std::endl;
+				std::cout << "\t\t\tName: " << test.getServer(i).getLocation(j).getSubLocation().getName() << "$" << std::endl;
+				std::cout << "\t\t\tRoot: " << test.getServer(i).getLocation(j).getSubLocation().getRoot() << "$" << std::endl;
+				std::cout << "\t\t\tIndex: " << test.getServer(i).getLocation(j).getSubLocation().getIndex() << "$" << std::endl;
+				std::cout << "\t\t\tCGI Pass: " << test.getServer(i).getLocation(j).getSubLocation().getPass() << "$" << std::endl;
+				std::cout << "\t\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getSubLocation().getClientBuffSize() << "$" << std::endl;
+				std::cout << "\t\t\tAlias: " << test.getServer(i).getLocation(j).getSubLocation().getAlias() << "$" << std::endl;
+			}
 			//std::cout << "\t\tMethods: " << test.getServer(i).getLocation(j).getMethods("all") << std::endl;
 		}
 	}

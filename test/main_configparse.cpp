@@ -32,6 +32,7 @@ try // TODO write general exceptions?
 			std::cout << "\t\tCGI Pass: " << test.getServer(i).getLocation(j).getPass() << "$" << std::endl;
 			std::cout << "\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getClientBuffSize() << "$" << std::endl;
 			std::cout << "\t\tAlias: " << test.getServer(i).getLocation(j).getAlias() << "$" << std::endl;
+			//std::cout << "\t\tMethods: " << test.getServer(i).getLocation(j).getMethods("all") << "$" << std::endl;
 			if (test.getServer(i).getLocation(j).checkSubLocation())
 			{
 				std::cout << "\n\t\tSub-Location:" << std::endl;
@@ -41,8 +42,8 @@ try // TODO write general exceptions?
 				std::cout << "\t\t\tCGI Pass: " << test.getServer(i).getLocation(j).getSubLocation().getPass() << "$" << std::endl;
 				std::cout << "\t\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getSubLocation().getClientBuffSize() << "$" << std::endl;
 				std::cout << "\t\t\tAlias: " << test.getServer(i).getLocation(j).getSubLocation().getAlias() << "$" << std::endl;
+				//std::cout << "\t\t\tMethods: " << test.getServer(i).getLocation(j).getSubLocation().getMethods("all") << "$" << std::endl;
 			}
-			//std::cout << "\t\tMethods: " << test.getServer(i).getLocation(j).getMethods("all") << std::endl;
 		}
 	}
 

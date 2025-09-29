@@ -37,7 +37,7 @@ public:
 	//Server const	&getServer(unsigned int num) const; // TODO Should the return be const Server?
 	void			setServer(Server* serv);
 
-	void	parse_file(std::string filename); // TODO Write function...
+	void	parse_file(std::string filename);
 
 	class BadConfigException: public std::exception
 	{

@@ -50,25 +50,33 @@ public:
 	bool const			&getAlias(void) const;
 	bool				checkSubLocation(void) const;
 	Location const		&getSubLocation(void) const;
-	void		setSubLocation(Location* loc);
-	void		setMethods(std::string const str);
-	void		setOneMethod(std::string word);
-	bool		hasMethod(t_methods method) const;
+	bool				hasMethod(t_methods method) const;
+
+	void	setSubLocation(Location* loc);
+	void	setMethods(std::string const str);
+	void	setOneMethod(std::string word);
+	void	setIndex(std::string index);
+	void	setRoot(std::string root);
+	void	setName(std::string name);
+	void	setPass(std::string pass);
+	void	setClientBuffSize(unsigned long buff_size);
+	void	setAlias(bool alias);
+
 	Location*	clone(void) const;
 
 	void	parse_location(std::istream& location_file, std::string line);
 
 private:
-	std::string		_name;
-	std::string		_root;
-	std::string		_index;
-	std::string		_cgi_pass;
+	std::string		_name;		// ex: /directory
+	std::string		_root;		// ex: joao-rib/
+	std::string		_index;		// ex: joao.bad_extension
+	std::string		_cgi_pass;	// ex: test_linux/ubuntu_cgi_tester
 	unsigned long	_client_body_buffer_size; // TODO appropriate type?
-	bool			_alias; // TODO should accept string?
+	bool			_alias;		// TODO should accept string?
 
-	Location*		_sub_location;
+	std::vector<t_methods>	_methods;	// ex: GET
 
-	std::vector<t_methods>	_methods;
+	Location*	_sub_location;
 };
 
 #endif

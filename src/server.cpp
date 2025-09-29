@@ -6,39 +6,6 @@
 // | HELPER FUNCTIONS
 // |----------------------
 
-/*bool	isDelim(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\n'
-		|| c == '\v' || c == '\f' || c == '\r')
-		return (true);
-	else
-		return (false);
-}
-
-const std::string	trim_whitespace(const std::string& str)
-{
-	int i = 0;
-	while (isDelim(str[i]))
-		i++;
-	if (!str[i])
-		return ("");
-
-	size_t j = str.size() - 1;
-	while (isDelim(str[j]))
-		j--;
-	return (str.substr(i, j - i + 1));
-}*/
-
-std::string capitalize(std::string str)
-{
-	for (unsigned int i = 0; i < str.length(); i++)
-	{
-		if (std::isalpha(str[i]))
-			str[i] = std::toupper(str[i]);
-	}
-	return (str);
-}
-
 // |----------------------
 // | MEMBER FUNCTIONS
 // |----------------------
@@ -47,63 +14,65 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 {
 	std::string		line;
 
-	// TODO Adequate checks
-	// Basic checks in Configuration file
-	//getline(server_file, line);
-	//if (line != "date | value")
-	//	throw BadConfigException("Server file is not properly formatted");
-
 	// Printing loop, once per line in Configuration file
 	while (getline(server_file, line))
 	{
 		line = trim_whitespace(line);
 		// End function if server segment ends
 		if (line == "}")
+		{
 			break ;
+		}
 
 		// TODO Consider using a switch for this
 		if (line.compare(0, 8, "location") == 0)
 		{
-			// Only create a location when one is declared
-			//Location* curr_location = new Location();
-			//curr_location->parse_location(server_file, line); // TODO Add error case (ex.: bool)
-			// Set the Location into the vector
-			//this->setLocation(curr_location);
-			this->setLocation(new Location(server_file, line)); // TODO testar
-			// TODO Make sure that the line is at the right spot after building the Location
+			this->setLocation(new Location(server_file, line));
 
 			if (this->_locations.empty())
-				throw InputException("Input error (location)");
+			{
+				throw InputException("Input error (location)"); // TODO be more specific!
+			}
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
 		{
-			this->_name = trim_whitespace(line.substr(11)); // TODO escrever setName()?
-			if (this->_name == "") // TODO escrever getName()?
-				throw InputException("Empty field (server_name)");
+			this->setName(trim_whitespace(line.substr(11)));
+			if (this->getName() == "")
+			{
+				throw InputException("Empty field (server_name)"); // TODO be more specific!
+			}
 		}
-		else if (line.compare(0, 6, "listen") == 0) // TODO
+		else if (line.compare(0, 6, "listen") == 0)
 		{
 			this->setPort(trim_whitespace(line.substr(6)));
-			if (this->_port == "" || this->_interface == "") // TODO escrever getPort/Interface()?
-				throw InputException("Empty field (listen)");
+			if (this->getPort() == "" || this->getInterface() == "")
+			{
+				throw InputException("Empty field (listen)"); // TODO be more specific!
+			}
 		}
 		else if (line.compare(0, 4, "root") == 0)
 		{
-			this->_root = trim_whitespace(line.substr(4)); // TODO escrever setRoot()?
-			if (this->_root == "") // TODO escrever getRoot()?
-				throw InputException("Empty field (root)");
+			this->setRoot(trim_whitespace(line.substr(4)));
+			if (this->getRoot() == "")
+			{
+				throw InputException("Empty field (root)"); // TODO be more specific!
+			}
 		}
 		else if (line.compare(0, 5, "index") == 0)
 		{
-			this->_index = trim_whitespace(line.substr(5)); // TODO escrever setIndex()?
-			if (this->_index == "") // TODO escrever getIndex()?
-				throw InputException("Empty field (index)");
+			this->setIndex(trim_whitespace(line.substr(5)));
+			if (this->getIndex() == "")
+			{
+				throw InputException("Empty field (index)"); // TODO be more specific!
+			}
 		}
 		else if (line.compare(0, 13, "allow_methods") == 0)
 		{
 			this->setMethods(trim_whitespace(line.substr(13)));
 			if (this->_methods.empty())
-				throw InputException("Empty field (allow_methods)");
+			{
+				throw InputException("Empty field (allow_methods)"); // TODO be more specific!
+			}
 		}
 	}
 }
@@ -157,10 +126,9 @@ void	Server::setOneMethod(std::string word)
 	unsigned int method_num = sizeof(method_name) / sizeof(method_name[0]);
 	for (unsigned int i = 0; i < method_num ; i++)
 	{
-		if (capitalize(word) == method_name[i])
+		if (capitalize(word) == method_name[i] && !this->hasMethod(static_cast<t_methods>(i)))
 		{
 			this->_methods.push_back(static_cast<t_methods>(i));
-			// TODO Prevenir duplicados. Potencialmente usar um container "set", ou simplesmente escrever findMethod()
 			return ;
 		}
 	}
@@ -169,6 +137,13 @@ void	Server::setOneMethod(std::string word)
 
 void	Server::setPort(std::string str)
 {
+	if (str == "")
+	{
+		this->_interface = "";
+		this->_port = "";
+		return ;
+	}
+
 	for(unsigned int i = 0; i < str.size() ; i++)
 	{
 		if (str[i] == ':')
@@ -178,7 +153,23 @@ void	Server::setPort(std::string str)
 			return ;
 		}
 	}
+
 	throw InputException("Invalid syntax (listen)");
+}
+
+void	Server::setIndex(std::string index)
+{
+	this->_index = index;
+}
+
+void	Server::setRoot(std::string root)
+{
+	this->_root = root;
+}
+
+void	Server::setName(std::string name)
+{
+	this->_name = name;
 }
 
 void	Server::setLocation(Location* loc)
@@ -262,11 +253,10 @@ Server::Server(void)
 {
 	this->setLocation(NULL);
 	this->setMethods("");
-	_name = ""; // TODO escrever setName()?
-	_interface = ""; // TODO escrever setPort()?
-	_port = ""; // TODO escrever setPort()?
-	_root = ""; // TODO escrever setRoot()?
-	_index = ""; // TODO escrever setIndex()?
+	this->setName("");
+	this->setPort("");
+	this->setRoot("");
+	this->setIndex("");
 	//std::cout << "Server constructed." << std::endl;
 }
 

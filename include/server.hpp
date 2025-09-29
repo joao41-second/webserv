@@ -37,13 +37,17 @@ public:
 	std::string const	&getRoot(void) const;
 	std::string const	&getIndex(void) const;
 	size_t				getLocNum(void) const;
-	//Location const		&getLocation(std::string name) const; // TODO Location should be found by name...
-	Location const	&getLocation(unsigned int num) const; // TODO Should the return be const Server?
+	//Location const	&getLocation(std::string name) const; // TODO Location should be found by name...
+	Location const		&getLocation(unsigned int num) const; // TODO Should the return be const Server?
+	bool				hasMethod(t_methods method) const;
+
 	void	setLocation(Location* loc);
 	void	setMethods(std::string const str);
 	void	setOneMethod(std::string word);
 	void	setPort(std::string str);
-	bool	hasMethod(t_methods method) const;
+	void	setIndex(std::string index);
+	void	setRoot(std::string root);
+	void	setName(std::string name);
 
 	void	parse_server(std::istream& server_file);
 
@@ -51,10 +55,10 @@ private:
 	std::string		_name;		// ex: joao-rib
 	std::string		_interface;	// ex: 0.0.0.0
 	std::string		_port;		// ex: 8000
-	std::string		_root;		// ex: 
-	std::string		_index;		// ex: 
+	std::string		_root;		// ex: ./joao-rib
+	std::string		_index;		// ex: index.html
 
-	std::vector<t_methods>	_methods;
+	std::vector<t_methods>	_methods;	// ex: GET
 	std::vector<Location>	_locations;
 };
 

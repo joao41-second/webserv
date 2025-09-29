@@ -28,6 +28,16 @@ const std::string	trim_whitespace(const std::string& str)
 	return (str.substr(i, j - i + 1));
 }
 
+std::string capitalize(std::string str)
+{
+	for (unsigned int i = 0; i < str.length(); i++)
+	{
+		if (std::isalpha(str[i]))
+			str[i] = std::toupper(str[i]);
+	}
+	return (str);
+}
+
 // |----------------------
 // | MEMBER FUNCTIONS
 // |----------------------
@@ -39,12 +49,6 @@ void	Config::parse_file(std::string filename) // TODO Write function
 		throw BadConfigException("Could not open file ", filename);
 
 	std::string		line;
-
-	// TODO Adequate checks
-	// Basic checks in configuration file
-	//getline(config_file, line);
-	//if (line != "date | value")
-	//	throw BadConfigException("Config file is not properly formatted");
 
 	// Printing loop, once per line in configuration file
 	while (getline(config_file, line))
@@ -59,7 +63,6 @@ void	Config::parse_file(std::string filename) // TODO Write function
 
 		// Set the server into the vector
 		this->setServer(curr_server);
-		// TODO Make sure that the line is at the right spot after building the server
 	}
 
 	// Close configuration file

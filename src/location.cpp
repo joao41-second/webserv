@@ -131,6 +131,18 @@ void	Location::parse_location(std::istream& location_file, std::string line) // 
 // | GETTERS & SETTERS
 // |----------------------
 
+bool	Location::hasMethod(t_methods method)
+{
+	for (unsigned int i = 0; i < this->_methods.size(); i++)
+	{
+		if (this->_methods[i] == method)
+		{
+			return (true);
+		}
+	}
+	return (false);
+}
+
 void	Location::setMethods(std::string const str)
 {
 	for(unsigned int i = 0; i < str.size() ; i++)

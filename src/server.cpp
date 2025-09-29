@@ -112,18 +112,16 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
-void	Server::setPort(std::string str)
+bool	Server::hasMethod(t_methods method)
 {
-	for(unsigned int i = 0; i < str.size() ; i++)
+	for (unsigned int i = 0; i < this->_methods.size(); i++)
 	{
-		if (str[i] == ':')
+		if (this->_methods[i] == method)
 		{
-			this->_interface = trim_whitespace(str.substr(0, i));
-			this->_port = trim_whitespace(str.substr(i + 1));
-			return ;
+			return (true);
 		}
 	}
-	throw InputException("Invalid syntax (listen)");
+	return (false);
 }
 
 void	Server::setMethods(std::string const str)
@@ -161,27 +159,26 @@ void	Server::setOneMethod(std::string word)
 	{
 		if (capitalize(word) == method_name[i])
 		{
-			/*switch (i)
-			{
-			case 0:
-				this->_methods.push_back(GET);
-				break;
-			case 1:
-				this->_methods.push_back(HEAD);
-				break;
-			case 2:
-				this->_methods.push_back(POST);
-				break;
-			(...)
-			default:
-				throw InputException("Invalid method");
-			}*/
 			this->_methods.push_back(static_cast<t_methods>(i));
 			// TODO Prevenir duplicados. Potencialmente usar um container "set", ou simplesmente escrever findMethod()
 			return ;
 		}
 	}
 	throw InputException("Invalid method");
+}
+
+void	Server::setPort(std::string str)
+{
+	for(unsigned int i = 0; i < str.size() ; i++)
+	{
+		if (str[i] == ':')
+		{
+			this->_interface = trim_whitespace(str.substr(0, i));
+			this->_port = trim_whitespace(str.substr(i + 1));
+			return ;
+		}
+	}
+	throw InputException("Invalid syntax (listen)");
 }
 
 void	Server::setLocation(Location* loc)

@@ -85,6 +85,18 @@ Server const	&Config::getServer(unsigned int num) const
 	return(this->_servers[num]);
 }
 
+/*Server const	&Config::getServer(std::string port) const
+{
+	for (unsigned int i = 0; i < this->_servers.size(); i++)
+	{
+		if (this->_servers[i].getPort() == port)
+		{
+			return (this->_servers[i]);
+		}
+	}
+	throw BadConfigException("Port not found", port);
+}*/
+
 size_t	Config::getServNum(void) const
 {
 	return(this->_servers.size());

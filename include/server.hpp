@@ -42,6 +42,7 @@ public:
 	void	setMethods(std::string const str);
 	void	setOneMethod(std::string word);
 	void	setPort(std::string str);
+	bool	hasMethod(t_methods method);
 
 	void	parse_server(std::istream& server_file);
 

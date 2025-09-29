@@ -33,8 +33,8 @@ public:
 	virtual ~Config();
 
 	size_t			getServNum(void) const;
-	//Server const	&getServer(std::string port) const; // TODO Server should be found by port...
-	Server const	&getServer(unsigned int num) const; // TODO Should the return be const Server?
+	Server const	&getServer(std::string port) const;
+	//Server const	&getServer(unsigned int num) const; // TODO Should the return be const Server?
 	void			setServer(Server* serv);
 
 	void	parse_file(std::string filename); // TODO Write function...

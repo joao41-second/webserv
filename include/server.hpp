@@ -37,7 +37,8 @@ public:
 	std::string const	&getRoot(void) const;
 	std::string const	&getIndex(void) const;
 	size_t				getLocNum(void) const;
-	Location const		&getLocation(unsigned int num) const;
+	//Location const		&getLocation(std::string name) const; // TODO Location should be found by name...
+	Location const	&getLocation(unsigned int num) const; // TODO Should the return be const Server?
 	void	setLocation(Location* loc);
 	void	setMethods(std::string const str);
 	void	setOneMethod(std::string word);

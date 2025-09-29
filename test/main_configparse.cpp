@@ -23,18 +23,10 @@ static void	print_methods_loc(Location const location)
 	{
 		if (location.hasMethod(static_cast<t_methods>(i)))
 		{
-			std::cout << method_name[i];
-			if (i == method_num - 1)
-			{
-				std::cout << '$' << std::endl;
-				continue ;
-			}
-			else
-			{
-				std::cout << ' ';
-			}
+			std::cout << method_name[i] << ' ';
 		}
 	}
+	std::cout << '$' << std::endl;
 }
 
 static void	print_methods_serv(Server const serv)
@@ -57,18 +49,10 @@ static void	print_methods_serv(Server const serv)
 	{
 		if (serv.hasMethod(static_cast<t_methods>(i)))
 		{
-			std::cout << method_name[i];
-			if (i == method_num - 1)
-			{
-				std::cout << '$' << std::endl;
-				continue ;
-			}
-			else
-			{
-				std::cout << ' ';
-			}
+			std::cout << method_name[i] << ' ';
 		}
 	}
+	std::cout << '$' << std::endl;
 }
 
 int	main(int argc, char **argv)
@@ -81,39 +65,49 @@ try // TODO write general exceptions?
 	}
 
 	Config test(argv[1]);
-	for (unsigned int i = 0; i < test.getServNum(); i++)
+
+	int a = 10;
+	std::stringstream ss;
+	ss << a;
+	std::string str = ss.str();
+	for (unsigned int i = 8000; i < test.getServNum() + 8000; i++)
 	{
-		std::cout << "Server " << i << ":" << std::endl;
-		std::cout << "\tName: " << test.getServer(i).getName() << "$" << std::endl;
-		std::cout << "\tPort: " << test.getServer(i).getPort() << "$" << std::endl;
-		std::cout << "\tInterface: " << test.getServer(i).getInterface() << "$" << std::endl;
-		std::cout << "\tRoot: " << test.getServer(i).getRoot() << "$" << std::endl;
-		std::cout << "\tIndex: " << test.getServer(i).getIndex() << "$" << std::endl;
+		std::stringstream ss;
+		ss << i;
+		std::string i_str = ss.str();
+
+		std::cout << "Server " << (i - 8000) << ":" << std::endl;
+		std::cout << "\tName: " << test.getServer(i_str).getName() << "$" << std::endl;
+		std::cout << "\tPort: " << test.getServer(i_str).getPort() << "$" << std::endl;
+		std::cout << "\tInterface: " << test.getServer(i_str).getInterface() << "$" << std::endl;
+		std::cout << "\tRoot: " << test.getServer(i_str).getRoot() << "$" << std::endl;
+		std::cout << "\tIndex: " << test.getServer(i_str).getIndex() << "$" << std::endl;
 		std::cout << "\tMethods: ";
-		print_methods_serv(test.getServer(i));
+		print_methods_serv(test.getServer(i_str));
 		std::cout << std::endl;
-		for (unsigned int j = 0; j < test.getServer(i).getLocNum(); j++)
+		for (unsigned int j = 0; j < test.getServer(i_str).getLocNum(); j++)
 		{
 			std::cout << "\tLocation " << j << ":" << std::endl;
-			std::cout << "\t\tName: " << test.getServer(i).getLocation(j).getName() << "$" << std::endl;
-			std::cout << "\t\tRoot: " << test.getServer(i).getLocation(j).getRoot() << "$" << std::endl;
-			std::cout << "\t\tIndex: " << test.getServer(i).getLocation(j).getIndex() << "$" << std::endl;
-			std::cout << "\t\tCGI Pass: " << test.getServer(i).getLocation(j).getPass() << "$" << std::endl;
-			std::cout << "\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getClientBuffSize() << "$" << std::endl;
-			std::cout << "\t\tAlias: " << test.getServer(i).getLocation(j).getAlias() << "$" << std::endl;
+			std::cout << "\t\tName: " << test.getServer(i_str).getLocation(j).getName() << "$" << std::endl;
+			std::cout << "\t\tRoot: " << test.getServer(i_str).getLocation(j).getRoot() << "$" << std::endl;
+			std::cout << "\t\tIndex: " << test.getServer(i_str).getLocation(j).getIndex() << "$" << std::endl;
+			std::cout << "\t\tCGI Pass: " << test.getServer(i_str).getLocation(j).getPass() << "$" << std::endl;
+			std::cout << "\t\tClient body buffer size: " << test.getServer(i_str).getLocation(j).getClientBuffSize() << "$" << std::endl;
+			std::cout << "\t\tAlias: " << test.getServer(i_str).getLocation(j).getAlias() << "$" << std::endl;
 			std::cout << "\t\tMethods: ";
-			print_methods_loc(test.getServer(i).getLocation(j));
-			if (test.getServer(i).getLocation(j).checkSubLocation())
+			print_methods_loc(test.getServer(i_str).getLocation(j));
+
+			if (test.getServer(i_str).getLocation(j).checkSubLocation())
 			{
 				std::cout << "\n\t\tSub-Location:" << std::endl;
-				std::cout << "\t\t\tName: " << test.getServer(i).getLocation(j).getSubLocation().getName() << "$" << std::endl;
-				std::cout << "\t\t\tRoot: " << test.getServer(i).getLocation(j).getSubLocation().getRoot() << "$" << std::endl;
-				std::cout << "\t\t\tIndex: " << test.getServer(i).getLocation(j).getSubLocation().getIndex() << "$" << std::endl;
-				std::cout << "\t\t\tCGI Pass: " << test.getServer(i).getLocation(j).getSubLocation().getPass() << "$" << std::endl;
-				std::cout << "\t\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getSubLocation().getClientBuffSize() << "$" << std::endl;
-				std::cout << "\t\t\tAlias: " << test.getServer(i).getLocation(j).getSubLocation().getAlias() << "$" << std::endl;
+				std::cout << "\t\t\tName: " << test.getServer(i_str).getLocation(j).getSubLocation().getName() << "$" << std::endl;
+				std::cout << "\t\t\tRoot: " << test.getServer(i_str).getLocation(j).getSubLocation().getRoot() << "$" << std::endl;
+				std::cout << "\t\t\tIndex: " << test.getServer(i_str).getLocation(j).getSubLocation().getIndex() << "$" << std::endl;
+				std::cout << "\t\t\tCGI Pass: " << test.getServer(i_str).getLocation(j).getSubLocation().getPass() << "$" << std::endl;
+				std::cout << "\t\t\tClient body buffer size: " << test.getServer(i_str).getLocation(j).getSubLocation().getClientBuffSize() << "$" << std::endl;
+				std::cout << "\t\t\tAlias: " << test.getServer(i_str).getLocation(j).getSubLocation().getAlias() << "$" << std::endl;
 				std::cout << "\t\t\tMethods: ";
-				print_methods_loc(test.getServer(i).getLocation(j).getSubLocation());
+				print_methods_loc(test.getServer(i_str).getLocation(j).getSubLocation());
 			}
 			std::cout << std::endl;
 		}

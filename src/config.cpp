@@ -78,14 +78,14 @@ void	Config::setServer(Server* serv)
 	}
 }
 
-Server const	&Config::getServer(unsigned int num) const
+/*Server const	&Config::getServer(unsigned int num) const
 {
 	if (num >= this->_servers.size())
 		throw BadConfigException("Out of bounds", " - Servers");
 	return(this->_servers[num]);
-}
+}*/
 
-/*Server const	&Config::getServer(std::string port) const
+Server const	&Config::getServer(std::string port) const
 {
 	for (unsigned int i = 0; i < this->_servers.size(); i++)
 	{
@@ -95,7 +95,7 @@ Server const	&Config::getServer(unsigned int num) const
 		}
 	}
 	throw BadConfigException("Port not found", port);
-}*/
+}
 
 size_t	Config::getServNum(void) const
 {

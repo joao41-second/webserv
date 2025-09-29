@@ -93,7 +93,10 @@ void test_httprespons()
 void execute()
 {
 	Cgi ok;
-	ok.execute("ola.chg");
+ 	ok.execute("ola.chg");
+
+	T_MSG( ok.execute("ola.chg"),GREEN);
+
 
 }
 

@@ -53,7 +53,7 @@ public:
 	void		setSubLocation(Location* loc);
 	void		setMethods(std::string const str);
 	void		setOneMethod(std::string word);
-	bool		hasMethod(t_methods method);
+	bool		hasMethod(t_methods method) const;
 	Location*	clone(void) const;
 
 	void	parse_location(std::istream& location_file, std::string line);

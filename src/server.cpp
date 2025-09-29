@@ -112,7 +112,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
-bool	Server::hasMethod(t_methods method)
+bool	Server::hasMethod(t_methods method) const
 {
 	for (unsigned int i = 0; i < this->_methods.size(); i++)
 	{

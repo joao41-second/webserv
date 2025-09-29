@@ -3,6 +3,74 @@
 #include "../include/server.hpp"
 #include "../include/location.hpp"
 
+static void	print_methods_loc(Location const location)
+{
+	const std::string method_name[] = 
+	{
+		"GET",
+		"HEAD",
+		"POST",
+		"PUT",
+		"DELETE",
+		"OPTIONS",
+		"PATCH",
+		"TRACE",
+		"CONNECT"
+	};
+
+	unsigned int method_num = sizeof(method_name) / sizeof(method_name[0]);
+	for (unsigned int i = 0; i < method_num ; i++)
+	{
+		if (location.hasMethod(static_cast<t_methods>(i)))
+		{
+			std::cout << method_name[i];
+			if (i == method_num - 1)
+			{
+				std::cout << '$' << std::endl;
+				continue ;
+			}
+			else
+			{
+				std::cout << ' ';
+			}
+		}
+	}
+}
+
+static void	print_methods_serv(Server const serv)
+{
+	const std::string method_name[] = 
+	{
+		"GET",
+		"HEAD",
+		"POST",
+		"PUT",
+		"DELETE",
+		"OPTIONS",
+		"PATCH",
+		"TRACE",
+		"CONNECT"
+	};
+
+	unsigned int method_num = sizeof(method_name) / sizeof(method_name[0]);
+	for (unsigned int i = 0; i < method_num ; i++)
+	{
+		if (serv.hasMethod(static_cast<t_methods>(i)))
+		{
+			std::cout << method_name[i];
+			if (i == method_num - 1)
+			{
+				std::cout << '$' << std::endl;
+				continue ;
+			}
+			else
+			{
+				std::cout << ' ';
+			}
+		}
+	}
+}
+
 int	main(int argc, char **argv)
 {
 try // TODO write general exceptions?
@@ -21,7 +89,8 @@ try // TODO write general exceptions?
 		std::cout << "\tInterface: " << test.getServer(i).getInterface() << "$" << std::endl;
 		std::cout << "\tRoot: " << test.getServer(i).getRoot() << "$" << std::endl;
 		std::cout << "\tIndex: " << test.getServer(i).getIndex() << "$" << std::endl;
-		//std::cout << "\tMethods: " << test.getServer(i).getMethods("all") << std::endl;
+		std::cout << "\tMethods: ";
+		print_methods_serv(test.getServer(i));
 		std::cout << std::endl;
 		for (unsigned int j = 0; j < test.getServer(i).getLocNum(); j++)
 		{
@@ -32,7 +101,8 @@ try // TODO write general exceptions?
 			std::cout << "\t\tCGI Pass: " << test.getServer(i).getLocation(j).getPass() << "$" << std::endl;
 			std::cout << "\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getClientBuffSize() << "$" << std::endl;
 			std::cout << "\t\tAlias: " << test.getServer(i).getLocation(j).getAlias() << "$" << std::endl;
-			//std::cout << "\t\tMethods: " << test.getServer(i).getLocation(j).getMethods("all") << "$" << std::endl;
+			std::cout << "\t\tMethods: ";
+			print_methods_loc(test.getServer(i).getLocation(j));
 			if (test.getServer(i).getLocation(j).checkSubLocation())
 			{
 				std::cout << "\n\t\tSub-Location:" << std::endl;
@@ -42,8 +112,10 @@ try // TODO write general exceptions?
 				std::cout << "\t\t\tCGI Pass: " << test.getServer(i).getLocation(j).getSubLocation().getPass() << "$" << std::endl;
 				std::cout << "\t\t\tClient body buffer size: " << test.getServer(i).getLocation(j).getSubLocation().getClientBuffSize() << "$" << std::endl;
 				std::cout << "\t\t\tAlias: " << test.getServer(i).getLocation(j).getSubLocation().getAlias() << "$" << std::endl;
-				//std::cout << "\t\t\tMethods: " << test.getServer(i).getLocation(j).getSubLocation().getMethods("all") << "$" << std::endl;
+				std::cout << "\t\t\tMethods: ";
+				print_methods_loc(test.getServer(i).getLocation(j).getSubLocation());
 			}
+			std::cout << std::endl;
 		}
 	}
 

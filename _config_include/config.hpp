@@ -19,6 +19,7 @@
 
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
+//#include <arpa/inet.h>
 
 class Server;
 //class Location;

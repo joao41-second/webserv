@@ -45,7 +45,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		else if (line.compare(0, 6, "listen") == 0)
 		{
 			this->setPort(trim_whitespace(line.substr(6)));
-			if (this->getPort() == "" || this->getInterface() == "")
+			if (this->getPort() == 0 || this->getInterface() == "") // TODO Can ports actually be 0?
 			{
 				throw InputException("Empty field (listen)"); // TODO be more specific!
 			}
@@ -75,6 +75,24 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 			}
 		}
 	}
+}
+
+uint16_t Server::stringToUint16(const std::string &str)
+{
+	char* safeguard;
+	unsigned long ul = std::strtoul(str.c_str(), &safeguard, 10);
+
+	if (*safeguard != '\0')
+	{
+		throw InputException("Input port is not a number");
+	}
+
+	if (ul > 65535)
+	{
+		throw InputException("Port cannot be higher than uint_16 max (65535)");
+	}
+
+	return (static_cast<uint16_t>(ul));
 }
 
 // |----------------------
@@ -140,7 +158,7 @@ void	Server::setPort(std::string str)
 	if (str == "")
 	{
 		this->_interface = "";
-		this->_port = "";
+		this->_port = 0;
 		return ;
 	}
 
@@ -149,7 +167,7 @@ void	Server::setPort(std::string str)
 		if (str[i] == ':')
 		{
 			this->_interface = trim_whitespace(str.substr(0, i));
-			this->_port = trim_whitespace(str.substr(i + 1));
+			this->_port = stringToUint16(trim_whitespace(str.substr(i + 1)));
 			return ;
 		}
 	}

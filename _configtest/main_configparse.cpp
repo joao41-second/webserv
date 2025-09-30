@@ -113,29 +113,28 @@ try // TODO write general exceptions?
 		}
 	}
 
-	/*// Create a socket (IPv4, TCP)
+	// Create a socket (IPv4, TCP)
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0); // int socket(int domain, int type, int protocol);
-	if (sockfd == -1) {
-		std::cout << "Failed to create socket. errno: " << errno << std::endl;
-		exit(EXIT_FAILURE);
+	if (sockfd < 0)
+	{
+		throw InputException("Could not create socket") << std::endl;
 	}
 
 	// Listen to port 9999 on any address
 	sockaddr_in sockaddr;
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_addr.s_addr = INADDR_ANY;
-	sockaddr.sin_port = htons(9999); // htons is necessary to convert a number to network byte order
+	sockaddr.sin_port = htons(test.getServer(8000).getPort()); // TODO Which server gets priority?
 
 	if (bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0) {
-		std::cout << "Failed to bind to port 9999. errno: " << errno << std::endl;
-		exit(EXIT_FAILURE);
+		throw InputException("Failed to bind to the port");
 	}
 
 	// Start listening. Hold at most 10 connections in the queue
-	if (listen(sockfd, 10) < 0) {
-		std::cout << "Failed to listen on socket. errno: " << errno << std::endl;
-		exit(EXIT_FAILURE);
-	}*/
+	if (listen(sockfd, 10) < 0)
+	{
+		throw InputException("Failed to listen on socket");
+	}
 }
 catch (std::exception &e)
 {

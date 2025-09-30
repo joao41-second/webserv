@@ -59,7 +59,7 @@ public:
 	void	setRoot(std::string root);
 	void	setName(std::string name);
 	void	setPass(std::string pass);
-	void	setClientBuffSize(unsigned long buff_size);
+	void	setClientBuffSize(std::string buff_size);
 	void	setAlias(bool alias);
 
 	Location*	clone(void) const;

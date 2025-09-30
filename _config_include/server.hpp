@@ -33,9 +33,9 @@ public:
 
 	std::string const	&getName(void) const;
 	std::string const	&getInterface(void) const;
-	std::string const	&getPort(void) const;
 	std::string const	&getRoot(void) const;
 	std::string const	&getIndex(void) const;
+	uint16_t			getPort(void) const;
 	size_t				getLocNum(void) const;
 	//Location const	&getLocation(std::string name) const; // TODO Location should be found by name...
 	Location const		&getLocation(unsigned int num) const; // TODO Should the return be const Server?
@@ -49,12 +49,13 @@ public:
 	void	setRoot(std::string root);
 	void	setName(std::string name);
 
-	void	parse_server(std::istream& server_file);
+	uint16_t	stringToUint16(const std::string &str);
+	void		parse_server(std::istream& server_file);
 
 private:
 	std::string		_name;		// ex: joao-rib
 	std::string		_interface;	// ex: 0.0.0.0
-	std::string		_port;		// ex: 8000
+	uint16_t		_port;		// ex: 8000
 	std::string		_root;		// ex: ./joao-rib
 	std::string		_index;		// ex: index.html
 

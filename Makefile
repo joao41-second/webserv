@@ -1,32 +1,20 @@
-NAME     := webserv
-CXX      := c++
-CXXFLAGS := -Wall -Wextra -Werror -std=c++98
-
-SRC_DIR  := srcs
-OBJ_DIR  := obj
-
-SRCS     := $(SRC_DIR)/main.cpp
-
-OBJS     := $(OBJ_DIR)/main.o
+NAME = webserv
+CPP = c++
+FLAGS = -Wall -Werror -Wextra -std=c++98
+MAIN = _configtest/main_configparse.cpp
+SRC = _config_src/*.cpp # TODO tbd
+RM = rm -fr
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(NAME): $(SRC) $(MAIN)
+	@$(CPP) $(FLAGS) $(SRC) $(MAIN) -o $(NAME)
 
 clean:
-	@rm -rf $(OBJ_DIR)
+	@$(RM) $(NAME)
 
 fclean: clean
-	@rm -f $(NAME)
-	@rm -f leaks.out
 
 re: fclean all
 
-leaks:
-	$(CXX) $(CXXFLAGS) -fsanitize=address -g $(SRCS) -o leaks.out
-	./leaks.out
+.PHONY: all clean fclean re

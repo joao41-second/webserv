@@ -1,7 +1,7 @@
-//#include "./include/*.hpp" TODO header names
-#include "../include/config.hpp"
-#include "../include/server.hpp"
-#include "../include/location.hpp"
+//#include "./_config_include/*.hpp" TODO header names
+#include "../_config_include/config.hpp"
+#include "../_config_include/server.hpp"
+#include "../_config_include/location.hpp"
 
 static void	print_methods_loc(Location const location)
 {

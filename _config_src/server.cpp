@@ -1,6 +1,6 @@
-#include "../include/config.hpp"
-#include "../include/server.hpp"
-#include "../include/location.hpp"
+#include "../_config_include/config.hpp"
+#include "../_config_include/server.hpp"
+#include "../_config_include/location.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS

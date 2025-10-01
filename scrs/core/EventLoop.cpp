@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/09/26 00:17:28 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/01 16:39:35 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,26 @@ EventLoop::~EventLoop() {
 
 void	EventLoop::addListeningSocket(const Socket& socket, Server& server) {
 	
-	
+	struct pollfd pfd;
+	pfd.fd = socket.getFd();
+	pfd.events = POLLIN;
+	pfd.revents = POLLOUT; //not sure
+
+	PollEntry entry;
+	entry.pfd = pfd;
+	entry.conn = NULL;
+	entry.server = &server;
+
+	_pollEntries.push_back(entry);
 }
 
 void	EventLoop::run() {
 
-	int	ret;
 	while (true) {
 		
 		if (!_pollEntries.empty()) {
-    		poll(&_pollEntries[0].pfd, _pollEntries.size(), -1);
-			if (ret < 0) {
+    		int errorCode = poll(&_pollEntries[0].pfd, _pollEntries.size(), -1);
+			if (errorCode < 0) {
             	perror("poll");
             	break ;
         	}
@@ -42,6 +51,15 @@ void	EventLoop::run() {
 	}
 }
 
+/*
+accept() :
+The first argument is the server’s socket, 
+the second is a pointer to a socket address 
+and the third is the length of the address object passed prior. 
+Accept() returns the new peer socket 
+and writes the socket address information 
+into the socket address pointer passed in as the second argument.
+*/
 void EventLoop::handleNewConnection(PollEntry& entry) {
 
 	int clientFd = accept(entry.pfd.fd, NULL, NULL);

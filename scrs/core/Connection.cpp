@@ -40,19 +40,6 @@ EventLoop::~EventLoop() {
     }
 }
 
-void EventLoop::addListeningSocket(const Socket& socket, Server& server) {
-    struct pollfd pfd;
-    pfd.fd = socket.getFd();
-    pfd.events = POLLIN; // ready to read (new clients)
-    pfd.revents = 0;
-
-    PollEntry entry;
-    entry.pfd = pfd;
-    entry.server = &server;
-    entry.conn = NULL; // listening socket
-    _pollEntries.push_back(entry);
-}
-
 void EventLoop::loop() {
     while (true) {
         int ret = poll(&_pollEntries[0].pfd, _pollEntries.size(), -1);

@@ -1,75 +1,42 @@
-#include <vector>
-#include <map>
-#include <poll.h>
-#include "Socket.hpp"
-#include "Server.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Connection.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
+/*   Updated: 2025/10/02 20:27:04 by cereais          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-class Connection;
+#include "../include/core/Connection.hpp"
 
-class EventLoop {
-public:
-    EventLoop();
-    ~EventLoop();
-
-    void addListeningSocket(const Socket& socket, Server& server);
-    void loop(); // main event loop
-
-private:
-    struct PollEntry {
-        struct pollfd pfd;
-        Server* server;        // which server owns this socket
-        Connection* conn;      // NULL if it's a listening socket
-    };
-
-    std::vector<PollEntry> _pollEntries;
-
-    void handleNewConnection(PollEntry& entry);
-    void closeConnection(PollEntry& entry);
-};
-
-
-
-EventLoop::EventLoop() {}
-
-EventLoop::~EventLoop() {
-    for (size_t i = 0; i < _pollEntries.size(); ++i) {
-        if (_pollEntries[i].conn) {
-            delete _pollEntries[i].conn;
-        }
-        close(_pollEntries[i].pfd.fd);
-    }
+Connection::Connection(int fd, Server &server) : _fd(fd), _server(server) {
 }
 
-void EventLoop::loop() {
-    while (true) {
-        int ret = poll(&_pollEntries[0].pfd, _pollEntries.size(), -1);
-        if (ret < 0) {
-            perror("poll");
-            break;
-        }
+Connection::~Connection() {
 
-        for (size_t i = 0; i < _pollEntries.size(); ++i) {
-            PollEntry& entry = _pollEntries[i];
+	//probably deletes server?
+}
 
-            if (entry.pfd.revents & POLLIN) {
-                if (entry.conn == NULL) {
-                    // listening socket
-                    handleNewConnection(entry);
-                } else {
-                    // client socket: read
-                    if (!entry.conn->readRequest()) {
-                        closeConnection(entry);
-                    }
-                }
-            }
+Connection::Connection(const Connection &copy) : 
+	_server(copy._server), _response(copy._response),
+	_request(copy._request) {
+	
+	this->_fd = copy._fd;
+	this->_readBuffer = copy._readBuffer;
+	this->_writeBuffer = copy._writeBuffer;
+}
 
-            if (entry.pfd.revents & POLLOUT) {
-                if (entry.conn && !entry.conn->writeResponse()) {
-                    closeConnection(entry);
-                }
-            }
+bool	Connection::readRequest() {
+	
+}
 
-            entry.pfd.revents = 0; // reset for next poll
-        }
-    }
+bool	Connection::writeResponse() {
+
+}
+
+bool	Connection::processRequest() {
+	
 }

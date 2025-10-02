@@ -121,7 +121,7 @@ try // TODO write general exceptions?
 	}
 
 	/*
-	pollfd serverFD;
+	pollfd	serverFD;
 
 	serverFD.fd = socket( AF_INET, SOCK_STREAM, 0 );
 
@@ -150,7 +150,8 @@ try // TODO write general exceptions?
 	sockaddr.sin_addr.s_addr = INADDR_ANY;
 	sockaddr.sin_port = htons(test.getServer(8000).getPort()); // TODO Which server gets priority?
 
-	if (bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0) {
+	if (bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0)
+	{
 		throw InputException("Failed to bind to the port");
 	}
 

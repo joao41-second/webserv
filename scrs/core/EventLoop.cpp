@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   EventLoop.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/01 16:39:35 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/02 20:18:17 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,15 @@
 #include "../include/core/Connection.hpp"
 #include "../include/net/Socket.hpp"
 
-EventLoop::EventLoop() {
-}
+EventLoop::EventLoop() {}
 
 EventLoop::~EventLoop() {
 
+	for (size_t i = 0; i < _pollEntries.size(); ++i) {
+		if (_pollEntries[0].conn)
+			delete _pollEntries[0].conn;
+		close(_pollEntries[i].pfd.fd);
+	}
 }
 
 void	EventLoop::addListeningSocket(const Socket& socket, Server& server) {
@@ -27,7 +31,7 @@ void	EventLoop::addListeningSocket(const Socket& socket, Server& server) {
 	struct pollfd pfd;
 	pfd.fd = socket.getFd();
 	pfd.events = POLLIN;
-	pfd.revents = POLLOUT; //not sure
+	pfd.revents = 0;
 
 	PollEntry entry;
 	entry.pfd = pfd;
@@ -42,11 +46,38 @@ void	EventLoop::run() {
 	while (true) {
 		
 		if (!_pollEntries.empty()) {
-    		int errorCode = poll(&_pollEntries[0].pfd, _pollEntries.size(), -1);
+			int errorCode = poll(&_pollEntries[0].pfd, _pollEntries.size(), -1);
 			if (errorCode < 0) {
-            	perror("poll");
-            	break ;
-        	}
+				perror("poll");
+				break ;
+			}
+		}
+		for (size_t i = 0; i < _pollEntries.size(); ++i) {
+			PollEntry& entry = _pollEntries[i];
+
+			//ready to read
+			if (entry.pfd.revents & POLLIN) {
+				if (entry.conn == NULL)
+					handleNewConnection(entry);
+				else {
+					if (!entry.conn->readRequest()) {
+						closeConnection(entry);
+					} else {
+						//if request is complete switch to write mode
+						entry.pfd.events = POLLOUT;
+					}
+				}
+			}
+
+			//ready to write
+			if (entry.pfd.revents & POLLOUT) {
+				
+				if (entry.conn && !entry.conn->writeResponse()) {
+					closeConnection(entry);
+				}
+			}
+			
+			entry.pfd.revents = 0; // reset for next poll
 		}
 	}
 }
@@ -60,7 +91,7 @@ Accept() returns the new peer socket
 and writes the socket address information 
 into the socket address pointer passed in as the second argument.
 */
-void EventLoop::handleNewConnection(PollEntry& entry) {
+void	EventLoop::handleNewConnection(PollEntry& entry) {
 
 	int clientFd = accept(entry.pfd.fd, NULL, NULL);
 	if (clientFd < 0) {
@@ -75,18 +106,18 @@ void EventLoop::handleNewConnection(PollEntry& entry) {
 	pfd.events = 0;
 
 	PollEntry clientEntry;
-    clientEntry.pfd = pfd;
-    clientEntry.conn = conn;
-    clientEntry.server = entry.server;
+	clientEntry.pfd = pfd;
+	clientEntry.conn = conn;
+	clientEntry.server = entry.server;
 
 	_pollEntries.push_back(clientEntry);
 	std::cout << "New client accepted: fd " << clientFd << std::endl;
 }
 
-void EventLoop::closeConnection(PollEntry& entry) {
+void	EventLoop::closeConnection(PollEntry& entry) {
 
-    close(entry.pfd.fd);
-    delete entry.conn;
-    entry.conn = NULL;
-    std::cout << "Connection closed: fd " << entry.pfd.fd << std::endl;
+	close(entry.pfd.fd);
+	delete entry.conn;
+	entry.conn = NULL;
+	std::cout << "Connection closed: fd " << entry.pfd.fd << std::endl;
 }

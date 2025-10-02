@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   EventLoop.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:44:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/26 00:07:56 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/02 15:51:42 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ private:
 /*
 pollfd struct:
 int    fd       The following descriptor being polled. 
-short  events   The input event flags (see below). 
-short  revents  The output event flags (see below).
+short  events   The input event flags. 
+short  revents  The output event flags.
 
 
 LOOP PRINCIPAL
@@ -64,10 +64,6 @@ fds de escrita
 fds de erro (exception)
 
 
-
-Monitora fds usando poll().
-
-Quando um listening socket fica pronto chama Server::acceptConnection() -> cria uma nova Connection.
 
 Quando um client socket fica pronto para leitura chama Connection::handleRead() -> acumula dados e parseia request.
 

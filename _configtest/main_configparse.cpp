@@ -113,8 +113,10 @@ try // TODO write general exceptions?
 		}
 	}
 
-	// Create a socket (IPv4, TCP)
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0); // int socket(int domain, int type, int protocol);
+	// Create a socket: int socket(int domain, int type, int protocol);
+	// AF_INET → IPv4 (addresses like 192.168.1.10)
+	// SOCK_STREAM → TCP (reliable, connection-oriented byte stream)
+	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
 	{
 		throw InputException("Could not create socket") << std::endl;
@@ -144,7 +146,7 @@ try // TODO write general exceptions?
 	}
 	*/
 
-	// Listen to port 9999 on any address
+	// Listen to port 8000 on any address
 	sockaddr_in sockaddr;
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_addr.s_addr = INADDR_ANY;

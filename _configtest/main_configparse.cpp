@@ -120,6 +120,30 @@ try // TODO write general exceptions?
 		throw InputException("Could not create socket") << std::endl;
 	}
 
+	/*
+	pollfd serverFD;
+
+	serverFD.fd = socket( AF_INET, SOCK_STREAM, 0 );
+
+	if ( serverFD.fd < 0 )
+		throw std::runtime_error( "Error creating socket." );
+
+	serverFD.events = POLLIN; // ???
+	serverFD.revents = 0; // ???
+	
+	// F_GETFL → get socket's status flags
+	int curr_flags = fcntl(sock, F_GETFL, 0); // int fcntl(int fd, int cmd, ... (arg) );
+	if (curr_flags == -1)
+	{
+		throw std::runtime_error("Could not get socket's flags");
+	}
+	// F_SETFL → set socket's status flags ; O_NONBLOCK → Set socket's flag to non-blocking
+	if (fcntl(serverFD.fd, F_SETFL, curr_flags | O_NONBLOCK) == -1) // Getting current flags ensures that nothing is overwritten
+	{
+		throw fcntlError("Could not set socket to non-blocking");
+	}
+	*/
+
 	// Listen to port 9999 on any address
 	sockaddr_in sockaddr;
 	sockaddr.sin_family = AF_INET;

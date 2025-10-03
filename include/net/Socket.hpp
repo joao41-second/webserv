@@ -11,9 +11,9 @@ class Socket
 {
 public:
 	Socket();
-	Socket(int fd);
-	Socket(const Socket& copy);
-	Socket& operator=(const Socket& src);
+	Socket(uint16_t port);
+	//Socket(const Socket& copy);
+	//Socket& operator=(const Socket& src);
 	virtual ~Socket();
 
 	//void	close();

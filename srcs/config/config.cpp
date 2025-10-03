@@ -1,5 +1,5 @@
 #include "../../include/config/config.hpp"
-#include "../../include/config/serverconfig.hpp"
+#include "../../include/config/serverConfig.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS

@@ -1,5 +1,7 @@
-#include "../../include/Socket/socket.hpp"
-#include "../../include/Socket/serverSocket.hpp"
+#include "../../include/net/Socket.hpp"
+#include "../../include/config/config.hpp"
+#include "../../include/config/serverConfig.hpp"
+#include "../../include/config/locationConfig.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -13,12 +15,12 @@
 // | GETTERS & SETTERS
 // |----------------------
 
-struct sockaddr_in const	&getAddr() const
+struct sockaddr_in const	&Socket::getAddr() const
 {
 	return(this->_addr);
 }
 
-int		getFd() const
+int		Socket::getFd() const
 {
 	return(this->_fd);
 }
@@ -27,26 +29,27 @@ int		getFd() const
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
 
-Socket &Socket::operator = (const Socket &orig)
+/*Socket &Socket::operator = (const Socket &orig)
 {
 	if (this != &orig)
 	{
-		this->_servers = orig._servers;
+		this->_fd = orig._fd;
+		this->_addr = orig._addr;
 	}
 	//std::cout << "Socket assignment copy-constructed." << std::endl;
 	return (*this);
 }
 
-Socket::Socket(const Socket &orig): _fd(orig._servers), _addr(orig._addr)
+Socket::Socket(const Socket &orig): _fd(orig._fd), _addr(orig._addr)
 {
 	//std::cout << "Socket copy-constructed." << std::endl;
-}
+}*/
 
 Socket::Socket(uint16_t port)
 {
     // Create socket
 	this->_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0)
+	if (this->_fd < 0)
 	{
 		throw InputException("Could not create socket");
 	}
@@ -78,7 +81,6 @@ Socket::Socket(uint16_t port)
 
 Socket::Socket(void)
 {
-	this->setServerSocket(NULL);
 	//std::cout << "Socket constructed." << std::endl;
 }
 

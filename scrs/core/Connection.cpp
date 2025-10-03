@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connection.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
+/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/02 20:27:04 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/03 12:45:48 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ Connection::~Connection() {
 }
 
 Connection::Connection(const Connection &copy) : 
-	_server(copy._server), _response(copy._response),
-	_request(copy._request) {
+	_server(copy._server) {
 	
 	this->_fd = copy._fd;
 	this->_readBuffer = copy._readBuffer;

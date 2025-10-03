@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connection.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
+/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/02 20:26:22 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/03 12:40:32 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,13 @@ public:
 	~Connection();
 	Connection(const Connection &copy);
 
-	bool	readRequest();               // read data from socket
+	bool	readRequest();				// read data from socket
 	bool	writeResponse(); 			// sends data from socket
-	bool	processRequest();           // check if CGI, static || error
+	bool	processRequest();			// check if CGI, static || error
 
 private:
 	int				_fd;
 	Server&			_server;
-	HttpRequest		_request;
-	HttpResponse	_response;
 	std::string		_readBuffer;
 	std::string		_writeBuffer;
 };

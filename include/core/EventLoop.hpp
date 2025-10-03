@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   EventLoop.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
+/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:44:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/02 15:51:42 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/03 12:45:16 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <map>
 #include <vector>
 #include <poll.h>
 #include <unistd.h>

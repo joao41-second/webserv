@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:46 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/25 21:23:43 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/03 12:46:51 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ public:
 	void    launch(); //invoca o loop do eventLoop
 	void    closeConnection();
 
-	std::vector<ServerConfig>   getConfig();
+	std::vector<ServerConfig>	getConfig();
 
 private:
 	std::vector<ServerConfig>	_configs;

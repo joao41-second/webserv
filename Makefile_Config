@@ -2,7 +2,7 @@ NAME = webserv
 CPP = c++
 FLAGS = -Wall -Werror -Wextra -std=c++98
 MAIN = _configtest/main_configparse.cpp
-SRC = scrs/config/*.cpp # TODO tbd
+SRC = srcs/config/*.cpp # TODO tbd
 RM = rm -fr
 
 all: $(NAME)

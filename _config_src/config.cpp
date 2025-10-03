@@ -1,5 +1,5 @@
 #include "../_config_include/config.hpp"
-#include "../_config_include/server.hpp"
+#include "../_config_include/serverconfig.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -58,11 +58,11 @@ void	Config::parse_file(std::string filename) // TODO Write function
 		if (line != "server {")
 			continue ;
 
-		Server* curr_server = new Server();
+		ServerConfig* curr_server = new ServerConfig();
 		curr_server->parse_server(config_file); // TODO Add error case (ex.: bool)
 
 		// Set the server into the vector
-		this->setServer(curr_server);
+		this->setServerConfig(curr_server);
 	}
 
 	// Close configuration file
@@ -73,7 +73,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
-void	Config::setServer(Server* serv)
+void	Config::setServerConfig(ServerConfig* serv)
 {
 	if (serv)
 	{
@@ -81,14 +81,14 @@ void	Config::setServer(Server* serv)
 	}
 }
 
-/*Server const	&Config::getServer(unsigned int num) const
+/*Server const	&Config::getServerConfig(unsigned int num) const
 {
 	if (num >= this->_servers.size())
 		throw BadConfigException("Out of bounds", " - Servers");
 	return(this->_servers[num]);
 }*/
 
-Server const	&Config::getServer(uint16_t port) const
+ServerConfig const	&Config::getServerConfig(uint16_t port) const
 {
 	for (unsigned int i = 0; i < this->_servers.size(); i++)
 	{
@@ -132,7 +132,7 @@ Config::Config(std::string filename)
 
 Config::Config(void)
 {
-	this->setServer(NULL);
+	this->setServerConfig(NULL);
 	//std::cout << "Config constructed." << std::endl;
 }
 

@@ -22,8 +22,8 @@
 #include <netinet/in.h> // TODO Ver se ha melhor
 //#include <arpa/inet.h>
 
-class Server;
-//class Location;
+class ServerConfig;
+//class LocationConfig;
 
 class Config
 {
@@ -34,10 +34,10 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	size_t			getServNum(void) const;
-	Server const	&getServer(uint16_t port) const;
-	//Server const	&getServer(unsigned int num) const; // TODO Should the return be const Server?
-	void			setServer(Server* serv);
+	size_t				getServNum(void) const;
+	ServerConfig const	&getServerConfig(uint16_t port) const;
+	//ServerConfig const	&getServerConfig(unsigned int num) const; // TODO Should the return be const ServerConfig?
+	void				setServerConfig(ServerConfig* serv);
 
 	void	parse_file(std::string filename);
 
@@ -51,11 +51,14 @@ public:
 		std::string _msg;
 	};
 private:
-	std::vector<Server>	_servers;
+	std::vector<ServerConfig>	_servers; // TODO construir um getter para isto
+	//std::vector<Socket>	_sockets; // TODO fazer tudo
+	//char	**env; // TODO environmental variables
 };
 
 bool	isDelim(char c);
 const std::string	trim_whitespace(const std::string& str);
+std::string capitalize(std::string str);
 
 class InputException: public std::exception
 {

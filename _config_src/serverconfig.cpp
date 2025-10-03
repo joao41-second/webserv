@@ -1,6 +1,6 @@
 #include "../_config_include/config.hpp"
-#include "../_config_include/server.hpp"
-#include "../_config_include/location.hpp"
+#include "../_config_include/serverconfig.hpp"
+#include "../_config_include/locationconfig.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -10,7 +10,7 @@
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	Server::parse_server(std::istream& server_file) // TODO Write function
+void	ServerConfig::parse_server(std::istream& server_file) // TODO Write function
 {
 	std::string		line;
 
@@ -27,7 +27,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 		// TODO Consider using a switch for this
 		if (line.compare(0, 8, "location") == 0)
 		{
-			this->setLocation(new Location(server_file, line));
+			this->setLocationConfig(new LocationConfig(server_file, line));
 
 			if (this->_locations.empty())
 			{
@@ -77,7 +77,7 @@ void	Server::parse_server(std::istream& server_file) // TODO Write function
 	}
 }
 
-uint16_t Server::stringToUint16(const std::string &str)
+uint16_t ServerConfig::stringToUint16(const std::string &str)
 {
 	char* safeguard;
 	unsigned long ul = std::strtoul(str.c_str(), &safeguard, 10);
@@ -99,7 +99,7 @@ uint16_t Server::stringToUint16(const std::string &str)
 // | GETTERS & SETTERS
 // |----------------------
 
-bool	Server::hasMethod(t_methods method) const
+bool	ServerConfig::hasMethod(t_methods method) const
 {
 	for (unsigned int i = 0; i < this->_methods.size(); i++)
 	{
@@ -111,7 +111,7 @@ bool	Server::hasMethod(t_methods method) const
 	return (false);
 }
 
-void	Server::setMethods(std::string const str)
+void	ServerConfig::setMethods(std::string const str)
 {
 	for(unsigned int i = 0; i < str.size() ; i++)
 	{
@@ -126,7 +126,7 @@ void	Server::setMethods(std::string const str)
 	}
 }
 
-void	Server::setOneMethod(std::string word)
+void	ServerConfig::setOneMethod(std::string word)
 {
 	const std::string method_name[] = 
 	{
@@ -153,7 +153,7 @@ void	Server::setOneMethod(std::string word)
 	throw InputException("Invalid method");
 }
 
-void	Server::setPort(std::string str)
+void	ServerConfig::setPort(std::string str)
 {
 	if (str == "")
 	{
@@ -175,22 +175,22 @@ void	Server::setPort(std::string str)
 	throw InputException("Invalid syntax (listen)");
 }
 
-void	Server::setIndex(std::string index)
+void	ServerConfig::setIndex(std::string index)
 {
 	this->_index = index;
 }
 
-void	Server::setRoot(std::string root)
+void	ServerConfig::setRoot(std::string root)
 {
 	this->_root = root;
 }
 
-void	Server::setName(std::string name)
+void	ServerConfig::setName(std::string name)
 {
 	this->_name = name;
 }
 
-void	Server::setLocation(Location* loc)
+void	ServerConfig::setLocationConfig(LocationConfig* loc)
 {
 	if (loc)
 	{
@@ -198,39 +198,39 @@ void	Server::setLocation(Location* loc)
 	}
 }
 
-Location const	&Server::getLocation(unsigned int num) const
+LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 {
 	if (num >= this->_locations.size())
 		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
 	return(this->_locations[num]);
 }
 
-size_t	Server::getLocNum(void) const
+size_t	ServerConfig::getLocNum(void) const
 {
 	return(this->_locations.size());
 }
 
-std::string const	&Server::getName(void) const
+std::string const	&ServerConfig::getName(void) const
 {
 	return(this->_name);
 }
 
-uint16_t	Server::getPort(void) const
+uint16_t	ServerConfig::getPort(void) const
 {
 	return(this->_port);
 }
 
-std::string const	&Server::getInterface(void) const
+std::string const	&ServerConfig::getInterface(void) const
 {
 	return(this->_interface);
 }
 
-std::string const	&Server::getRoot(void) const
+std::string const	&ServerConfig::getRoot(void) const
 {
 	return(this->_root);
 }
 
-std::string const	&Server::getIndex(void) const
+std::string const	&ServerConfig::getIndex(void) const
 {
 	return(this->_index);
 }
@@ -239,7 +239,7 @@ std::string const	&Server::getIndex(void) const
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
 
-Server &Server::operator = (const Server &orig)
+ServerConfig &ServerConfig::operator = (const ServerConfig &orig)
 {
 	if (this != &orig)
 	{
@@ -251,37 +251,37 @@ Server &Server::operator = (const Server &orig)
 		this->_root = orig._root;
 		this->_index = orig._index;
 	}
-	//std::cout << "Server assignment copy-constructed." << std::endl;
+	//std::cout << "ServerConfig assignment copy-constructed." << std::endl;
 	return (*this);
 }
 
-Server::Server(const Server &orig)
+ServerConfig::ServerConfig(const ServerConfig &orig)
 {
 	*this = orig;
-	//std::cout << "Server copy-constructed." << std::endl;
+	//std::cout << "ServerConfig copy-constructed." << std::endl;
 }
 
-Server::Server(std::istream& server_file)
+ServerConfig::ServerConfig(std::istream& server_file)
 {
 	this->parse_server(server_file);
-	//std::cout << "Server constructed." << std::endl;
+	//std::cout << "ServerConfig constructed." << std::endl;
 }
 
-Server::Server(void)
+ServerConfig::ServerConfig(void)
 {
-	this->setLocation(NULL);
+	this->setLocationConfig(NULL);
 	this->setMethods("");
 	this->setName("");
 	this->setPort("");
 	this->setRoot("");
 	this->setIndex("");
-	//std::cout << "Server constructed." << std::endl;
+	//std::cout << "ServerConfig constructed." << std::endl;
 }
 
-Server::~Server(void)
+ServerConfig::~ServerConfig(void)
 {
 	//delete[] _locations;
-	//std::cout << "Server destructed." << std::endl;
+	//std::cout << "ServerConfig destructed." << std::endl;
 }
 
 // |----------------------

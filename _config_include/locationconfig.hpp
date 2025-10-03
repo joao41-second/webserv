@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef LOCATION_H
-#define LOCATION_H
+#ifndef LOCATIONCONFIG_H
+#define LOCATIONCONFIG_H
 
 // TODO Considerar meter estas libraries num unico ficheiro
 #include <iostream>
@@ -33,26 +33,26 @@ enum t_methods
 	CONNECT // Establish a proxy tunnel
 };
 
-class Location
+class LocationConfig
 {
 public:
-	Location();
-	Location(std::istream& location_file, std::string line);
-	Location(const Location &orig);
-	Location &operator = (const Location &orig);
-	virtual ~Location();
+	LocationConfig();
+	LocationConfig(std::istream& location_file, std::string line);
+	LocationConfig(const LocationConfig &orig);
+	LocationConfig &operator = (const LocationConfig &orig);
+	virtual ~LocationConfig();
 
-	std::string const	&getName(void) const;
-	std::string const	&getRoot(void) const;
-	std::string const	&getIndex(void) const;
-	std::string const	&getPass(void) const;
-	unsigned long		getClientBuffSize(void) const;
-	bool const			&getAlias(void) const;
-	bool				checkSubLocation(void) const;
-	Location const		&getSubLocation(void) const;
-	bool				hasMethod(t_methods method) const;
+	std::string const		&getName(void) const;
+	std::string const		&getRoot(void) const;
+	std::string const		&getIndex(void) const;
+	std::string const		&getPass(void) const;
+	unsigned long			getClientBuffSize(void) const;
+	bool const				&getAlias(void) const;
+	bool					checkSubLocation(void) const;
+	LocationConfig const	&getSubLocation(void) const;
+	bool					hasMethod(t_methods method) const;
 
-	void	setSubLocation(Location* loc);
+	void	setSubLocation(LocationConfig* loc);
 	void	setMethods(std::string const str);
 	void	setOneMethod(std::string word);
 	void	setIndex(std::string index);
@@ -62,7 +62,7 @@ public:
 	void	setClientBuffSize(std::string buff_size);
 	void	setAlias(bool alias);
 
-	Location*	clone(void) const;
+	LocationConfig*	clone(void) const;
 
 	void	parse_location(std::istream& location_file, std::string line);
 
@@ -76,7 +76,7 @@ private:
 
 	std::vector<t_methods>	_methods;	// ex: GET
 
-	Location*	_sub_location;
+	LocationConfig*	_sub_location;
 };
 
 #endif

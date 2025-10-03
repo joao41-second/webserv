@@ -1,6 +1,6 @@
 #include "../_config_include/config.hpp"
-#include "../_config_include/server.hpp"
-#include "../_config_include/location.hpp"
+#include "../_config_include/serverconfig.hpp"
+#include "../_config_include/locationconfig.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -10,7 +10,7 @@
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	Location::parse_location(std::istream& location_file, std::string line) // TODO Write function
+void	LocationConfig::parse_location(std::istream& location_file, std::string line) // TODO Write function
 {
 	// Set name
 	unsigned int range = line.size();
@@ -38,7 +38,7 @@ void	Location::parse_location(std::istream& location_file, std::string line) // 
 		// TODO Consider using a switch for this
 		if (line.compare(0, 8, "location") == 0)
 		{
-			this->setSubLocation(new Location(location_file, line));
+			this->setSubLocation(new LocationConfig(location_file, line));
 			if (!this->checkSubLocation())
 			{
 				throw InputException("Input error (location)"); // TODO be more specific!
@@ -91,7 +91,7 @@ void	Location::parse_location(std::istream& location_file, std::string line) // 
 // | GETTERS & SETTERS
 // |----------------------
 
-bool	Location::hasMethod(t_methods method) const
+bool	LocationConfig::hasMethod(t_methods method) const
 {
 	for (unsigned int i = 0; i < this->_methods.size(); i++)
 	{
@@ -103,7 +103,7 @@ bool	Location::hasMethod(t_methods method) const
 	return (false);
 }
 
-void	Location::setMethods(std::string const str)
+void	LocationConfig::setMethods(std::string const str)
 {
 	for(unsigned int i = 0; i < str.size() ; i++)
 	{
@@ -118,7 +118,7 @@ void	Location::setMethods(std::string const str)
 	}
 }
 
-void	Location::setOneMethod(std::string word)
+void	LocationConfig::setOneMethod(std::string word)
 {
 	const std::string method_name[] = 
 	{
@@ -145,27 +145,27 @@ void	Location::setOneMethod(std::string word)
 	throw InputException("Invalid method");
 }
 
-void	Location::setIndex(std::string index)
+void	LocationConfig::setIndex(std::string index)
 {
 	this->_index = index;
 }
 
-void	Location::setRoot(std::string root)
+void	LocationConfig::setRoot(std::string root)
 {
 	this->_root = root;
 }
 
-void	Location::setName(std::string name)
+void	LocationConfig::setName(std::string name)
 {
 	this->_name = name;
 }
 
-void	Location::setPass(std::string pass)
+void	LocationConfig::setPass(std::string pass)
 {
 	this->_cgi_pass = pass;
 }
 
-void	Location::setClientBuffSize(std::string buff_size)
+void	LocationConfig::setClientBuffSize(std::string buff_size)
 {
 	char *safeguard;
 	this->_client_body_buffer_size = std::strtoul(buff_size.c_str(), &safeguard, 10); // TODO Alterar se for para usar unsigned int
@@ -175,12 +175,12 @@ void	Location::setClientBuffSize(std::string buff_size)
 	}
 }
 
-void	Location::setAlias(bool alias)
+void	LocationConfig::setAlias(bool alias)
 {
 	this->_alias = alias;
 }
 
-void	Location::setSubLocation(Location* loc)
+void	LocationConfig::setSubLocation(LocationConfig* loc)
 {
 	if (loc)
 	{
@@ -188,37 +188,37 @@ void	Location::setSubLocation(Location* loc)
 	}
 }
 
-std::string const	&Location::getName(void) const
+std::string const	&LocationConfig::getName(void) const
 {
 	return(this->_name);
 }
 
-std::string const	&Location::getRoot(void) const
+std::string const	&LocationConfig::getRoot(void) const
 {
 	return(this->_root);
 }
 
-std::string const	&Location::getIndex(void) const
+std::string const	&LocationConfig::getIndex(void) const
 {
 	return(this->_index);
 }
 
-std::string const	&Location::getPass(void) const
+std::string const	&LocationConfig::getPass(void) const
 {
 	return(this->_cgi_pass);
 }
 
-unsigned long	Location::getClientBuffSize(void) const
+unsigned long	LocationConfig::getClientBuffSize(void) const
 {
 	return(this->_client_body_buffer_size);
 }
 
-bool const	&Location::getAlias(void) const
+bool const	&LocationConfig::getAlias(void) const
 {
 	return(this->_alias);
 }
 
-bool	Location::checkSubLocation(void) const
+bool	LocationConfig::checkSubLocation(void) const
 {
 	if (this->_sub_location)
 	{
@@ -227,7 +227,7 @@ bool	Location::checkSubLocation(void) const
 	return(false);
 }
 
-Location const	&Location::getSubLocation(void) const
+LocationConfig const	&LocationConfig::getSubLocation(void) const
 {
 	// TODO potential error case?
 	//if (!this->_sub_location)
@@ -235,17 +235,17 @@ Location const	&Location::getSubLocation(void) const
 	return(*this->_sub_location);
 }
 
-Location*	Location::clone(void) const
+LocationConfig*	LocationConfig::clone(void) const
 {
-	//std::cout << "Location was cloned" << std::endl;
-	return (new Location(*this));
+	//std::cout << "LocationConfig was cloned" << std::endl;
+	return (new LocationConfig(*this));
 }
 
 // |----------------------
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
 
-Location &Location::operator = (const Location &orig)
+LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 {
 	if (this != &orig)
 	{
@@ -262,23 +262,23 @@ Location &Location::operator = (const Location &orig)
 		this->_client_body_buffer_size = orig._client_body_buffer_size;
 		this->_alias = orig._alias;
 	}
-	//std::cout << "Location assignment copy-constructed." << std::endl;
+	//std::cout << "LocationConfig assignment copy-constructed." << std::endl;
 	return (*this);
 }
 
-Location::Location(const Location &orig)
+LocationConfig::LocationConfig(const LocationConfig &orig)
 {
 	*this = orig;
-	//std::cout << "Location copy-constructed." << std::endl;
+	//std::cout << "LocationConfig copy-constructed." << std::endl;
 }
 
-Location::Location(std::istream& location_file, std::string line): _sub_location(NULL)
+LocationConfig::LocationConfig(std::istream& location_file, std::string line): _sub_location(NULL)
 {
 	this->parse_location(location_file, line);
-	//std::cout << "Location constructed." << std::endl;
+	//std::cout << "LocationConfig constructed." << std::endl;
 }
 
-Location::Location(void)
+LocationConfig::LocationConfig(void)
 {
 	this->setMethods("");
 	this->setSubLocation(NULL);
@@ -288,14 +288,14 @@ Location::Location(void)
 	this->setPass("");
 	this->setClientBuffSize(0);
 	this->setAlias(false);
-	//std::cout << "Location constructed." << std::endl;
+	//std::cout << "LocationConfig constructed." << std::endl;
 }
 
-Location::~Location(void)
+LocationConfig::~LocationConfig(void)
 {
 	if (this->_sub_location)
 		delete this->_sub_location;
-	//std::cout << "Location destructed." << std::endl;
+	//std::cout << "LocationConfig destructed." << std::endl;
 }
 
 // |----------------------

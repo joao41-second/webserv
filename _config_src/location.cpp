@@ -78,7 +78,7 @@ void	Location::parse_location(std::istream& location_file, std::string line) // 
 		}
 		else if (line.compare(0, 24, "client_body_buffer_size") == 0)
 		{
-			this->setClientBuffSize(trim_whitespace(line.substr(24)).c_str(), &safeguard, 10);
+			this->setClientBuffSize(trim_whitespace(line.substr(24)));
 		}
 		else if (line.compare(0, 5, "alias") == 0)
 		{
@@ -168,7 +168,7 @@ void	Location::setPass(std::string pass)
 void	Location::setClientBuffSize(std::string buff_size)
 {
 	char *safeguard;
-	this->_client_body_buffer_size = std::strtoul(buff_size, &safeguard, 10); // TODO Alterar se for para usar unsigned int
+	this->_client_body_buffer_size = std::strtoul(buff_size.c_str(), &safeguard, 10); // TODO Alterar se for para usar unsigned int
 	if (*safeguard != '\0')
 	{
 		throw InputException("Invalid client_body_buffer_size"); // TODO be more specific!

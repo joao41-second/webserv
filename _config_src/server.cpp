@@ -215,7 +215,7 @@ std::string const	&Server::getName(void) const
 	return(this->_name);
 }
 
-std::string const	&Server::getPort(void) const
+uint16_t	Server::getPort(void) const
 {
 	return(this->_port);
 }

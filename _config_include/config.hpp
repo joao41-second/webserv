@@ -35,7 +35,7 @@ public:
 	virtual ~Config();
 
 	size_t			getServNum(void) const;
-	Server const	&getServer(std::string port) const;
+	Server const	&getServer(uint16_t port) const;
 	//Server const	&getServer(unsigned int num) const; // TODO Should the return be const Server?
 	void			setServer(Server* serv);
 

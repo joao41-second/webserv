@@ -88,7 +88,7 @@ void	Config::setServer(Server* serv)
 	return(this->_servers[num]);
 }*/
 
-Server const	&Config::getServer(std::string port) const
+Server const	&Config::getServer(uint16_t port) const
 {
 	for (unsigned int i = 0; i < this->_servers.size(); i++)
 	{
@@ -97,7 +97,7 @@ Server const	&Config::getServer(std::string port) const
 			return (this->_servers[i]);
 		}
 	}
-	throw BadConfigException("Port not found", port);
+	throw BadConfigException("Port not found", "");
 }
 
 size_t	Config::getServNum(void) const

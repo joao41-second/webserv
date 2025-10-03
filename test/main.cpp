@@ -90,20 +90,24 @@ void test_httprespons()
 }
 
 
-void execute()
+void execute(char **env)
 {
 	Cgi ok;
+
+	std::vector<char *> _env;
+	ok.create_env(env,_env );
  	ok.execute("ola.chg");
 
 	T_MSG( ok.execute("ola.chg"),GREEN);
-
-
 }
 
-int main() {
+int main(int argc ,char ** argv,char**env) 
+{
 //	HTTP_test_parser();	
 //test_httprespons();
-	execute();
+	(void)argv;
+	(void)argc;
+	execute(env);
         return 0;
 }
 

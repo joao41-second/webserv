@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:46 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/23 15:27:37 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/03 16:09:43 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@
 #include <sys/socket.h>
 #include <fstream>
 #include <algorithm>
+#include <string>
+#include <cstring>
+#include <dirent.h>
+#include <sstream>
+#include <unistd.h>
+#include <sys/wait.h>
+
+
+
 
 class Socket;
 class ServerConfig;

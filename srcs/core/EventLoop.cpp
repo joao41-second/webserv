@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/03 14:22:11 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:15:40 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void	EventLoop::run() {
 					closeConnection(entry);
 				}
 			}
-
 			entry.pfd.revents = 0; // reset for next poll
 		}
 	}

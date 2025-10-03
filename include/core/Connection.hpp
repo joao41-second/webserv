@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/03 14:17:34 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:29:23 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 //Connection represents each client connected to the server
 
 class Connection {
-	
+
 public:
 	Connection(int fd, Server &server);
 	~Connection();

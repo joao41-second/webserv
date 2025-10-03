@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/03 15:14:45 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:39:02 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,42 +31,40 @@ Connection::Connection(const Connection &copy) :
 }
 
 bool	Connection::readRequest() {
-	
+
 	char	buffer[1024];
-    ssize_t	bytesRead;
-	
+	ssize_t	bytesRead;
+
 	while ((bytesRead = read(_fd, buffer, sizeof(buffer))) > 0) {
 		_readBuffer.append(buffer, bytesRead);
 	}
 
-    if (bytesRead > 0) {
-        
-        return (true);
-    } else if (bytesRead == 0)
-        return false;
-    else {
-        perror("read");
-        return false;
-    }
+	if (bytesRead > 0) {
+		
+		return (true);
+	} else if (bytesRead == 0)
+		return false;
+	else {
+		perror("read");
+		return false;
+	}
 }
 
-bool Connection::readRequest() {
-    char buffer[1024];
-    ssize_t bytesRead;
+bool	Connection::readRequest() {
+	char buffer[1024];
+	ssize_t bytesRead;
 
-    while ((bytesRead = read(_fd, buffer, sizeof(buffer))) > 0) {
-        _readBuffer.append(buffer, bytesRead);
-    }
-    if (bytesRead == 0)
-        return false;
-    if (bytesRead < 0) {
-        perror("read");
-        return false;
-    }
-    return true;
+	while ((bytesRead = read(_fd, buffer, sizeof(buffer))) > 0) {
+		_readBuffer.append(buffer, bytesRead);
+	}
+	if (bytesRead == 0)
+		return false;
+	if (bytesRead < 0) {
+		perror("read");
+		return false;
+	}
+	return true;
 }
-
-
 
 bool	Connection::writeResponse() {
 

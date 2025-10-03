@@ -58,6 +58,8 @@ private:
 	uint16_t		_port;		// ex: 8000
 	std::string		_root;		// ex: ./joao-rib
 	std::string		_index;		// ex: index.html
+	// TODO client_max_body_size
+	// TODO error_page (map)
 
 	std::vector<t_methods>		_methods;	// ex: GET
 	std::vector<LocationConfig>	_locations;

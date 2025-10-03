@@ -22,6 +22,7 @@
 #include <netinet/in.h> // TODO Ver se ha melhor
 //#include <arpa/inet.h>
 
+class Socket;
 class ServerConfig;
 //class LocationConfig;
 
@@ -35,8 +36,8 @@ public:
 	virtual ~Config();
 
 	size_t				getServNum(void) const;
-	ServerConfig const	&getServerConfig(uint16_t port) const;
-	//ServerConfig const	&getServerConfig(unsigned int num) const; // TODO Should the return be const ServerConfig?
+	ServerConfig const	&getServerConfig(uint16_t port) const; // TODO Should the return be const ServerConfig?
+	//ServerConfig const	&getServerConfig(unsigned int num) const; 
 	void				setServerConfig(ServerConfig* serv);
 
 	void	parse_file(std::string filename);
@@ -52,7 +53,7 @@ public:
 	};
 private:
 	std::vector<ServerConfig>	_servers; // TODO construir um getter para isto
-	//std::vector<Socket>	_sockets; // TODO fazer tudo
+	std::vector<Socket>			_sockets; // TODO fazer o vector
 	//char	**env; // TODO environmental variables
 };
 

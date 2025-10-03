@@ -112,11 +112,11 @@ try // TODO write general exceptions?
 	// Create a socket: int socket(int domain, int type, int protocol);
 	// AF_INET → IPv4 (addresses like 192.168.1.10)
 	// SOCK_STREAM → TCP (reliable, connection-oriented byte stream)
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	/*int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
 	{
 		throw InputException("Could not create socket");
-	}
+	}*/
 
 	
 	/*pollfd	serverFD;
@@ -140,7 +140,7 @@ try // TODO write general exceptions?
 	
 
 	// Listen to port 8000 on any address
-	sockaddr_in sockaddr;
+	/*sockaddr_in sockaddr;
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_addr.s_addr = INADDR_ANY;
 	sockaddr.sin_port = htons(test.getServerConfig(8000).getPort()); // TODO Which server gets priority?
@@ -154,7 +154,7 @@ try // TODO write general exceptions?
 	if (listen(sockfd, 10) < 0)
 	{
 		throw InputException("Failed to listen on socket");
-	}
+	}*/
 
 	// Close the connections
 	//close(connection);

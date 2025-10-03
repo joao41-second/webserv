@@ -11,10 +11,14 @@
 /* ************************************************************************** */
 
 #include "config/color.hpp"
+#include "config/locationconfig.hpp"
 #include "core/Server.hpp"
 #include "http/HttpParser.hpp"
 #include <cgi/cgi.hpp>
 #include <ostream>
+#include <cstring>
+#include <netdb.h>
+#include <arpa/inet.h>
 
 Cgi::Cgi(){}
 Cgi::~Cgi(){}
@@ -31,18 +35,18 @@ std::string Cgi::chek_program_pach(std::string porgram)
 		{
 			if(std::strncmp("PATH=",_envs[i],5) == 0)
 			{
-				break;	
+				break;	 // ver error a for 
 			}
 		}
 		std::stringstream ss(_envs[i]);
 		std::string path;
 		
-		while (std::getline(ss,path,':')) {
+		while (std::getline(ss,path,':'))
+		{
 			_path.push_back(path);	
 		}	
 	}
-
-	T_MSG("pache size " << _path.size(),BWHITE )	;
+	T_MSG("pache size " << _path.size(),BWHITE );
 	struct dirent *name_dir;
 	std::string name_program_dir;
 	for(int i=0;(int)_path.size() > i; i++)
@@ -57,19 +61,30 @@ std::string Cgi::chek_program_pach(std::string porgram)
 			continue;
 		}
 		name_dir = readdir(dir);
-		while ( name_dir != NULL) {
-
+		while ( name_dir != NULL) 
+		{
 			name_program_dir = name_dir->d_name;
 			if(name_program_dir == porgram)
 			{
+
 				HTTP_MSG("path for porgram use is" <<_path[i] <<" " <<name_program_dir);
-				return (_path[i]);
+				 if (access((_path[i] +"/"+name_program_dir).c_str(), X_OK) == 0)
+				 {
+					closedir(dir);
+					return (_path[i]);
+				 }
+				 else
+				 {
+					 // tenho que chekar que error por aqui 
+				 }
 			}
 			name_dir = readdir(dir);
 		}
+
+		closedir(dir);
 	}
 	T_MSG("error",BWHITE )	;
-	return "./";
+	return NULL;
 }
 
 void Cgi::create_env( char **env,std::vector<char *> env_request)

@@ -1,17 +1,29 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Socket.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 16:58:14 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/09/15 18:53:34 by joseoliv         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 
-class Socket {
-	
+#ifndef SOCKET_H
+#define SOCKET_H
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
+class Socket
+{
+public:
+	Socket();
+	Socket(int fd);
+	Socket(const Socket& copy);
+	Socket& operator=(const Socket& src);
+	virtual ~Socket();
+
+	//void	close();
+
+	int							getFd() const;
+	struct sockaddr_in const	&getAddr() const; // TODO Should the return be const sockaddr_in?
+
+private:
+	struct sockaddr_in	_addr;
+	int					_fd;
 };
+
+#endif

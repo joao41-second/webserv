@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include <core/Server.hpp>
-#include <config/ServerConfig.hpp>
+#include <config/serverconfig.hpp>
 #include <net/Socket.hpp>
 #include <http/HttpParser.hpp>
 

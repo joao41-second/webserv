@@ -6,13 +6,13 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:03:54 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/26 14:41:50 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/03 16:36:30 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <config/color.hpp>
 #include <http/HttpResponse.hpp>
 #include <core/Server.hpp>
-#include <config/ServerConfig.hpp>
+#include <config/serverconfig.hpp>
 #include <net/Socket.hpp>
 #include <http/HttpParser.hpp>
 #include <dirent.h>
@@ -104,7 +104,7 @@ void execute(char **env)
 int main(int argc ,char ** argv,char**env) 
 {
 //	HTTP_test_parser();	
-//test_httprespons();
+// 	test_httprespons();
 	(void)argv;
 	(void)argc;
 	execute(env);

@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/03 12:40:32 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/03 14:17:34 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <sys/socket.h>
+#include <unistd.h>
 #include <../http/HttpRequest.hpp>
 #include <../http/HttpResponse.hpp>
 #include <../core/Server.hpp>

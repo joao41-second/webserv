@@ -6,12 +6,13 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:44:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/03 12:45:16 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/03 13:17:59 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include "../include/net/Socket.hpp"
 #include <vector>
 #include <poll.h>
 #include <unistd.h>
@@ -30,10 +31,10 @@ public:
 
 private:
 	struct PollEntry {
-
-		struct pollfd	pfd;
-		Server*			server;
-		Connection*		conn;
+		struct pollfd		pfd;
+		struct sockaddr_in	socketAddr;
+		Server*				server;
+		Connection*			conn;
 	};
 
 	std::vector<PollEntry>	_pollEntries;

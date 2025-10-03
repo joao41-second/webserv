@@ -20,7 +20,7 @@
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
 
-#include "../_config_include/locationconfig.hpp"
+#include "./locationconfig.hpp"
 
 class ServerConfig
 {

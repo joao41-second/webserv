@@ -14,6 +14,7 @@
 #include "core/Server.hpp"
 #include "http/HttpParser.hpp"
 #include <cgi/cgi.hpp>
+#include <ostream>
 
 Cgi::Cgi(){}
 Cgi::~Cgi(){}
@@ -46,26 +47,26 @@ std::string Cgi::chek_program_pach(std::string porgram)
 	std::string name_program_dir;
 	for(int i=0;(int)_path.size() > i; i++)
 	{
+		if(i == 0)
+		{
+			_path[i] = _path[i].substr(5,_path[i].size());
+		}
  		DIR* dir = opendir(_path[i].c_str());
 		if(dir == NULL)
 		{
-			break;
+			continue;
 		}
 		name_dir = readdir(dir);
-		HTTP_MSG( " que carlhos"<< name_dir->d_name);
-		while ( name_dir == NULL) {
+		while ( name_dir != NULL) {
 
 			name_program_dir = name_dir->d_name;
-			HTTP_MSG( name_program_dir);
 			if(name_program_dir == porgram)
 			{
-				HTTP_MSG("path for porgram use is" <<_path[i]);
+				HTTP_MSG("path for porgram use is" <<_path[i] <<" " <<name_program_dir);
 				return (_path[i]);
 			}
 			name_dir = readdir(dir);
 		}
-
-		T_MSG(_path[i], GREEN);
 	}
 	T_MSG("error",BWHITE )	;
 	return "./";

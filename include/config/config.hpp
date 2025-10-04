@@ -35,10 +35,13 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	size_t				getServNum(void) const;
-	ServerConfig const	&getServerConfig(uint16_t port) const; // TODO Should the return be const ServerConfig?
-	//ServerConfig const	&getServerConfig(unsigned int num) const; 
-	void				setServerConfig(ServerConfig* serv);
+	size_t							getServNum(void) const;
+	ServerConfig const				&getServerConfig(uint16_t port) const; // TODO Should the return be const?
+	std::vector<ServerConfig> const	&getServerConfigVector() const; // TODO Should the return be const?
+	std::vector<Socket> const		&getSocketVector() const; // TODO Should the return be const?
+
+	void	setServerConfig(ServerConfig* serv);
+	void	setSockets(void);
 
 	void	parse_file(std::string filename);
 
@@ -52,9 +55,11 @@ public:
 		std::string _msg;
 	};
 private:
-	std::vector<ServerConfig>	_servers; // TODO construir um getter para isto
-	std::vector<Socket>			_sockets; // TODO fazer o vector
+	std::vector<ServerConfig>	_servers;
+	std::vector<Socket>			_sockets; // TODO testar
 	//char	**env; // TODO environmental variables
+
+	ServerConfig const	&getServerConfig(unsigned int num) const; // TODO Should the return be const?
 };
 
 bool	isDelim(char c);

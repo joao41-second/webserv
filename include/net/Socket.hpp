@@ -22,8 +22,8 @@ public:
 	struct sockaddr_in const	&getAddr() const; // TODO Should the return be const sockaddr_in?
 
 private:
-	struct sockaddr_in	_addr;
-	int					_fd;
+	struct sockaddr_in	_addr; // TODO testar?
+	int					_fd; // TODO testar
 };
 
 #endif

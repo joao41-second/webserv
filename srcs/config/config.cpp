@@ -74,6 +74,11 @@ void	Config::parse_file(std::string filename) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
+void	Config::setEnv(char **env)
+{
+	this->_env = env; // TODO write function
+}
+
 void	Config::setServerConfig(ServerConfig* serv)
 {
 	if (serv)
@@ -145,10 +150,11 @@ Config::Config(const Config &orig): _servers(orig._servers)
 	//std::cout << "Config copy-constructed." << std::endl;
 }
 
-Config::Config(std::string filename)
+Config::Config(std::string filename, char **env)
 {
 	this->parse_file(filename);
 	this->setSockets();
+	this->setEnv(env);
 	//std::cout << "Config constructed." << std::endl;
 }
 
@@ -162,6 +168,7 @@ Config::~Config(void)
 {
 	//delete[] this->_servers;
 	//delete[] this->_sockets;
+	delete[] this->_env;
 	//std::cout << "Config destructed." << std::endl;
 }
 

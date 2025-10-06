@@ -55,7 +55,7 @@ static void	print_methods_serv(ServerConfig const serv)
 	std::cout << '$' << std::endl;
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 try // TODO write general exceptions?
 {
@@ -64,7 +64,7 @@ try // TODO write general exceptions?
 		throw InputException("The program should use the template './webserv [configuration file]'");
 	}
 
-	Config test(argv[1]);
+	Config test(argv[1], envp);
 
 	int a = 10;
 	std::stringstream ss;

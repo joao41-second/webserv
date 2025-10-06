@@ -30,7 +30,7 @@ class Config
 {
 public:
 	Config();
-	Config(std::string filename);
+	Config(std::string filename, char **env);
 	Config(const Config &orig);
 	Config &operator = (const Config &orig);
 	virtual ~Config();
@@ -42,6 +42,7 @@ public:
 
 	void	setServerConfig(ServerConfig* serv);
 	void	setSockets(void);
+	void	setEnv(char **env);
 
 	void	parse_file(std::string filename);
 
@@ -57,7 +58,7 @@ public:
 private:
 	std::vector<ServerConfig>	_servers;
 	std::vector<Socket>			_sockets; // TODO testar
-	//char	**env; // TODO environmental variables
+	char	**_env; // TODO environmental variables
 
 	ServerConfig const	&getServerConfig(unsigned int num) const; // TODO Should the return be const?
 };

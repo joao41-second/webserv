@@ -23,10 +23,7 @@
 //#include <arpa/inet.h>//
 //
 #include <iostream>
-
-
 #include <cstring>
-class Socket;
 class ServerConfig;
 //class LocationConfig;
 
@@ -57,7 +54,6 @@ public:
 	};
 private:
 	std::vector<ServerConfig>	_servers; // TODO construir um getter para isto
-	std::vector<Socket>			_sockets; // TODO fazer o vector
 	//char	**env; // TODO environmental variables
 };
 

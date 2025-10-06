@@ -11,9 +11,9 @@ class Socket
 {
 public:
 	Socket();
-	Socket(int fd);
-	Socket(const Socket& copy);
-	Socket& operator=(const Socket& src);
+	Socket(uint16_t port);
+	//Socket(const Socket& copy);
+	//Socket& operator=(const Socket& src);
 	virtual ~Socket();
 
 	//void	close();
@@ -22,8 +22,8 @@ public:
 	struct sockaddr_in const	&getAddr() const; // TODO Should the return be const sockaddr_in?
 
 private:
-	struct sockaddr_in	_addr;
-	int					_fd;
+	struct sockaddr_in	_addr; // TODO testar?
+	int					_fd; // TODO testar
 };
 
 #endif

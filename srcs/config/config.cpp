@@ -76,7 +76,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 
 void	Config::setEnv(char **env)
 {
-	this->_env = env; // TODO write function
+	this->_env = env; // TODO Should this be a deep copy?
 }
 
 void	Config::setServerConfig(ServerConfig* serv)

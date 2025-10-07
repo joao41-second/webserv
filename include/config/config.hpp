@@ -58,7 +58,7 @@ public:
 private:
 	std::vector<ServerConfig>	_servers;
 	std::vector<Socket>			_sockets; // TODO testar
-	char	**_env; // TODO environmental variables
+	char	**_env; // TODO Should this be a deep copy?
 
 	ServerConfig const	&getServerConfig(unsigned int num) const; // TODO Should the return be const?
 };

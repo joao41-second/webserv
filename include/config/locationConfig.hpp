@@ -66,7 +66,7 @@ public:
 
 	void	parse_location(std::istream& location_file, std::string line);
 
-private:
+private: // TODO Considerar guardar _name como map
 	std::string		_name;		// ex: /directory
 	std::string		_root;		// ex: joao-rib/
 	std::string		_index;		// ex: joao.bad_extension

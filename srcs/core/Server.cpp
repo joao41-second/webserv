@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:29 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/07 11:46:31 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/07 12:02:41 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ Server::~Server() {
 
 void Server::launch() {
 
-	EventLoop loop;
+	EventLoop	loop;
 
 	for (size_t i = 0; i < _listeningSockets.size(); i++)
 		loop.addListeningSocket(_listeningSockets[i], *this);

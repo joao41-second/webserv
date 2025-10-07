@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/03 15:15:40 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/07 12:02:59 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ EventLoop::~EventLoop() {
 
 void	EventLoop::addListeningSocket(const Socket& socket, Server& server) {
 	
-	struct pollfd pfd;
+	struct pollfd	pfd;
 	pfd.fd = socket.getFd();
 	pfd.events = POLLIN;
 	pfd.revents = 0;
 
-	PollEntry entry;
+	PollEntry	entry;
 	entry.pfd = pfd;
 	entry.conn = NULL;
 	entry.server = &server;

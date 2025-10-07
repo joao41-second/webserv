@@ -168,7 +168,6 @@ Config::~Config(void)
 {
 	//delete[] this->_servers;
 	//delete[] this->_sockets;
-	delete[] this->_env;
 	//std::cout << "Config destructed." << std::endl;
 }
 

@@ -60,7 +60,7 @@ Socket::Socket(uint16_t port)
 		throw InputException("Could not set socket to non-blocking");
 	}
 
-    // Listen to port on any address
+    // Listen to port on the address
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	this->_addr.sin_port = htons(port);
@@ -86,7 +86,7 @@ Socket::Socket(void)
 
 Socket::~Socket(void)
 {
-    // close(this->fd); // TODO confirmar se e necessario
+    close(this->_fd); // TODO confirmar se e necessario
 	//std::cout << "Socket destructed." << std::endl;
 }
 

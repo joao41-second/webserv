@@ -77,6 +77,9 @@ private: // TODO Considerar guardar _name como map
 	std::vector<t_methods>	_methods;	// ex: GET
 
 	LocationConfig*	_sub_location;
+
+	// maybe TODO (*.(json|jpeg|bla))
+	// maybe TODO ifs (cookies, bonus)
 };
 
 #endif

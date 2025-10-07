@@ -43,6 +43,8 @@ std::string HttpResponse::open_static_file(std::string file)
 	}
 	if(!file_fd.is_open())
 	{
+		status = true;
+		index = false; 
 		throw Not_found_404();
 	}
 	request += "Content-Type: application/" + file.substr(file.size()-4,file.size()) + ";\r\n"; 
@@ -77,23 +79,64 @@ std::string HttpResponse::open_static_file(std::string file)
 		_request_status = false;
 		status = false;
 	}
-	request +=   data ;
+	request += data ;
+	HTTP_MSG("ola");
 	return (request);
+}
+
+
+std::string HttpResponse::rediect_path(std::string path)
+{
+	std::string file;
+	int size;
+	size = path.find('/'); //TODO  if not 1 not good parsing
+	file = path.substr(size,path.size());
+	size = path.find('/'); 
+	if(size == (int)std::string::npos)
+		return "ola" + file; //TODO the check the local file not implemtn
+	
+
+	// this funsicon is recorsive;
+
+	
+
+	return "ola" + file;
+}
+
+bool HttpResponse::chek_cig_or_static(std::string)
+{
+
+	//TODO  implemtn the check string execute cig or no
+	return (false);
 }
 
 std::string HttpResponse::request_and_response(std::string request)
 {
+	int error;
 	std::string response;
-
+	std::string path;
+	try
+	{
 	HttpParser::new_request(request);
-
-	if(true)
+	}
+	catch(std::exception &e)
+	{
+		error = std::atoi(e.what());
+		std::cout << RED << "error: "<< e.what() << RESET << std::endl;
+	}
+	if(chek_cig_or_static(HttpParser::_pach_info))
 	{
 		// execute in exeve 
 	}
 	else 
 	{
-		// open and send file 
+		// open and send file j
+		path =  rediect_path(HttpParser::_pach_info);
+		HTTP_MSG( "_pach_info: "<< path << std::endl);
+			
+		response = HttpResponse::open_static_file(path);
+		HTTP_MSG("what" << response);
+
 	}	
 	return (response);
 }

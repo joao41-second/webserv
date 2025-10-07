@@ -43,8 +43,8 @@ class HttpParser
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
 	public:   
-	     static std::string _type;
-	     static std::string _pach_info; 
+	      static std::string _type;
+	      static std::string _pach_info; 
 
 	      static void new_request(std::string buffer); 
 	      static std::string get_request_msg();

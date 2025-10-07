@@ -15,6 +15,7 @@
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>
 #include <http/Http_thow.hpp>
+#include <sys/ucontext.h>
 
 std::vector<std::string> HttpParser::env;
 bool HttpParser::_request = false;
@@ -60,7 +61,6 @@ void HttpParser::parsing_request_line(std::string buffer)
 	buffer = buffer.substr(size+1,buffer.size());
 	// set paht info
 	size = buffer.find('?');
-
 	if (size == std::string::npos || size == 0)
 	{
 		query_string = false;
@@ -70,6 +70,8 @@ void HttpParser::parsing_request_line(std::string buffer)
 	}
 	method = buffer.substr(0,size);
 	buffer = buffer.substr(size+1,buffer.size());
+	HttpParser::_pach_info = method;
+	T_MSG(_pach_info, REG_CR2);
 
 	env.push_back("PATH_INFO='" + method + "'");
 	// set query_string if true
@@ -87,6 +89,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 		env.push_back("SERVER_PROTOCOL='" + buffer + "'");
 	else
 	   throw Version_Not_Supported_505();
+	
 	
 }
 

@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/07 12:08:45 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:19:08 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,40 @@ bool	Connection::readRequest() {
 		_readBuffer.append(buffer, bytesRead);
 	}
 
-	if (bytesRead == 0)
-		return true;
-	else {
+	if (bytesRead > 0) {
 		perror("read");
 		return false;
 	}
+	return (true);
 }
 
 bool	Connection::writeResponse() {
 
 }
 
-bool	Connection::processRequest() {
+bool	Connection::isRequestComplete() {
+
+	size_t headerEnd = _readBuffer.find("\r\n\r\n");
+	if (headerEnd == std::string::npos)
+		return (false);
+
+	size_t contentLengthPos = _readBuffer.find("Content-Length:");
+	if (contentLengthPos != std::string::npos) {
+
+		size_t valueStart = _readBuffer.find(":", contentLengthPos) + 1;
+		size_t valueEnd = _readBuffer.find("\r\n", valueStart);
+		std::string lengthStr = _readBuffer.substr(valueStart, valueEnd - valueStart);
+		int contentLength = atoi(lengthStr.c_str());
+
+		size_t bodyStart = headerEnd + 4;
+		size_t bodyLength = _readBuffer.size() - bodyStart;
+		if (bodyLength < (size_t)contentLength)
+			return (false); // Body not fully received
+	}
+	return (true);
+}
+
+std::string	Connection::getReadBuffer() const {
 	
+	return (_readBuffer);
 }

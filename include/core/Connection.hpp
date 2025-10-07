@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/03 15:29:23 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:18:35 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ public:
 
 	bool	readRequest();				// read data from socket
 	bool	writeResponse(); 			// sends data from socket
-	bool	processRequest();			// check if CGI, static || error
+	bool	isRequestComplete();		// check if _readbuffer contains a complete HTTP request
 
+	std::string		getReadBuffer() const;
 private:
 	int				_fd;
 	Server&			_server;

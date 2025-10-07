@@ -6,7 +6,7 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/07 12:02:59 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:17:31 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,9 @@ void	EventLoop::run() {
 				else {
 					if (!entry.conn->readRequest())
 						closeConnection(entry);
-					else
-						entry.pfd.events = POLLOUT;
+					else if (entry.conn->isRequestComplete()) {
+						//send to joao entry.conn->getReadBuffer(); 
+					}
 				}
 			}
 

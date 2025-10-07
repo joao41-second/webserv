@@ -6,12 +6,37 @@
 /*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:37 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/25 22:25:55 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/07 11:26:49 by joseoliv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-class HttpResponse {
-	
+//works with HttpStatus
+
+
+#include <string>
+#ifndef HTTPRESPONSE_HPP
+#define HTTPRESPONSE_HPP
+
+#include <config/debug.hpp>
+#include <http/HttpParser.hpp>
+
+
+class HttpResponse
+{
+
+	private:
+		int size_max;
+	public:
+		bool _request_status;
+		HttpResponse();
+		~HttpResponse();
+		std::string request_and_response(std::string request);
+		std::string open_static_file(std::string feile);
 };
+
+
+#endif
+
+

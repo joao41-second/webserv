@@ -20,7 +20,7 @@
 #include <fcntl.h>		// TODO Ver se ha melhor
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
-//#include <arpa/inet.h>
+#include <arpa/inet.h>	// TODO Ver se ha melhor
 
 class Socket;
 class ServerConfig;
@@ -38,7 +38,7 @@ public:
 	size_t							getServNum(void) const;
 	ServerConfig const				&getServerConfig(uint16_t port) const; // TODO Should the return be const?
 	std::vector<ServerConfig> const	&getServerConfigVector() const; // TODO Should the return be const?
-	std::vector<Socket> const		&getSocketVector() const; // TODO Should the return be const?
+	std::vector<Socket*> const		&getSocketVector() const; // TODO Should the return be const?
 
 	void	setServerConfig(ServerConfig* serv);
 	void	setSockets(void);
@@ -57,7 +57,7 @@ public:
 	};
 private:
 	std::vector<ServerConfig>	_servers;
-	std::vector<Socket>			_sockets; // TODO testar
+	std::vector<Socket*>		_sockets; // TODO testar
 	char	**_env; // TODO Should this be a deep copy?
 
 	ServerConfig const	&getServerConfig(unsigned int num) const; // TODO Should the return be const?

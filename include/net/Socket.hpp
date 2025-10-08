@@ -18,6 +18,7 @@ public:
 
 	int							getFd() const;
 	struct sockaddr_in const	&getAddr() const; // TODO Should the return be const sockaddr_in?
+	uint16_t					getAddrPort() const;
 
 private:
 	struct sockaddr_in	_addr; // TODO testar?

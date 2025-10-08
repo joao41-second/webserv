@@ -15,6 +15,11 @@
 // | GETTERS & SETTERS
 // |----------------------
 
+uint16_t	Socket::getAddrPort() const
+{
+	return(ntohs(this->_addr.sin_port));
+}
+
 struct sockaddr_in const	&Socket::getAddr() const
 {
 	return(this->_addr);

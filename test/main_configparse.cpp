@@ -81,8 +81,11 @@ try // TODO write general exceptions?
 		std::cout << "\tIndex: " << test.getServerConfig(static_cast<uint16_t>(i)).getIndex() << "$" << std::endl;
 		std::cout << "\tMethods: ";
 		print_methods_serv(test.getServerConfig(static_cast<uint16_t>(i)));
-		std::cout << "\tSocket (fd): " << test.getSocketVector()[i - 8000].getFd() << "$" << std::endl;
-		// TODO print socket info!
+		std::cout << "\tSocket (fd): " << test.getSocketVector()[i - 8000]->getFd() << "$" << std::endl;
+		std::cout << "\tSocket (addr):" << std::endl;
+		std::cout << "\t\taddr Family:" << test.getSocketVector()[i - 8000]->getAddr().sin_family << "$" << std::endl;
+		std::cout << "\t\taddr Address:" << inet_ntoa(test.getSocketVector()[i - 8000]->getAddr().sin_addr) << "$" << std::endl; // TODO inet_ntoa() is likely not allowed!
+		std::cout << "\t\taddr Port:" << test.getSocketVector()[i - 8000]->getAddrPort() << "$" << std::endl;
 		// TODO print client_max_body_size!
 		// TODO print error_page info!
 		std::cout << std::endl;

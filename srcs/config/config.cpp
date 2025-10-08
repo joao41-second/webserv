@@ -92,12 +92,12 @@ void	Config::setSockets(void)
 	size_t	sock_num = this->getServNum();
 	for (unsigned int i = 0 ; i < sock_num ; i++)
 	{
-		Socket curr_sock = Socket(this->getServerConfig(i).getPort());
+		Socket *curr_sock = new Socket(this->getServerConfig(i).getPort());
 		this->_sockets.push_back(curr_sock);
 	}
 }
 
-std::vector<Socket> const	&Config::getSocketVector() const
+std::vector<Socket*> const	&Config::getSocketVector() const
 {
 	return (this->_sockets);
 }
@@ -167,7 +167,12 @@ Config::Config(void)
 Config::~Config(void)
 {
 	//delete[] this->_servers;
-	//delete[] this->_sockets;
+	for (std::vector<Socket*>::iterator it = this->_sockets.begin();
+		it != this->_sockets.end(); ++it)
+	{
+		delete (*it);
+	}
+    this->_sockets.clear();
 	//std::cout << "Config destructed." << std::endl;
 }
 

@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/08 19:16:13 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/08 20:25:53 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,23 @@ bool	Connection::readRequest() {
 }
 
 bool	Connection::writeResponse() {
+	
+	ssize_t	bytesWritten;
 
+	if (_writeBuffer.empty())
+		return (true);
+
+	bytesWritten = send(_fd, _writeBuffer.c_str(), _writeBuffer.size(), MSG_NOSIGNAL);
+	if (bytesWritten < 0) {
+        if (errno == EAGAIN || errno == EWOULDBLOCK)
+            return (false);
+        perror("write");
+        return false;
+    } else if (bytesWritten == 0)
+		return (false);
+	_writeBuffer.erase(0, static_cast<size_t>(bytesWritten));
+
+	return (_writeBuffer.empty());
 }
 
 bool	Connection::isRequestComplete() {

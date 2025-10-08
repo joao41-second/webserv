@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connection.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/07 14:18:35 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/08 20:22:54 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <vector>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <errno.h>
 #include <../http/HttpRequest.hpp>
 #include <../http/HttpResponse.hpp>
 #include <../core/Server.hpp>
@@ -34,6 +35,7 @@ public:
 	bool	isRequestComplete();		// check if _readbuffer contains a complete HTTP request
 
 	std::string		getReadBuffer() const;
+	void			setWriteBuffer(HttpResponse response);
 private:
 	int				_fd;
 	Server&			_server;

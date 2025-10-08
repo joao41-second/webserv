@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/08 17:12:25 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/08 20:36:09 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	EventLoop::run() {
 			//ready to write
 			if (entry.pfd.revents & POLLOUT) {
 				
-				if (entry.conn && !entry.conn->writeResponse()) {
+				if (entry.conn && !entry.conn->writeResponse()) {   //TODO
 					closeConnection(entry);
 				}
 			}

@@ -1,0 +1,9 @@
+GET /ficheiro.zip HTTP/1.1
+Host: www.exemplo.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+Accept: */*
+Connection: keep-alive
+Connection keep-alive
+
+ola mundo
+eu estou a adurar esta forma de trabalho

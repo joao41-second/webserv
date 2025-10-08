@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Connection.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/07 14:19:08 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/08 17:12:13 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/core/Connection.hpp"
+#include "../../include/core/Connection.hpp"
 
 Connection::Connection(int fd, Server &server) : _fd(fd), _server(server) {
 	_readBuffer = "";

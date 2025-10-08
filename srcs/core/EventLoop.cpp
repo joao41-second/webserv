@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   EventLoop.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/07 14:17:31 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/08 17:12:25 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/core/EventLoop.hpp"
-#include "../include/core/Server.hpp"
-#include "../include/core/Connection.hpp"
+#include "../../include/core/EventLoop.hpp"
+#include "../../include/core/Server.hpp"
+#include "../../include/core/Connection.hpp"
 
 EventLoop::EventLoop() {}
 

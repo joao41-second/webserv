@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:29 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/07 12:02:41 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/08 17:12:35 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/core/Server.hpp"
-#include "../include/core/EventLoop.hpp"
-#include "../include/net/Socket.hpp"
+#include "../../include/core/Server.hpp"
+#include "../../include/core/EventLoop.hpp"
+#include "../../include/net/Socket.hpp"
 
 Server::Server(const std::vector<ServerConfig>& configs,
 			   const std::vector<Socket>& sockets)

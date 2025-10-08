@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/08 17:12:13 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/08 19:16:13 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool	Connection::readRequest() {
 		perror("read");
 		return false;
 	}
-	return (true);
+	return (true); 
 }
 
 bool	Connection::writeResponse() {

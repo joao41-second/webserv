@@ -195,6 +195,7 @@ void	ServerConfig::setLocationConfig(LocationConfig* loc)
 	if (loc)
 	{
 		this->_locations.push_back(*loc);
+		delete (loc);
 	}
 }
 
@@ -280,7 +281,12 @@ ServerConfig::ServerConfig(void)
 
 ServerConfig::~ServerConfig(void)
 {
-	//delete[] _locations;
+	// Delete vector of Locations
+	/*for (std::vector<LocationConfig>::iterator it = this->_locations.begin();
+		it != this->_locations.end(); ++it)
+	{
+		delete (it);
+	}*/
 	//std::cout << "ServerConfig destructed." << std::endl;
 }
 

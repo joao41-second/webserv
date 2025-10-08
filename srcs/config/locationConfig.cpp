@@ -274,6 +274,7 @@ LocationConfig::LocationConfig(const LocationConfig &orig)
 
 LocationConfig::LocationConfig(std::istream& location_file, std::string line): _sub_location(NULL)
 {
+	this->_client_body_buffer_size = 0;
 	this->parse_location(location_file, line);
 	//std::cout << "LocationConfig constructed." << std::endl;
 }

@@ -10,13 +10,11 @@
 class Socket
 {
 public:
-	Socket();
+	//Socket();
 	Socket(uint16_t port);
-	//Socket(const Socket& copy);
-	//Socket& operator=(const Socket& src);
+	//Socket(const Socket& orig);
+	//Socket& operator=(const Socket& orig);
 	virtual ~Socket();
-
-	//void	close();
 
 	int							getFd() const;
 	struct sockaddr_in const	&getAddr() const; // TODO Should the return be const sockaddr_in?

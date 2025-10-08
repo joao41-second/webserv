@@ -33,8 +33,13 @@ int		Socket::getFd() const
 {
 	if (this != &orig)
 	{
+		if (this->_fd >= 0)
+		{
+			close(this->_fd);
+		}
 		this->_fd = orig._fd;
 		this->_addr = orig._addr;
+		orig._fd = -1;
 	}
 	//std::cout << "Socket assignment copy-constructed." << std::endl;
 	return (*this);
@@ -42,12 +47,13 @@ int		Socket::getFd() const
 
 Socket::Socket(const Socket &orig): _fd(orig._fd), _addr(orig._addr)
 {
+	orig._fd = -1;
 	//std::cout << "Socket copy-constructed." << std::endl;
 }*/
 
 Socket::Socket(uint16_t port)
 {
-    // Create socket
+	// Create socket
 	this->_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (this->_fd < 0)
 	{
@@ -60,13 +66,13 @@ Socket::Socket(uint16_t port)
 		throw InputException("Could not set socket to non-blocking");
 	}
 
-    // Listen to port on the address
+	// Listen to port on the address
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	this->_addr.sin_port = htons(port);
 
-    // Bind port to socket
-	if (bind(this->_fd, (struct sockaddr*)&this->_addr, sizeof(sockaddr)) < 0)
+	// Bind port to socket
+	if (bind(this->_fd, (struct sockaddr*)&this->_addr, sizeof(this->_addr)) < 0)
 	{
 		throw InputException("Failed to bind to the port");
 	}
@@ -79,14 +85,15 @@ Socket::Socket(uint16_t port)
 	//std::cout << "Socket constructed." << std::endl;
 }
 
-Socket::Socket(void)
+/*Socket::Socket(void)
 {
 	//std::cout << "Socket constructed." << std::endl;
-}
+}*/
 
 Socket::~Socket(void)
 {
-    close(this->_fd); // TODO confirmar se e necessario
+	if (this->_fd >= 0)
+		close(this->_fd);
 	//std::cout << "Socket destructed." << std::endl;
 }
 

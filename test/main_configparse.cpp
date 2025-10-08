@@ -2,6 +2,7 @@
 #include "../include/config/config.hpp"
 #include "../include/config/serverConfig.hpp"
 #include "../include/config/locationConfig.hpp"
+#include "../include/net/Socket.hpp"
 
 static void	print_methods_loc(LocationConfig const location)
 {
@@ -80,6 +81,10 @@ try // TODO write general exceptions?
 		std::cout << "\tIndex: " << test.getServerConfig(static_cast<uint16_t>(i)).getIndex() << "$" << std::endl;
 		std::cout << "\tMethods: ";
 		print_methods_serv(test.getServerConfig(static_cast<uint16_t>(i)));
+		std::cout << "\tSocket (fd): " << test.getSocketVector()[i - 8000].getFd() << "$" << std::endl;
+		// TODO print socket info!
+		// TODO print client_max_body_size!
+		// TODO print error_page info!
 		std::cout << std::endl;
 		for (unsigned int j = 0; j < test.getServerConfig(static_cast<uint16_t>(i)).getLocNum(); j++)
 		{
@@ -90,9 +95,6 @@ try // TODO write general exceptions?
 			std::cout << "\t\tCGI Pass: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getPass() << "$" << std::endl;
 			std::cout << "\t\tClient body buffer size: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getClientBuffSize() << "$" << std::endl;
 			std::cout << "\t\tAlias: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getAlias() << "$" << std::endl;
-			// TODO print socket info!
-			// TODO print client_max_body_size!
-			// TODO print error_page info!
 			std::cout << "\t\tMethods: ";
 			print_methods_loc(test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j));
 

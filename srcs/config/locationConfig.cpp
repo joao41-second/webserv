@@ -168,10 +168,10 @@ void	LocationConfig::setPass(std::string pass)
 void	LocationConfig::setClientBuffSize(std::string buff_size)
 {
 	char *safeguard;
-	this->_client_body_buffer_size = std::strtoul(buff_size.c_str(), &safeguard, 10); // TODO Alterar se for para usar unsigned int
+	this->_client_body_buffer_size = std::strtoul(buff_size.c_str(), &safeguard, 10);
 	if (*safeguard != '\0')
 	{
-		throw InputException("Invalid client_body_buffer_size"); // TODO be more specific!
+		throw InputException("Invalid client_body_buffer_size");
 	}
 }
 

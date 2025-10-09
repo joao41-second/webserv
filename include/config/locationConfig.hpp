@@ -14,6 +14,7 @@
 #include <climits>
 
 #include <vector>
+#include <map>
 #include <algorithm>
 #include <typeinfo>
 
@@ -67,11 +68,12 @@ public:
 	void	parse_location(std::istream& location_file, std::string line);
 
 private: // TODO Considerar guardar _name como map
+	//std::map<std::string, std::string>	_name;	// ex:	/post_body :: directory	;	*.bla :: files
 	std::string		_name;		// ex: /directory
 	std::string		_root;		// ex: joao-rib/
 	std::string		_index;		// ex: joao.bad_extension
 	std::string		_cgi_pass;	// ex: test_linux/ubuntu_cgi_tester
-	unsigned long	_client_body_buffer_size; // TODO appropriate type?
+	unsigned long	_client_body_buffer_size;
 	bool			_alias;		// TODO should accept string?
 
 	std::vector<t_methods>	_methods;	// ex: GET

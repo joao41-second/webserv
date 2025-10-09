@@ -14,6 +14,7 @@
 #include <climits>
 
 #include <vector>
+#include <map>
 #include <algorithm>
 #include <typeinfo>
 
@@ -36,6 +37,8 @@ public:
 	std::string const		&getRoot(void) const;
 	std::string const		&getIndex(void) const;
 	uint16_t				getPort(void) const;
+	unsigned long			getClientMaxSize(void) const;
+	std::string const		&getErrorPage(int error_num) const;
 	size_t					getLocNum(void) const;
 	//LocationConfig const	&getLocationConfig(std::string name) const; // TODO Location should be found by name...
 	LocationConfig const	&getLocationConfig(unsigned int num) const; // TODO Should the return be const Location?
@@ -44,6 +47,8 @@ public:
 	void	setLocationConfig(LocationConfig* loc);
 	void	setMethods(std::string const str);
 	void	setOneMethod(std::string word);
+	void	setOneErrorPage(std::string error_page_str);
+	void	setClientMaxSize(std::string max_size);
 	void	setPort(std::string str);
 	void	setIndex(std::string index);
 	void	setRoot(std::string root);
@@ -58,8 +63,9 @@ private:
 	uint16_t		_port;		// ex: 8000
 	std::string		_root;		// ex: ./joao-rib
 	std::string		_index;		// ex: index.html
-	// TODO client_max_body_size
-	// TODO error_page (map)
+	unsigned long	_client_max_body_size; // ex: 10M // TODO should this be size_t?
+
+	std::map<int, std::string>	_error_pages; // ex: 404 , ./www/errors/404.html
 
 	std::vector<t_methods>		_methods;	// ex: GET
 	std::vector<LocationConfig>	_locations;

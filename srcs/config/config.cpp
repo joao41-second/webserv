@@ -167,13 +167,6 @@ Config::Config(void)
 
 Config::~Config(void)
 {
-	// Delete vector of servers
-	/*for (std::vector<ServerConfig>::iterator it = this->_servers.begin();
-		it != this->_servers.end(); ++it)
-	{
-		delete (it);
-	}*/
-
 	// Delete vector of sockets
 	for (std::vector<Socket*>::iterator it = this->_sockets.begin();
 		it != this->_sockets.end(); ++it)

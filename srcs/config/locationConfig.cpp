@@ -76,9 +76,9 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 				throw InputException("Empty field (allow_methods)"); // TODO be more specific!
 			}
 		}
-		else if (line.compare(0, 24, "client_body_buffer_size") == 0)
+		else if (line.compare(0, 23, "client_body_buffer_size") == 0)
 		{
-			this->setClientBuffSize(trim_whitespace(line.substr(24)));
+			this->setClientBuffSize(trim_whitespace(line.substr(23)));
 		}
 		else if (line.compare(0, 5, "alias") == 0)
 		{

@@ -74,6 +74,14 @@ void	ServerConfig::parse_server(std::istream& server_file) // TODO Write functio
 				throw InputException("Empty field (allow_methods)"); // TODO be more specific!
 			}
 		}
+		else if (line.compare(0, 20, "client_max_body_size") == 0)
+		{
+			this->setClientMaxSize(trim_whitespace(line.substr(20)));
+		}
+		else if (line.compare(0, 10, "error_page") == 0)
+		{
+			this->setOneErrorPage(trim_whitespace(line.substr(10)));
+		}
 	}
 }
 
@@ -153,6 +161,44 @@ void	ServerConfig::setOneMethod(std::string word)
 	throw InputException("Invalid method");
 }
 
+void	ServerConfig::setOneErrorPage(std::string error_page_str)
+{
+	char 			*safeguard;
+	unsigned long	error_num = static_cast<int>(std::strtoul(error_page_str.substr(0, 3).c_str(), &safeguard, 10));
+	if (*safeguard != '\0')
+	{
+		throw InputException("Invalid Error Page in configuration file");
+	}
+
+	this->_error_pages[error_num] = trim_whitespace(error_page_str.substr(3));
+}
+
+void	ServerConfig::setClientMaxSize(std::string max_size)
+{
+	size_t	lim = max_size.size() - 1;
+	char	unit = max_size[lim];
+	char	*safeguard;
+
+	this->_client_max_body_size = std::strtoul(max_size.substr(0, lim).c_str(), &safeguard, 10);
+	if (*safeguard != '\0')
+	{
+		throw InputException("Invalid client_max_body_size");
+	}
+
+	if (unit == 'k' || unit == 'K')
+	{
+		this->_client_max_body_size *= 1024;
+	}
+	else if (unit == 'm' || unit == 'M')
+	{
+		this->_client_max_body_size *= 1024 * 1024;
+	}
+	else if (unit == 'g' || unit == 'G')
+	{
+		this->_client_max_body_size *= 1024 * 1024 * 1024;
+	}
+}
+
 void	ServerConfig::setPort(std::string str)
 {
 	if (str == "")
@@ -211,6 +257,17 @@ size_t	ServerConfig::getLocNum(void) const
 	return(this->_locations.size());
 }
 
+std::string const		&ServerConfig::getErrorPage(int error_num) const
+{
+	std::map<int, std::string>::const_iterator it = this->_error_pages.find(error_num);
+	if (it != this->_error_pages.end())
+	{
+		return (it->second);
+	}
+
+	return(this->_error_pages.find(100)->second); // TODO It should return the default error! Define the default error!
+}
+
 std::string const	&ServerConfig::getName(void) const
 {
 	return(this->_name);
@@ -236,6 +293,11 @@ std::string const	&ServerConfig::getIndex(void) const
 	return(this->_index);
 }
 
+unsigned long	ServerConfig::getClientMaxSize(void) const
+{
+	return(this->_client_max_body_size);
+}
+
 // |----------------------
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
@@ -251,6 +313,8 @@ ServerConfig &ServerConfig::operator = (const ServerConfig &orig)
 		this->_port = orig._port;
 		this->_root = orig._root;
 		this->_index = orig._index;
+		this->_client_max_body_size = orig._client_max_body_size;
+		this->_error_pages = orig._error_pages;
 	}
 	//std::cout << "ServerConfig assignment copy-constructed." << std::endl;
 	return (*this);
@@ -264,6 +328,8 @@ ServerConfig::ServerConfig(const ServerConfig &orig)
 
 ServerConfig::ServerConfig(std::istream& server_file)
 {
+	this->_client_max_body_size = 0;
+	this->setOneErrorPage("100 ./www/errors/100.html"); // TODO define the default error
 	this->parse_server(server_file);
 	//std::cout << "ServerConfig constructed." << std::endl;
 }
@@ -276,17 +342,13 @@ ServerConfig::ServerConfig(void)
 	this->setPort("");
 	this->setRoot("");
 	this->setIndex("");
+	this->setOneErrorPage("100 ./www/errors/100.html"); // TODO define the default error
+	this->_client_max_body_size = 0;
 	//std::cout << "ServerConfig constructed." << std::endl;
 }
 
 ServerConfig::~ServerConfig(void)
 {
-	// Delete vector of Locations
-	/*for (std::vector<LocationConfig>::iterator it = this->_locations.begin();
-		it != this->_locations.end(); ++it)
-	{
-		delete (it);
-	}*/
 	//std::cout << "ServerConfig destructed." << std::endl;
 }
 

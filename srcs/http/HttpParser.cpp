@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 14:29:33 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/09 12:05:27 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ bool HttpParser::_request = false;
 std::string HttpParser::mensage = "";
 std::string HttpParser::_pach_info = "";
 std::string HttpParser::_type = "";
+int HttpParser::_http_page_error = 0;
 
 HttpParser::HttpParser(void)
 {

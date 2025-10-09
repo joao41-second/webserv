@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:03:54 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/03 16:36:30 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/09 12:06:39 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ void HTTP_test_request()
         file.close();
 	try{
 		HttpResponse ok;
-		ok.request_and_response(conteudo);
+
+		HTTP_MSG("what" <<   ok.request_and_response(conteudo));
 	}
 	catch(std::exception &e)
 	{
@@ -81,7 +82,7 @@ int main(int argc ,char ** argv,char**env)
 	(void)argc;
 	(void)env;
 	//execute(env);
-	//config_and_http_implemente(argc,argv,env);
+	config_and_http_implemente(argc,argv,env);
 	HTTP_test_request();
         return 0;
 }

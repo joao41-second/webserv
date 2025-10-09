@@ -6,11 +6,10 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:38 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/09 12:14:30 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/26 13:33:19 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstdlib>
 #include <http/HttpResponse.hpp>
 #include <http/HttpParser.hpp>
 #include <http/Http_thow.hpp>
@@ -64,6 +63,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		request = "";
 	if(index == false)
 	{
+	 T_MSG("oi", RED);
 	 index = true;
 	}
 	
@@ -80,6 +80,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		status = false;
 	}
 	request += data ;
+	HTTP_MSG("ola");
 	return (request);
 }
 
@@ -116,54 +117,31 @@ std::string HttpResponse::request_and_response(std::string request)
 	std::string path;
 	try
 	{
-		HttpParser::new_request(request);
-		if(chek_cig_or_static(HttpParser::_pach_info))
-		{
-		// execute in exeve 
-		}
-		else 
-		{
-		// open and send file j
-		path =  rediect_path(HttpParser::_pach_info);
-		HTTP_MSG( "_pach_info: "<< path << std::endl);	
-		response = HttpResponse::open_static_file(path);
-		}
+	HttpParser::new_request(request);
 	}
 	catch(std::exception &e)
 	{
 		error = std::atoi(e.what());
-		return (gener_erro_page(HttpParser::_http_page_error, e.what()));
 		std::cout << RED << "error: "<< e.what() << RESET << std::endl;
 	}
-		
+	if(chek_cig_or_static(HttpParser::_pach_info))
+	{
+		// execute in exeve 
+	}
+	else 
+	{
+		// open and send file j
+		path =  rediect_path(HttpParser::_pach_info);
+		HTTP_MSG( "_pach_info: "<< path << std::endl);
+			
+		response = HttpResponse::open_static_file(path);
+		HTTP_MSG("what" << response);
+
+	}	
 	return (response);
 }
 
 
-std::string HttpResponse::gener_erro_page(int error, std::string status)
+std::string HttpResponse::gener_erro_page()
 {
-	std::string response, mens;
-	std::stringstream ok;
-	std::stringstream size;
-	ok << error;
-	
-	response = "HTTP/1.1 " + ok.str() + " " + status + "\n";
-	response += "Content-Type: text/html; charset=UTF-8 \n";
-	// response = TODO add host the server  
-	mens = 
-    "<!DOCTYPE html>\n"
-    "<html>\n"
-    "<head><title>" + ok.str() + status + "</title></head>\n"
-    "<body>\n"
-    "<h1>" + status + "</h1>\n"
-    "<hr>\n"
-    "</body>\n"
-    "</html>\n";
-	size << mens.size();
-	response += "Content-Length: " + size.str()+"\n\n";
-	response += mens;
-	return response;
-
-
 }
-

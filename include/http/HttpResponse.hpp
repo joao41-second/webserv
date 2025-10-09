@@ -40,6 +40,7 @@ class HttpResponse
 		std::string rediect_path(std::string);
 		std::string request_and_response(std::string request);
 		std::string open_static_file(std::string feile);
+		std::string gener_erro_page(int error,std::string status);
 };
 
 

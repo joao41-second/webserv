@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/08 20:22:54 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/09 10:59:34 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ public:
 	Connection(const Connection &copy);
 
 	bool	readRequest();				// read data from socket
-	bool	writeResponse(); 			// sends data from socket
+	bool	writeResponse(); 			// sends data to socket
 	bool	isRequestComplete();		// check if _readbuffer contains a complete HTTP request
 
 	std::string		getReadBuffer() const;

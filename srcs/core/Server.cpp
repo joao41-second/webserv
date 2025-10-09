@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:29 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/08 17:12:35 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/09 10:57:26 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Server::~Server() {
 	std::cout << "Server stopped." << std::endl;
 }
 
-void Server::launch() {
+void	Server::launch() {
 
 	EventLoop	loop;
 

@@ -6,7 +6,7 @@
 /*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:38 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/09 12:14:30 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/09 12:19:02 by jperpct          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,15 @@ std::string HttpResponse::request_and_response(std::string request)
 		else 
 		{
 		// open and send file j
-		path =  rediect_path(HttpParser::_pach_info);
-		HTTP_MSG( "_pach_info: "<< path << std::endl);	
-		response = HttpResponse::open_static_file(path);
+			path =  rediect_path(HttpParser::_pach_info);
+			HTTP_MSG( "_pach_info: "<< path << std::endl);	
+			response = HttpResponse::open_static_file(path);
 		}
 	}
 	catch(std::exception &e)
 	{
 		error = std::atoi(e.what());
+		//TODO not inplemente use paths setd in config
 		return (gener_erro_page(HttpParser::_http_page_error, e.what()));
 		std::cout << RED << "error: "<< e.what() << RESET << std::endl;
 	}

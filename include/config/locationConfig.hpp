@@ -44,6 +44,7 @@ public:
 	virtual ~LocationConfig();
 
 	std::string const		&getName(void) const;
+	//std::map<std::string, std::string> const	&getNameMap(void) const; // TODO
 	std::string const		&getRoot(void) const;
 	std::string const		&getIndex(void) const;
 	std::string const		&getPass(void) const;
@@ -59,6 +60,7 @@ public:
 	void	setIndex(std::string index);
 	void	setRoot(std::string root);
 	void	setName(std::string name);
+	//void	setOneName(std::string name); // TODO
 	void	setPass(std::string pass);
 	void	setClientBuffSize(std::string buff_size);
 	void	setAlias(bool alias);

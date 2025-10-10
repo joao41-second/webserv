@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/09 11:09:16 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/10 17:45:05 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ EventLoop::~EventLoop() {
 }
 
 void	EventLoop::addListeningSocket(const Socket& socket, Server& server) {
-	
+
 	struct pollfd	pfd;
 	pfd.fd = socket.getFd();
 	pfd.events = POLLIN;
@@ -44,7 +44,7 @@ void	EventLoop::addListeningSocket(const Socket& socket, Server& server) {
 void	EventLoop::run() {
 
 	while (true) {
-		
+
 		if (!_pollEntries.empty()) {
 			int errorCode = poll(&_pollEntries[0].pfd, _pollEntries.size(), 5000);
 			if (errorCode < 0) {
@@ -64,14 +64,14 @@ void	EventLoop::run() {
 						closeConnection(entry);
 					else if (entry.conn->isRequestComplete()) {
 						//send to joao entry.conn->getReadBuffer();
-						entry.pfd.events = 
+						entry.pfd.events = POLLIN;
 					}
 				}
 			}
 
 			//ready to write
 			if (entry.pfd.revents & POLLOUT) {
-				
+
 				if (entry.conn && !entry.conn->writeResponse()) {
 					closeConnection(entry);
 				}

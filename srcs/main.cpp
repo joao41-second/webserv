@@ -12,6 +12,7 @@
 
 #include "../include/core/Server.hpp"
 #include "../include/config/ServerConfig.hpp"
+#include "../include/config/Config.hpp"
 #include "../include/net/Socket.hpp"
 
 int	main(int argc, char **argv, char **envp)

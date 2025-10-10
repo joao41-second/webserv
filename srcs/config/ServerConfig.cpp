@@ -265,7 +265,7 @@ std::string const		&ServerConfig::getErrorPage(int error_num) const
 		return (it->second);
 	}
 
-	return(this->_error_pages.find(100)->second); // Default error page
+	return(this->_error_pages.find(404)->second); // Default error page
 }
 
 std::string const	&ServerConfig::getName(void) const
@@ -329,7 +329,7 @@ ServerConfig::ServerConfig(const ServerConfig &orig)
 ServerConfig::ServerConfig(std::istream& server_file)
 {
 	this->_client_max_body_size = 0;
-	this->setOneErrorPage("100 ./www/errors/100.html"); // TODO define the default error
+	this->setOneErrorPage("404 ./www/errors/404.html"); // TODO define the default error
 	this->parse_server(server_file);
 	//std::cout << "ServerConfig constructed." << std::endl;
 }
@@ -342,7 +342,7 @@ ServerConfig::ServerConfig(void)
 	this->setPort("");
 	this->setRoot("");
 	this->setIndex("");
-	this->setOneErrorPage("100 ./www/errors/100.html"); // TODO define the default error
+	this->setOneErrorPage("404 ./www/errors/404.html"); // TODO define the default error
 	this->_client_max_body_size = 0;
 	//std::cout << "ServerConfig constructed." << std::endl;
 }

@@ -36,7 +36,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 		}
 
 		// TODO Consider using a switch for this
-		if (line.compare(0, 8, "location") == 0)
+		if (line.compare(0, 8, "location") == 0) // TODO locmap
 		{
 			this->setSubLocation(new LocationConfig(location_file, line));
 			if (!this->checkSubLocation())

@@ -25,7 +25,7 @@ void	ServerConfig::parse_server(std::istream& server_file) // TODO Write functio
 		}
 
 		// TODO Consider using a switch for this
-		if (line.compare(0, 8, "location") == 0)
+		if (line.compare(0, 8, "location") == 0) // TODO locmap
 		{
 			this->setLocationConfig(new LocationConfig(server_file, line));
 
@@ -33,6 +33,7 @@ void	ServerConfig::parse_server(std::istream& server_file) // TODO Write functio
 			{
 				throw InputException("Input error (location)"); // TODO be more specific!
 			}
+			// TODO if subLocation exists, add one more to map? Or return boolean for the same effect?
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
 		{
@@ -173,6 +174,17 @@ void	ServerConfig::setOneErrorPage(std::string error_page_str)
 	this->_error_pages[error_num] = trim_whitespace(error_page_str.substr(3));
 }
 
+void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
+{
+	if (loc)
+	{
+		std::string	locname = loc.getName();
+		//this->_locations.push_back(*loc); // TODO locmap
+		this->_locations[locname] = *loc; // TODO testar
+		delete (loc);
+	}
+}
+
 void	ServerConfig::setClientMaxSize(std::string max_size)
 {
 	size_t	lim = max_size.size() - 1;
@@ -236,20 +248,20 @@ void	ServerConfig::setName(std::string name)
 	this->_name = name;
 }
 
-void	ServerConfig::setLocationConfig(LocationConfig* loc)
-{
-	if (loc)
-	{
-		this->_locations.push_back(*loc);
-		delete (loc);
-	}
-}
-
 LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 {
 	if (num >= this->_locations.size())
 		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
-	return(this->_locations[num]);
+
+	std::map<std::string, LocationConfig>::iterator it = this->_locations.begin()
+	unsigned int i = 0;
+	while (i < num)
+	{
+		i++;
+		it++;
+	}
+
+	return(this->_locations[it->first]); // TODO testar
 }
 
 size_t	ServerConfig::getLocNum(void) const

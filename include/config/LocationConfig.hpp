@@ -44,14 +44,14 @@ public:
 	virtual ~LocationConfig();
 
 	std::string const		&getName(void) const;
-	//std::map<std::string, std::string> const	&getNameMap(void) const; // TODO
+	//std::map<std::string, std::string> const	&getNameMap(void) const; // TODO locmap
 	std::string const		&getRoot(void) const;
 	std::string const		&getIndex(void) const;
 	std::string const		&getPass(void) const;
 	unsigned long			getClientBuffSize(void) const;
 	bool const				&getAlias(void) const;
-	bool					checkSubLocation(void) const;
-	LocationConfig const	&getSubLocation(void) const;
+	bool					checkSubLocation(void) const; // TODO locmap
+	LocationConfig const	&getSubLocation(void) const; // TODO locmap
 	bool					hasMethod(t_methods method) const;
 
 	void	setSubLocation(LocationConfig* loc);
@@ -60,7 +60,7 @@ public:
 	void	setIndex(std::string index);
 	void	setRoot(std::string root);
 	void	setName(std::string name);
-	//void	setOneName(std::string name); // TODO
+	//void	setOneName(std::string name); // TODO locmap
 	void	setPass(std::string pass);
 	void	setClientBuffSize(std::string buff_size);
 	void	setAlias(bool alias);
@@ -80,7 +80,7 @@ private: // TODO Considerar guardar _name como map
 
 	std::vector<t_methods>	_methods;	// ex: GET
 
-	LocationConfig*	_sub_location;
+	LocationConfig*	_sub_location; // TODO locmap
 
 	// maybe TODO (*.(json|jpeg|bla))
 	// maybe TODO ifs (cookies, bonus)

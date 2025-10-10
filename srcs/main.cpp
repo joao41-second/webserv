@@ -23,10 +23,10 @@ int	main(int argc, char **argv, char **envp)
 
 	Config conf_info(argv[1], envp);
 
-	//std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-	//std::vector<Socket>		sockets = conf_info.getSocketVector();
+	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+	std::vector<Socket*>		sockets = conf_info.getSocketVector();
 
-	Server server(conf_info.getServerConfigVector(), conf_info.getSocketVector());
+	Server server(configs, sockets);
 	server.run();
 
 	return 0;

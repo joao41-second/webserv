@@ -1,7 +1,7 @@
 #include "../../include/net/Socket.hpp"
-#include "../../include/config/config.hpp"
-#include "../../include/config/serverConfig.hpp"
-#include "../../include/config/locationConfig.hpp"
+#include "../../include/config/Config.hpp"
+#include "../../include/config/ServerConfig.hpp"
+#include "../../include/config/LocationConfig.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS

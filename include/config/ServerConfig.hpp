@@ -21,7 +21,7 @@
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
 
-#include "./locationConfig.hpp"
+#include "./LocationConfig.hpp"
 
 class ServerConfig
 {
@@ -65,10 +65,11 @@ private:
 	std::string		_index;		// ex: index.html
 	unsigned long	_client_max_body_size; // ex: 10M // TODO should this be size_t?
 
-	std::map<int, std::string>	_error_pages; // ex: 404 , ./www/errors/404.html // TODO definir default error_page!
+	std::map<int, std::string>	_error_pages; // ex: 404 , ./www/errors/404.html
 
 	std::vector<t_methods>		_methods;	// ex: GET
 	std::vector<LocationConfig>	_locations;
+	//std::map<std::string, LocationConfig> // TODO sub-location é mais um elemento deste map, key é nome
 };
 
 #endif

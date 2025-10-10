@@ -21,7 +21,7 @@
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
 
-#include "./locationConfig.hpp"
+#include "./LocationConfig.hpp"
 
 class ServerConfig
 {
@@ -69,6 +69,7 @@ private:
 
 	std::vector<t_methods>		_methods;	// ex: GET
 	std::vector<LocationConfig>	_locations;
+	//std::map<std::string, LocationConfig> // TODO sub-location é mais um elemento deste map, key é nome
 };
 
 #endif

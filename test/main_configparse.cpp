@@ -1,7 +1,7 @@
 //#include "./_config_include/*.hpp" TODO header names
-#include "../include/config/config.hpp"
-#include "../include/config/serverConfig.hpp"
-#include "../include/config/locationConfig.hpp"
+#include "../include/config/Config.hpp"
+#include "../include/config/ServerConfig.hpp"
+#include "../include/config/LocationConfig.hpp"
 #include "../include/net/Socket.hpp"
 
 static void	print_methods_loc(LocationConfig const location)

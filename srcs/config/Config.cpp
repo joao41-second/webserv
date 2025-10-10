@@ -1,5 +1,5 @@
-#include "../../include/config/config.hpp"
-#include "../../include/config/serverConfig.hpp"
+#include "../../include/config/Config.hpp"
+#include "../../include/config/ServerConfig.hpp"
 #include "../../include/net/Socket.hpp"
 
 // |----------------------

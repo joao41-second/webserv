@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:29 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/10 18:04:08 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/10 19:01:39 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../../include/core/EventLoop.hpp"
 
 Server::Server(const std::vector<ServerConfig>& configs,
-			   const std::vector<Socket>& sockets)
+			   const std::vector<Socket*>& sockets)
 	: _configs(configs), _listeningSockets(sockets)
 {
 	std::cout << "Server initialized with " 

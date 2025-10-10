@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:44:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/10 18:07:58 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/10 19:03:50 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ public:
 	EventLoop();
 	~EventLoop();
 
-	void	addListeningSocket(const Socket& socket, Server& server);
+	void	addListeningSocket(const Socket* socket, Server& server);
 	void	run();
 
 private:
 	struct PollEntry {
 		struct pollfd		pfd;
 		struct sockaddr_in	socketAddr;
-		Server*				server;
+		Server*				server;		//probably a leak here
 		Connection*			conn;
 	};
 

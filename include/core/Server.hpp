@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:46 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/10 18:05:19 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/10 18:54:17 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,18 @@
 class Server {
 
 public:
-	Server(const std::vector<ServerConfig>& configs,
-			const std::vector<Socket>& sockets);
+    Server(const std::vector<ServerConfig> &configs,
+	    const std::vector<Socket*> &sockets);
 	~Server();
 
-	void	launch(); //invoca o loop do eventLoop
-	void	closeConnection();
+	void launch(); // invoca o loop do eventLoop
+	void closeConnection();
 
-	std::vector<ServerConfig>	getConfig();
+	std::vector<ServerConfig> getConfig();
 
 private:
-	std::vector<ServerConfig>	_configs;
-	std::vector<Socket> 		_listeningSockets;
+	std::vector<ServerConfig> _configs;
+	std::vector<Socket*> _listeningSockets;
 };
 
 /*

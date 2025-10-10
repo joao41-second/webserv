@@ -6,14 +6,14 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:44:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/09 10:58:43 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/10 18:07:58 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "../include/net/Socket.hpp"
-#include <vector>
+#include "Server.hpp"
+#include "Connection.hpp"
 #include <poll.h>
 #include <unistd.h>
 

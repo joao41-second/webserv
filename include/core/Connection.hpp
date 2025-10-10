@@ -6,22 +6,17 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/09 10:59:34 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/10 18:08:13 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <errno.h>
 #include <../http/HttpRequest.hpp>
 #include <../http/HttpResponse.hpp>
 #include <../core/Server.hpp>
 
-//Connection represents each client connected to the server
+class Sever;
 
 class Connection {
 

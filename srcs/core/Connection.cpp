@@ -6,11 +6,12 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/09 11:05:16 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/10 18:08:27 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/core/Connection.hpp"
+#include "../../include/core/Server.hpp"
 
 Connection::Connection(int fd, Server &server) : _fd(fd), _server(server) {
 	_readBuffer = "";

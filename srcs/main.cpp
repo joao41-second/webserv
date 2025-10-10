@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/10 11:21:11 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/10 11:24:00 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	main(int argc, char *argv[]) {
     server.run();
 
     return 0;
-
 
 /*#include <core/Server.hpp>
 #include <config/ServerConfig.hpp>

@@ -24,16 +24,15 @@ void	ServerConfig::parse_server(std::istream& server_file) // TODO Write functio
 			break ;
 		}
 
-		// TODO Consider using a switch for this
 		if (line.compare(0, 8, "location") == 0) // TODO locmap
 		{
-			this->setLocationConfig(new LocationConfig(server_file, line));
+			this->setOneLocationConfig(new LocationConfig(server_file, line));
 
-			if (this->_locations.empty())
+			/*if (this->getLocationConfig(this->getLocNum() - 1).checkSubLocation())
 			{
-				throw InputException("Input error (location)"); // TODO be more specific!
-			}
-			// TODO if subLocation exists, add one more to map? Or return boolean for the same effect?
+				this-setOneLocationConfig(this->getLocationConfig(this->getLocNum() - 1).getSubLocation());
+			}*/
+			// TODO if subLocation exists, add one more to map, or allocate the pointer
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
 		{
@@ -178,7 +177,7 @@ void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
 {
 	if (loc)
 	{
-		std::string	locname = loc.getName();
+		std::string	locname = loc->getName();
 		//this->_locations.push_back(*loc); // TODO locmap
 		this->_locations[locname] = *loc; // TODO testar
 		delete (loc);
@@ -253,7 +252,7 @@ LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 	if (num >= this->_locations.size())
 		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
 
-	std::map<std::string, LocationConfig>::iterator it = this->_locations.begin()
+	std::map<std::string, LocationConfig>::const_iterator it = this->_locations.begin(); // TODO should this be const?
 	unsigned int i = 0;
 	while (i < num)
 	{
@@ -261,7 +260,7 @@ LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 		it++;
 	}
 
-	return(this->_locations[it->first]); // TODO testar
+	return(it->second); // TODO testar
 }
 
 size_t	ServerConfig::getLocNum(void) const
@@ -348,7 +347,7 @@ ServerConfig::ServerConfig(std::istream& server_file)
 
 ServerConfig::ServerConfig(void)
 {
-	this->setLocationConfig(NULL);
+	this->setOneLocationConfig(NULL);
 	this->setMethods("");
 	this->setName("");
 	this->setPort("");

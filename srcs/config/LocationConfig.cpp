@@ -35,13 +35,12 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			break ;
 		}
 
-		// TODO Consider using a switch for this
 		if (line.compare(0, 8, "location") == 0) // TODO locmap
 		{
 			this->setSubLocation(new LocationConfig(location_file, line));
 			if (!this->checkSubLocation())
 			{
-				throw InputException("Input error (location)"); // TODO be more specific!
+				throw InputException("Input error (sub-location)"); // TODO be more specific!
 			}
 		}
 		else if (line.compare(0, 4, "root") == 0)
@@ -185,6 +184,7 @@ void	LocationConfig::setSubLocation(LocationConfig* loc)
 	if (loc)
 	{
 		this->_sub_location = loc;
+		this->_sub_location->setName(this->getName() + "/" + this->_sub_location->getName());
 	}
 }
 
@@ -249,11 +249,14 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 {
 	if (this != &orig)
 	{
-		if (orig._sub_location)
+		if (orig._sub_location) // TODO fix this
+		{
 			this->_sub_location = orig._sub_location->clone();
+		}
 		else
+		{
 			this->_sub_location = NULL;
-
+		}
 		this->_name = orig._name;
 		this->_root = orig._root;
 		this->_index = orig._index;

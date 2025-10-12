@@ -10,7 +10,7 @@
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	LocationConfig::parse_location(std::istream& location_file, std::string line) // TODO Write function
+void	LocationConfig::parse_location(std::istream& location_file, std::string line)
 {
 	// Set name
 	unsigned int range = line.size();

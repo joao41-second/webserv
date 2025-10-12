@@ -10,7 +10,7 @@
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	ServerConfig::parse_server(std::istream& server_file) // TODO Write function
+void	ServerConfig::parse_server(std::istream& server_file)
 {
 	std::string		line;
 
@@ -180,7 +180,7 @@ void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
 	{
 		std::string	locname = loc->getName();
 		this->_locations[locname] = *loc;
-		//this->_locations[locname] = *loc->clone(); // TODO testar
+		//this->_locations[locname] = *loc->clone(); // TODO revisitar após testes
 		delete (loc);
 	}
 }
@@ -346,7 +346,7 @@ ServerConfig::ServerConfig(const ServerConfig &orig)
 ServerConfig::ServerConfig(std::istream& server_file)
 {
 	this->_client_max_body_size = 0;
-	this->setOneErrorPage("404 ./www/errors/404.html"); // TODO define the default error
+	this->setOneErrorPage("404 ./www/errors/404.html");
 	this->parse_server(server_file);
 	//std::cout << "ServerConfig constructed." << std::endl;
 }
@@ -359,7 +359,7 @@ ServerConfig::ServerConfig(void)
 	this->setPort("");
 	this->setRoot("");
 	this->setIndex("");
-	this->setOneErrorPage("404 ./www/errors/404.html"); // TODO define the default error
+	this->setOneErrorPage("404 ./www/errors/404.html");
 	this->_client_max_body_size = 0;
 	//std::cout << "ServerConfig constructed." << std::endl;
 }

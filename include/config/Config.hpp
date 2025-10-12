@@ -24,7 +24,6 @@
 
 class Socket;
 class ServerConfig;
-//class LocationConfig;
 
 class Config
 {

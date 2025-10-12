@@ -1,4 +1,3 @@
-//#include "./_config_include/*.hpp" TODO header names
 #include "../include/config/Config.hpp"
 #include "../include/config/ServerConfig.hpp"
 #include "../include/config/LocationConfig.hpp"
@@ -58,7 +57,7 @@ static void	print_methods_serv(ServerConfig const serv)
 
 int	main(int argc, char **argv, char **envp)
 {
-try // TODO write general exceptions?
+try
 {
 	if (argc != 2)
 	{
@@ -84,7 +83,8 @@ try // TODO write general exceptions?
 		std::cout << "\tSocket (fd): " << test.getSocketVector()[i - 8000]->getFd() << "$" << std::endl;
 		std::cout << "\tSocket (addr): " << std::endl;
 		std::cout << "\t\taddr Family: " << test.getSocketVector()[i - 8000]->getAddr().sin_family << "$" << std::endl;
-		std::cout << "\t\taddr Address: " << inet_ntoa(test.getSocketVector()[i - 8000]->getAddr().sin_addr) << "$" << std::endl; // TODO inet_ntoa() is likely not allowed!
+		std::cout << "\t\taddr Address: " << inet_ntoa(test.getSocketVector()[i - 8000]->getAddr().sin_addr) << "$" << std::endl;
+		// Note: inet_ntoa() is likely not allowed!
 		std::cout << "\t\taddr Port: " << test.getSocketVector()[i - 8000]->getAddrPort() << "$" << std::endl;
 		std::cout << "\tClient max body size: " << test.getServerConfig(static_cast<uint16_t>(i)).getClientMaxSize() << "$" << std::endl;
 		for (unsigned int j = 400; j < 403; j++)

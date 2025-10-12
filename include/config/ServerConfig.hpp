@@ -70,7 +70,7 @@ private:
 
 	std::map<int, std::string>	_error_pages; // ex: 404 , ./www/errors/404.html
 
-	std::map<std::string, LocationConfig>	_locations; // TODO locmap: sub-location é mais um elemento deste map, key é nome
+	std::map<std::string, LocationConfig>	_locations;
 };
 
 #endif

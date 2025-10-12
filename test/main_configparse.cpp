@@ -82,10 +82,10 @@ try // TODO write general exceptions?
 		std::cout << "\tMethods: ";
 		print_methods_serv(test.getServerConfig(static_cast<uint16_t>(i)));
 		std::cout << "\tSocket (fd): " << test.getSocketVector()[i - 8000]->getFd() << "$" << std::endl;
-		std::cout << "\tSocket (addr):" << std::endl;
-		std::cout << "\t\taddr Family:" << test.getSocketVector()[i - 8000]->getAddr().sin_family << "$" << std::endl;
-		std::cout << "\t\taddr Address:" << inet_ntoa(test.getSocketVector()[i - 8000]->getAddr().sin_addr) << "$" << std::endl; // TODO inet_ntoa() is likely not allowed!
-		std::cout << "\t\taddr Port:" << test.getSocketVector()[i - 8000]->getAddrPort() << "$" << std::endl;
+		std::cout << "\tSocket (addr): " << std::endl;
+		std::cout << "\t\taddr Family: " << test.getSocketVector()[i - 8000]->getAddr().sin_family << "$" << std::endl;
+		std::cout << "\t\taddr Address: " << inet_ntoa(test.getSocketVector()[i - 8000]->getAddr().sin_addr) << "$" << std::endl; // TODO inet_ntoa() is likely not allowed!
+		std::cout << "\t\taddr Port: " << test.getSocketVector()[i - 8000]->getAddrPort() << "$" << std::endl;
 		std::cout << "\tClient max body size: " << test.getServerConfig(static_cast<uint16_t>(i)).getClientMaxSize() << "$" << std::endl;
 		for (unsigned int j = 400; j < 403; j++)
 		{

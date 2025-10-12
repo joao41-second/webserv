@@ -229,16 +229,24 @@ bool	LocationConfig::checkSubLocation(void) const
 
 LocationConfig const	&LocationConfig::getSubLocation(void) const
 {
-	// TODO potential error case?
-	//if (!this->_sub_location)
-	//	throw InputException("Sub_Location cannot contain another sub_location");
 	return(*this->_sub_location);
 }
 
 LocationConfig*	LocationConfig::clone(void) const
 {
 	//std::cout << "LocationConfig was cloned" << std::endl;
-	return (new LocationConfig(*this));
+	//return (new LocationConfig(*this));
+
+	LocationConfig *copy = new LocationConfig(*this);
+	if (this->_sub_location)
+	{
+		copy->_sub_location = this->_sub_location->clone();
+	}
+	else
+	{
+		copy->_sub_location = NULL;
+	}
+	return (copy);
 }
 
 // |----------------------
@@ -249,7 +257,12 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 {
 	if (this != &orig)
 	{
-		if (orig._sub_location) // TODO fix this
+		if (this->_sub_location)
+		{
+			delete (this->_sub_location);
+		}
+
+		if (orig._sub_location)
 		{
 			this->_sub_location = orig._sub_location->clone();
 		}
@@ -269,7 +282,7 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 	return (*this);
 }
 
-LocationConfig::LocationConfig(const LocationConfig &orig)
+LocationConfig::LocationConfig(const LocationConfig &orig): _sub_location(NULL)
 {
 	*this = orig;
 	//std::cout << "LocationConfig copy-constructed." << std::endl;
@@ -283,10 +296,9 @@ LocationConfig::LocationConfig(std::istream& location_file, std::string line): _
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
 
-LocationConfig::LocationConfig(void)
+LocationConfig::LocationConfig(void): _sub_location(NULL)
 {
 	this->setMethods("");
-	this->setSubLocation(NULL);
 	this->setName("");
 	this->setRoot("");
 	this->setIndex("");

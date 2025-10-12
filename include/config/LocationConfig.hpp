@@ -44,14 +44,13 @@ public:
 	virtual ~LocationConfig();
 
 	std::string const		&getName(void) const;
-	//std::map<std::string, std::string> const	&getNameMap(void) const; // TODO locmap
 	std::string const		&getRoot(void) const;
 	std::string const		&getIndex(void) const;
 	std::string const		&getPass(void) const;
 	unsigned long			getClientBuffSize(void) const;
 	bool const				&getAlias(void) const;
-	bool					checkSubLocation(void) const; // TODO locmap
-	LocationConfig const	&getSubLocation(void) const; // TODO locmap
+	bool					checkSubLocation(void) const;
+	LocationConfig const	&getSubLocation(void) const;
 	bool					hasMethod(t_methods method) const;
 
 	void	setSubLocation(LocationConfig* loc);
@@ -60,7 +59,6 @@ public:
 	void	setIndex(std::string index);
 	void	setRoot(std::string root);
 	void	setName(std::string name);
-	//void	setOneName(std::string name); // TODO locmap
 	void	setPass(std::string pass);
 	void	setClientBuffSize(std::string buff_size);
 	void	setAlias(bool alias);
@@ -69,8 +67,7 @@ public:
 
 	void	parse_location(std::istream& location_file, std::string line);
 
-private: // TODO Considerar guardar _name como map
-	//std::map<std::string, std::string>	_name;	// ex:	/post_body , directory	;	*.bla , files
+private:
 	std::string		_name;		// ex: /directory
 	std::string		_root;		// ex: joao-rib/
 	std::string		_index;		// ex: joao.bad_extension
@@ -80,7 +77,7 @@ private: // TODO Considerar guardar _name como map
 
 	std::vector<t_methods>	_methods;	// ex: GET
 
-	LocationConfig*	_sub_location; // TODO locmap
+	LocationConfig*	_sub_location;
 
 	// maybe TODO (*.(json|jpeg|bla))
 	// maybe TODO ifs (cookies, bonus)

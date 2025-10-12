@@ -24,15 +24,16 @@ void	ServerConfig::parse_server(std::istream& server_file) // TODO Write functio
 			break ;
 		}
 
-		if (line.compare(0, 8, "location") == 0) // TODO locmap
+		if (line.compare(0, 8, "location") == 0)
 		{
-			this->setOneLocationConfig(new LocationConfig(server_file, line));
+			LocationConfig	*tmp_loc = new LocationConfig(server_file, line);
+			std::string		tmp_name = tmp_loc->getName();
+			this->setOneLocationConfig(tmp_loc);
 
-			/*if (this->getLocationConfig(this->getLocNum() - 1).checkSubLocation())
+			if (this->_locations[tmp_name].checkSubLocation())
 			{
-				this-setOneLocationConfig(this->getLocationConfig(this->getLocNum() - 1).getSubLocation());
-			}*/
-			// TODO if subLocation exists, add one more to map, or allocate the pointer
+				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation().clone());
+			}
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
 		{
@@ -178,8 +179,8 @@ void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
 	if (loc)
 	{
 		std::string	locname = loc->getName();
-		//this->_locations.push_back(*loc); // TODO locmap
-		this->_locations[locname] = *loc; // TODO testar
+		this->_locations[locname] = *loc;
+		//this->_locations[locname] = *loc->clone(); // TODO testar
 		delete (loc);
 	}
 }
@@ -247,12 +248,17 @@ void	ServerConfig::setName(std::string name)
 	this->_name = name;
 }
 
+std::map<std::string, LocationConfig>	&ServerConfig::getLocMap(void)
+{
+	return (this->_locations);
+}
+
 LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 {
 	if (num >= this->_locations.size())
 		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
 
-	std::map<std::string, LocationConfig>::const_iterator it = this->_locations.begin(); // TODO should this be const?
+	std::map<std::string, LocationConfig>::const_iterator it = this->_locations.begin();
 	unsigned int i = 0;
 	while (i < num)
 	{
@@ -260,7 +266,7 @@ LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 		it++;
 	}
 
-	return(it->second); // TODO testar
+	return(it->second);
 }
 
 size_t	ServerConfig::getLocNum(void) const

@@ -30,7 +30,7 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			std::string		tmp_name = tmp_loc->getName();
 			this->setOneLocationConfig(tmp_loc);
 
-			if (this->_locations[tmp_name].checkSubLocation())
+			if (this->getLocMap()[tmp_name].checkSubLocation())
 			{
 				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation().clone());
 			}

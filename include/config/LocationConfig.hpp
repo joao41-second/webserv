@@ -79,8 +79,11 @@ private:
 
 	LocationConfig*	_sub_location;
 
-	// maybe TODO (*.(json|jpeg|bla))
+	// maybe TODO (*.(json|jpeg|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
+	// if (compare("*.(")) --> adicionar os restantes usando | e ) como delimitadores relevantes
+
 	// maybe TODO ifs (cookies, bonus)
+	// if ($cookie_<name> [operator] <value>) { <action> }
 };
 
 #endif
@@ -94,5 +97,38 @@ Aplica as regras dessa location, por exemplo:
 Sobrescreve o root global para aquela rota.
 Decide se é CGI ou ficheiro estático.
 Define o index se for diretório.
+
+*/
+
+/*
+//Example 1
+if ($cookie_user) {
+    return 200 "Welcome back, $cookie_user!";
+}
+
+//Example 2
+if ($cookie_sessionid = "") {
+    return 403;
+}
+
+//Example 3
+if ($cookie_auth = "") {
+    return 302 /login;
+}
+
+//Example 4
+if ($cookie_sessionid = "") {
+    add_header Set-Cookie "sessionid=$request_id; Path=/;";
+}
+
+//Example 5
+if ($cookie_nocache) {
+    set $no_cache 1;
+}
+
+//Example 6
+if ($cookie_role = "admin") {
+    return 302 /admin_dashboard;
+}
 
 */

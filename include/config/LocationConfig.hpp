@@ -49,12 +49,18 @@ public:
 	std::string const		&getPass(void) const;
 	unsigned long			getClientBuffSize(void) const;
 	bool const				&getAlias(void) const;
-	bool					checkSubLocation(void) const;
-	LocationConfig const	&getSubLocation(void) const;
+	bool					checkSubLocation(void) const; // TODO vector de sublocations - tbw
+	LocationConfig			&getSubLocation(void); // TODO vector de sublocations - tbw
+	LocationConfig const	&getSubLocation(void) const; // TODO vector de sublocations - tbw
 	bool					hasMethod(t_methods method) const;
 
-	void	setSubLocation(LocationConfig* loc);
+	std::vector<t_methods> const					&getMethods() const;
+	std::map<std::string, LocationConfig>			&getSubLocationMap(void); // TODO vector de sublocations - Written
+	std::map<std::string, LocationConfig> const		&getSubLocationMap(void) const; // TODO vector de sublocations - Written
+
+	void	setSubLocation(LocationConfig* loc); // TODO vector de sublocations - tbw
 	void	setMethods(std::string const str);
+	void	copyMethods(std::vector<t_methods> const &orig);
 	void	setOneMethod(std::string word);
 	void	setIndex(std::string index);
 	void	setRoot(std::string root);
@@ -63,7 +69,7 @@ public:
 	void	setClientBuffSize(std::string buff_size);
 	void	setAlias(bool alias);
 
-	LocationConfig*	clone(void) const;
+	LocationConfig*	clone(void) const; // TODO vector de sublocations - tbw
 
 	void	parse_location(std::istream& location_file, std::string line);
 
@@ -75,11 +81,13 @@ private:
 	unsigned long	_client_body_buffer_size; // TODO should this be size_t?
 	bool			_alias;		// TODO should accept string?
 
-	std::vector<t_methods>	_methods;	// ex: GET
+	std::vector<t_methods>		_methods;	// ex: GET
 
 	LocationConfig*	_sub_location;
+	std::map<std::string, LocationConfig>	_sub_locations; // TODO vector de sublocations - Written
 
-	// maybe TODO (*.(json|jpeg|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
+	// TODO *.(jpeg|json|bla) -> dar throw
+	// maybe TODO (*.(jpeg|json|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
 	// if (compare("*.(")) --> adicionar os restantes usando | e ) como delimitadores relevantes
 
 	// maybe TODO ifs (cookies, bonus)

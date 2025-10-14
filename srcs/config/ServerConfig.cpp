@@ -28,8 +28,21 @@ void	ServerConfig::parse_server(std::istream& server_file)
 		{
 			LocationConfig	*tmp_loc = new LocationConfig(server_file, line);
 			std::string		tmp_name = tmp_loc->getName();
+			// Set location in map
 			this->setOneLocationConfig(tmp_loc);
 
+			// If location or sub-location do not contain methods, inherit from server
+			if (this->getLocMap()[tmp_name].getMethods().empty())
+			{
+				this->getLocMap()[tmp_name].copyMethods(this->getMethods());
+			}
+			if (this->getLocMap()[tmp_name].checkSubLocation() &&
+				this->getLocMap()[tmp_name].getSubLocation().getMethods().empty())
+			{
+				this->getLocMap()[tmp_name].getSubLocation().copyMethods(this->getMethods());
+			}
+
+			// Set sub-locations in map, with appropriate names
 			if (this->getLocMap()[tmp_name].checkSubLocation())
 			{
 				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation().clone());
@@ -313,6 +326,11 @@ std::string const	&ServerConfig::getIndex(void) const
 unsigned long	ServerConfig::getClientMaxSize(void) const
 {
 	return(this->_client_max_body_size);
+}
+
+std::vector<t_methods> const	&ServerConfig::getMethods() const
+{
+	return (this->_methods);
 }
 
 // |----------------------

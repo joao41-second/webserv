@@ -12,22 +12,26 @@
 
 #include "../include/core/Server.hpp"
 #include "../include/config/ServerConfig.hpp"
+#include "../include/config/Config.hpp"
 #include "../include/net/Socket.hpp"
 
-int	main(int argc, char *argv[]) {
-	
-	if (argc != 2) {
-		std::cout << "ERROR! This program requires exactly one argument." << std::endl;
+int	main(int argc, char **argv, char **envp)
+{
+	if (argc != 2)
+	{
+		throw InputException("The program should use the template './webserv [configuration file]'");
 	}
 
-	std::vector<ServerConfig> configs = //ConfigParser::parse("webserv.conf");
-    std::vector<Socket> sockets = //SocketFactory::someListeningSockets(configs);
+	Config conf_info(argv[1], envp);
 
-    Server server(configs, sockets);
-    server.run();
+	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+	std::vector<Socket*>		sockets = conf_info.getSocketVector();
 
-    return 0;
+	Server server(configs, sockets);
+	server.run();
 
+	return 0;
+}
 
 /*#include <core/Server.hpp>
 #include <config/ServerConfig.hpp>
@@ -61,4 +65,3 @@ int	main(int argc, char **argv, char **env)
 	{
 		std::cout << e.what() <<std::endl;
 	}*/
-}

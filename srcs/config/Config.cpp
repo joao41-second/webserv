@@ -1,5 +1,5 @@
-#include "../../include/config/config.hpp"
-#include "../../include/config/serverConfig.hpp"
+#include "../../include/config/Config.hpp"
+#include "../../include/config/ServerConfig.hpp"
 #include "../../include/net/Socket.hpp"
 
 // |----------------------
@@ -43,7 +43,7 @@ std::string capitalize(std::string str)
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	Config::parse_file(std::string filename) // TODO Write function
+void	Config::parse_file(std::string filename)
 {
 	std::ifstream	config_file(filename.c_str());
 	if (!config_file.is_open())
@@ -60,7 +60,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 			continue ;
 
 		ServerConfig* curr_server = new ServerConfig();
-		curr_server->parse_server(config_file); // TODO Add error case (ex.: bool)
+		curr_server->parse_server(config_file);
 
 		// Set the server into the vector
 		this->setServerConfig(curr_server);
@@ -76,7 +76,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 
 void	Config::setEnv(char **env)
 {
-	this->_env = env; // TODO Should this be a deep copy?
+	this->_env = env;
 }
 
 void	Config::setServerConfig(ServerConfig* serv)

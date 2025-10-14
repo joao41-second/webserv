@@ -1,7 +1,6 @@
-//#include "./_config_include/*.hpp" TODO header names
-#include "../include/config/config.hpp"
-#include "../include/config/serverConfig.hpp"
-#include "../include/config/locationConfig.hpp"
+#include "../include/config/Config.hpp"
+#include "../include/config/ServerConfig.hpp"
+#include "../include/config/LocationConfig.hpp"
 #include "../include/net/Socket.hpp"
 
 static void	print_methods_loc(LocationConfig const location)
@@ -58,7 +57,7 @@ static void	print_methods_serv(ServerConfig const serv)
 
 int	main(int argc, char **argv, char **envp)
 {
-try // TODO write general exceptions?
+try
 {
 	if (argc != 2)
 	{
@@ -82,16 +81,16 @@ try // TODO write general exceptions?
 		std::cout << "\tMethods: ";
 		print_methods_serv(test.getServerConfig(static_cast<uint16_t>(i)));
 		std::cout << "\tSocket (fd): " << test.getSocketVector()[i - 8000]->getFd() << "$" << std::endl;
-		std::cout << "\tSocket (addr):" << std::endl;
-		std::cout << "\t\taddr Family:" << test.getSocketVector()[i - 8000]->getAddr().sin_family << "$" << std::endl;
-		std::cout << "\t\taddr Address:" << inet_ntoa(test.getSocketVector()[i - 8000]->getAddr().sin_addr) << "$" << std::endl; // TODO inet_ntoa() is likely not allowed!
-		std::cout << "\t\taddr Port:" << test.getSocketVector()[i - 8000]->getAddrPort() << "$" << std::endl;
+		std::cout << "\tSocket (addr): " << std::endl;
+		std::cout << "\t\taddr Family: " << test.getSocketVector()[i - 8000]->getAddr().sin_family << "$" << std::endl;
+		std::cout << "\t\taddr Address: " << inet_ntoa(test.getSocketVector()[i - 8000]->getAddr().sin_addr) << "$" << std::endl;
+		// Note: inet_ntoa() is likely not allowed!
+		std::cout << "\t\taddr Port: " << test.getSocketVector()[i - 8000]->getAddrPort() << "$" << std::endl;
 		std::cout << "\tClient max body size: " << test.getServerConfig(static_cast<uint16_t>(i)).getClientMaxSize() << "$" << std::endl;
 		for (unsigned int j = 400; j < 403; j++)
 		{
 			std::cout << "\tError page " << j << ": " << test.getServerConfig(static_cast<uint16_t>(i)).getErrorPage(j) << "$" << std::endl;
 		}
-		// TODO print error_page info!
 		std::cout << std::endl;
 		for (unsigned int j = 0; j < test.getServerConfig(static_cast<uint16_t>(i)).getLocNum(); j++)
 		{
@@ -120,57 +119,6 @@ try // TODO write general exceptions?
 			std::cout << std::endl;
 		}
 	}
-
-	// Create a socket: int socket(int domain, int type, int protocol);
-	// AF_INET → IPv4 (addresses like 192.168.1.10)
-	// SOCK_STREAM → TCP (reliable, connection-oriented byte stream)
-	/*int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0)
-	{
-		throw InputException("Could not create socket");
-	}*/
-
-	
-	/*pollfd	serverFD;
-
-	serverFD.fd = socket(AF_INET, SOCK_STREAM, 0); // TODO meter dentro de um simples int
-
-	if ( serverFD.fd < 0 )
-		throw std::runtime_error( "Error creating socket." );
-	
-	// F_GETFL → get socket's status flags
-	int curr_flags = fcntl(sock, F_GETFL, 0); // int fcntl(int fd, int cmd, ... (arg) );
-	if (curr_flags == -1)
-	{
-		throw std::runtime_error("Could not get socket's flags");
-	}
-	// F_SETFL → set socket's status flags ; O_NONBLOCK → Set socket's flag to non-blocking
-	if (fcntl(serverFD.fd, F_SETFL, curr_flags | O_NONBLOCK) == -1) // Getting current flags ensures that nothing is overwritten
-	{
-		throw fcntlError("Could not set socket to non-blocking");
-	}*/
-	
-
-	// Listen to port 8000 on any address
-	/*sockaddr_in sockaddr;
-	sockaddr.sin_family = AF_INET;
-	sockaddr.sin_addr.s_addr = INADDR_ANY;
-	sockaddr.sin_port = htons(test.getServerConfig(8000).getPort()); // TODO Which server gets priority?
-
-	if (bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0)
-	{
-		throw InputException("Failed to bind to the port");
-	}
-
-	// Start listening. Hold at most 10 connections in the queue
-	if (listen(sockfd, 10) < 0)
-	{
-		throw InputException("Failed to listen on socket");
-	}*/
-
-	// Close the connections
-	//close(connection);
-	//close(sockfd);
 }
 catch (std::exception &e)
 {

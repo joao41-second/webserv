@@ -25,8 +25,8 @@ public:
 	uint16_t					getAddrPort() const;
 
 private:
-	struct sockaddr_in	_addr;
-	int					_fd;
+	struct sockaddr_in	_addr; // TODO testar?
+	int					_fd; // TODO testar
 };
 
 #endif

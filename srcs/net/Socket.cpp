@@ -1,7 +1,11 @@
 #include "../../include/net/Socket.hpp"
+<<<<<<< HEAD
 #include "../../include/config/Config.hpp"
 #include "../../include/config/ServerConfig.hpp"
 #include "../../include/config/LocationConfig.hpp"
+=======
+#include "../../include/config/config.hpp"
+>>>>>>> Parser_request_http
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -15,11 +19,14 @@
 // | GETTERS & SETTERS
 // |----------------------
 
+<<<<<<< HEAD
 uint16_t	Socket::getAddrPort() const
 {
 	return(ntohs(this->_addr.sin_port));
 }
 
+=======
+>>>>>>> Parser_request_http
 struct sockaddr_in const	&Socket::getAddr() const
 {
 	return(this->_addr);
@@ -38,6 +45,7 @@ int		Socket::getFd() const
 {
 	if (this != &orig)
 	{
+<<<<<<< HEAD
 		if (this->_fd >= 0)
 		{
 			close(this->_fd);
@@ -45,6 +53,10 @@ int		Socket::getFd() const
 		this->_fd = orig._fd;
 		this->_addr = orig._addr;
 		orig._fd = -1;
+=======
+		this->_fd = orig._fd;
+		this->_addr = orig._addr;
+>>>>>>> Parser_request_http
 	}
 	//std::cout << "Socket assignment copy-constructed." << std::endl;
 	return (*this);
@@ -52,13 +64,20 @@ int		Socket::getFd() const
 
 Socket::Socket(const Socket &orig): _fd(orig._fd), _addr(orig._addr)
 {
+<<<<<<< HEAD
 	orig._fd = -1;
+=======
+>>>>>>> Parser_request_http
 	//std::cout << "Socket copy-constructed." << std::endl;
 }*/
 
 Socket::Socket(uint16_t port)
 {
+<<<<<<< HEAD
 	// Create socket
+=======
+    // Create socket
+>>>>>>> Parser_request_http
 	this->_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (this->_fd < 0)
 	{
@@ -71,13 +90,22 @@ Socket::Socket(uint16_t port)
 		throw InputException("Could not set socket to non-blocking");
 	}
 
+<<<<<<< HEAD
 	// Listen to port on the address
+=======
+    // Listen to port on any address
+>>>>>>> Parser_request_http
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	this->_addr.sin_port = htons(port);
 
+<<<<<<< HEAD
 	// Bind port to socket
 	if (bind(this->_fd, (struct sockaddr*)&this->_addr, sizeof(this->_addr)) < 0)
+=======
+    // Bind port to socket
+	if (bind(this->_fd, (struct sockaddr*)&this->_addr, sizeof(sockaddr)) < 0)
+>>>>>>> Parser_request_http
 	{
 		throw InputException("Failed to bind to the port");
 	}
@@ -90,6 +118,7 @@ Socket::Socket(uint16_t port)
 	//std::cout << "Socket constructed." << std::endl;
 }
 
+<<<<<<< HEAD
 /*Socket::Socket(void)
 {
 	//std::cout << "Socket constructed." << std::endl;
@@ -99,6 +128,16 @@ Socket::~Socket(void)
 {
 	if (this->_fd >= 0)
 		close(this->_fd);
+=======
+Socket::Socket(void)
+{
+	//std::cout << "Socket constructed." << std::endl;
+}
+
+Socket::~Socket(void)
+{
+    // close(this->fd); // TODO confirmar se e necessario
+>>>>>>> Parser_request_http
 	//std::cout << "Socket destructed." << std::endl;
 }
 

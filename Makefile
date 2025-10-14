@@ -18,7 +18,7 @@ SRCS_ALL :=	\
 
 SRCS := $(SRC_DIR)/main.cpp  $(SRCS_ALL)
 
-SRCS_T := ./test/main.cpp 
+SRCS_T := ./test/main.cpp  ./test/test_http_requet.cpp 
 
 # Convert source files to object files
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))

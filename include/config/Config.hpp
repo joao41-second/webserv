@@ -20,9 +20,10 @@
 #include <fcntl.h>		// TODO Ver se ha melhor
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
-#include <arpa/inet.h>	// TODO Ver se ha melhor
-
-class Socket;
+//#include <arpa/inet.h>//
+//
+#include <iostream>
+#include <cstring>
 class ServerConfig;
 //class LocationConfig;
 
@@ -56,12 +57,8 @@ public:
 		std::string _msg;
 	};
 private:
-	std::vector<ServerConfig>	_servers;
-	std::vector<Socket*>		_sockets;
-
-	char	**_env;
-
-	ServerConfig const	&getServerConfig(unsigned int num) const; // TODO Should the return be const?
+	std::vector<ServerConfig>	_servers; // TODO construir um getter para isto
+	//char	**env; // TODO environmental variables
 };
 
 bool	isDelim(char c);

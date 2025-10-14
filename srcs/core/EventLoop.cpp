@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/10 19:02:47 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/14 14:04:37 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	EventLoop::run() {
 						closeConnection(entry);
 					else if (entry.conn->isRequestComplete()) {
 						//send to joao entry.conn->getReadBuffer();
+						std::cout << entry.conn->getReadBuffer() << std::endl;
 						entry.pfd.events = POLLIN;
 					}
 				}

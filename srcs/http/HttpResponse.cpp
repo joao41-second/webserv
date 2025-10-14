@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:38 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/26 13:33:19 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/14 14:08:25 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <http/HttpResponse.hpp>
 #include <http/HttpParser.hpp>
-#include <http/Http_thow.hpp>
+#include <http/Http_throw.hpp>
 #include <core/Server.hpp>
 #include <iostream>
 #include <net/Socket.hpp>

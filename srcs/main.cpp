@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/10 18:52:02 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/14 14:21:26 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,11 @@ int	main(int argc, char **argv, char **envp)
 	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
 	std::vector<Socket*>		sockets = conf_info.getSocketVector();
 
+	std::cout << "helooooo" << std::endl;
 	Server server(configs, sockets);
 	server.launch();
 
-	return 0;
+	return (0);
 }
 
 /*#include <core/Server.hpp>

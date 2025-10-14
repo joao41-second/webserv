@@ -6,15 +6,13 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/10 18:08:13 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/14 14:15:03 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <../http/HttpRequest.hpp>
-#include <../http/HttpResponse.hpp>
-#include <../core/Server.hpp>
+#include "Server.hpp"
 
 class Sever;
 
@@ -30,7 +28,7 @@ public:
 	bool	isRequestComplete();		// check if _readbuffer contains a complete HTTP request
 
 	std::string		getReadBuffer() const;
-	void			setWriteBuffer(HttpResponse response);
+	//void			setWriteBuffer();
 private:
 	int				_fd;
 	Server&			_server;

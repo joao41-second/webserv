@@ -83,7 +83,8 @@ private:
 
 	LocationConfig*	_sub_location; // TODO vector de sublocations
 
-	// maybe TODO (*.(json|jpeg|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
+	// TODO *.(jpeg|json|bla) -> dar throw
+	// maybe TODO (*.(jpeg|json|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
 	// if (compare("*.(")) --> adicionar os restantes usando | e ) como delimitadores relevantes
 
 	// maybe TODO ifs (cookies, bonus)

@@ -35,7 +35,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			break ;
 		}
 
-		if (line.compare(0, 8, "location") == 0) // TODO locmap
+		if (line.compare(0, 8, "location") == 0)
 		{
 			this->setSubLocation(new LocationConfig(location_file, line));
 			if (!this->checkSubLocation())
@@ -188,7 +188,7 @@ void	LocationConfig::setAlias(bool alias)
 	this->_alias = alias;
 }
 
-void	LocationConfig::setSubLocation(LocationConfig* loc)
+void	LocationConfig::setSubLocation(LocationConfig* loc) // TODO vector de sublocations
 {
 	if (loc)
 	{
@@ -232,7 +232,7 @@ std::vector<t_methods> const	&LocationConfig::getMethods() const
 	return (this->_methods);
 }
 
-bool	LocationConfig::checkSubLocation(void) const
+bool	LocationConfig::checkSubLocation(void) const // TODO vector de sublocations
 {
 	if (this->_sub_location)
 	{
@@ -241,20 +241,19 @@ bool	LocationConfig::checkSubLocation(void) const
 	return(false);
 }
 
-LocationConfig	&LocationConfig::getSubLocation(void)
+LocationConfig	&LocationConfig::getSubLocation(void) // TODO vector de sublocations
 {
 	return(*this->_sub_location);
 }
 
-LocationConfig const	&LocationConfig::getSubLocation(void) const
+LocationConfig const	&LocationConfig::getSubLocation(void) const // TODO vector de sublocations
 {
 	return(*this->_sub_location);
 }
 
-LocationConfig*	LocationConfig::clone(void) const
+LocationConfig*	LocationConfig::clone(void) const // TODO vector de sublocations
 {
 	//std::cout << "LocationConfig was cloned" << std::endl;
-	//return (new LocationConfig(*this));
 
 	LocationConfig *copy = new LocationConfig(*this);
 	if (this->_sub_location)
@@ -272,7 +271,7 @@ LocationConfig*	LocationConfig::clone(void) const
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
 
-LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
+LocationConfig &LocationConfig::operator = (const LocationConfig &orig) // TODO vector de sublocations
 {
 	if (this != &orig)
 	{
@@ -301,13 +300,13 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 	return (*this);
 }
 
-LocationConfig::LocationConfig(const LocationConfig &orig): _sub_location(NULL)
+LocationConfig::LocationConfig(const LocationConfig &orig): _sub_location(NULL) // TODO vector de sublocations
 {
 	*this = orig;
 	//std::cout << "LocationConfig copy-constructed." << std::endl;
 }
 
-LocationConfig::LocationConfig(std::istream& location_file, std::string line): _sub_location(NULL)
+LocationConfig::LocationConfig(std::istream& location_file, std::string line): _sub_location(NULL) // TODO vector de sublocations
 {
 	this->_client_body_buffer_size = 0;
 	this->setAlias(false);
@@ -315,7 +314,7 @@ LocationConfig::LocationConfig(std::istream& location_file, std::string line): _
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
 
-LocationConfig::LocationConfig(void): _sub_location(NULL)
+LocationConfig::LocationConfig(void): _sub_location(NULL) // TODO vector de sublocations
 {
 	this->setMethods("");
 	this->setName("");
@@ -327,7 +326,7 @@ LocationConfig::LocationConfig(void): _sub_location(NULL)
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
 
-LocationConfig::~LocationConfig(void)
+LocationConfig::~LocationConfig(void) // TODO vector de sublocations
 {
 	if (this->_sub_location)
 		delete this->_sub_location;

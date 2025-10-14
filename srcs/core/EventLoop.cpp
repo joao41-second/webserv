@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/14 14:04:37 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/14 16:04:31 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	EventLoop::run() {
 					}
 				}
 			}
-
+			std::cout << "yo" << std::endl;
 			//ready to write
 			if (entry.pfd.revents & POLLOUT) {
 

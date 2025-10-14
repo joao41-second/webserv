@@ -3,22 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   CgiHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 14:03:03 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/03 16:20:05 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/14 15:42:19 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "config/color.hpp"
-#include "config/locationconfig.hpp"
-#include "core/Server.hpp"
-#include "http/HttpParser.hpp"
-#include <cgi/cgi.hpp>
+#include "../../include/config/color.hpp"
+#include "../../include/config/LocationConfig.hpp"
+#include "../../include/core/Server.hpp"
+#include "../../include/http/HttpParser.hpp"
+#include "../../include/cgi/cgi.hpp"
 #include <ostream>
 #include <cstring>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <dirent.h>
+#include <sys/wait.h>
 
 Cgi::Cgi(){}
 Cgi::~Cgi(){}

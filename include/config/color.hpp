@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COLOR_HPP
+#define COLOR_HPP
 
 // Texto padrão ANSI
 #define RESET       "\033[0m"
@@ -31,4 +32,6 @@
 #define BGMAGENTA   "\033[45m"
 #define BGCYAN      "\033[46m"
 #define BGWHITE     "\033[47m"
+
+#endif // COLORS_HPP
 

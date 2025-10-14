@@ -6,17 +6,17 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:38 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/14 14:36:35 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/14 15:56:24 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
-#include <http/HttpResponse.hpp>
-#include <http/HttpParser.hpp>
-#include <http/Http_throw.hpp>
-#include <core/Server.hpp>
+#include "../../include/http/HttpResponse.hpp"
+#include "../../include/http/HttpParser.hpp"
+#include "../../include/http/Http_throw.hpp"
+#include "../../include/core/Server.hpp"
 #include <iostream>
-#include <net/Socket.hpp>
+#include "../../include/net/Socket.hpp"
 #include <ostream>
 #include <string>
 #include <sstream>
@@ -106,7 +106,7 @@ bool HttpResponse::chek_cig_or_static(std::string)
 
 std::string HttpResponse::request_and_response(std::string request)
 {
-	int error;
+	//int error;
 	std::string response;
 	std::string path;
 	try
@@ -126,7 +126,7 @@ std::string HttpResponse::request_and_response(std::string request)
 	}
 	catch (std::exception &e)
 	{
-		error = std::atoi(e.what());
+		//error = std::atoi(e.what());
 		// TODO not inplemente use paths setd in config
 		return (gener_erro_page(HttpParser::_http_page_error, e.what()));
 		std::cout << RED << "error: " << e.what() << RESET << std::endl;

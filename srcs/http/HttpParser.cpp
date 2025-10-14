@@ -6,15 +6,15 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/14 14:35:16 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/14 15:57:35 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config/color.hpp"
-#include <core/Server.hpp>
-#include <http/HttpParser.hpp>
+#include "../../include/core/Server.hpp"
+#include "../../include/http/HttpParser.hpp"
 #include <config/debug.hpp>
-#include <http/Http_thow.hpp>
+#include "../../include/http/Http_throw.hpp"
 #include <sys/ucontext.h>
 
 std::vector<std::string> HttpParser::env;

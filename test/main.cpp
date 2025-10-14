@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:03:54 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/09 12:06:39 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/14 15:31:44 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "config/config.hpp"
+#include "config/Config.hpp"
 #include <http/HttpResponse.hpp>
 #include "test.hpp"
 

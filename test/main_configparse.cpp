@@ -64,6 +64,7 @@ try
 		throw InputException("The program should use the template './webserv [configuration file]'");
 	}
 
+	// TODO estudar, qual a diferenca entre allow_methods em servers e locations?
 	Config test(argv[1], envp);
 
 	int a = 10;

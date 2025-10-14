@@ -77,7 +77,7 @@ private:
 
 	std::vector<t_methods>	_methods;	// ex: GET
 
-	LocationConfig*	_sub_location;
+	LocationConfig*	_sub_location; // TODO vector de sublocations
 
 	// maybe TODO (*.(json|jpeg|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
 	// if (compare("*.(")) --> adicionar os restantes usando | e ) como delimitadores relevantes

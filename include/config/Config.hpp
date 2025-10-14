@@ -38,6 +38,7 @@ public:
 	ServerConfig const				&getServerConfig(uint16_t port) const; // TODO Should the return be const?
 	std::vector<ServerConfig> const	&getServerConfigVector() const; // TODO Should the return be const?
 	std::vector<Socket*> const		&getSocketVector() const; // TODO Should the return be const?
+	;
 
 	void	setServerConfig(ServerConfig* serv);
 	void	setSockets(void);

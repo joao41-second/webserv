@@ -253,7 +253,7 @@ bool	LocationConfig::checkSubLocation(void) const
 	// TODO vector de sublocations - Written
 }
 
-std::map<std::string, LocationConfig>	&LocationConfig::getSubLocationMap(void) // TODO vector de sublocations - Written
+/* std::map<std::string, LocationConfig>	&LocationConfig::getSubLocationMap(void) // TODO vector de sublocations - Written
 {
 	return(*this->_sub_locations);
 }
@@ -261,7 +261,7 @@ std::map<std::string, LocationConfig>	&LocationConfig::getSubLocationMap(void) /
 std::map<std::string, LocationConfig> const	&LocationConfig::getSubLocationMap(void) const // TODO vector de sublocations - Written
 {
 	return(*this->_sub_locations);
-}
+} */
 
 LocationConfig	&LocationConfig::getSubLocation(void) // TODO vector de sublocations - tbw
 {

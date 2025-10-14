@@ -84,7 +84,7 @@ private:
 	std::vector<t_methods>		_methods;	// ex: GET
 
 	LocationConfig*	_sub_location;
-	std::map<std::string, LocationConfig>	_sub_locations; // TODO vector de sublocations - Written
+	//std::map<std::string, LocationConfig>	_sub_locations; // TODO vector de sublocations - Written
 
 	// TODO *.(jpeg|json|bla) -> dar throw
 	// maybe TODO (*.(jpeg|json|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?

@@ -1,11 +1,6 @@
-<<<<<<<< HEAD:srcs/config/Config.cpp
 #include "../../include/config/Config.hpp"
 #include "../../include/config/ServerConfig.hpp"
 #include "../../include/net/Socket.hpp"
-========
-#include <config/config.hpp>
-#include <config/serverconfig.hpp>
->>>>>>>> Parser_request_http:srcs/config/config.cpp
 
 // |----------------------
 // | HELPER FUNCTIONS

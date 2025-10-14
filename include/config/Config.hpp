@@ -21,8 +21,6 @@
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
 //#include <arpa/inet.h>//
-//
-#include <iostream>
 #include <cstring>
 class ServerConfig;
 //class LocationConfig;

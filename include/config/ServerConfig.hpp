@@ -32,6 +32,7 @@ public:
 	ServerConfig &operator = (const ServerConfig &orig);
 	virtual ~ServerConfig();
 
+	bool					hasMethod(t_methods method) const;
 	std::string const		&getName(void) const;
 	std::string const		&getInterface(void) const;
 	std::string const		&getRoot(void) const;
@@ -40,11 +41,11 @@ public:
 	unsigned long			getClientMaxSize(void) const;
 	std::string const		&getErrorPage(int error_num) const;
 	size_t					getLocNum(void) const;
-	//LocationConfig const	&getLocationConfig(std::string name) const; // TODO Location should be found by name...
 	LocationConfig const	&getLocationConfig(unsigned int num) const; // TODO Should the return be const Location?
-	bool					hasMethod(t_methods method) const;
 
-	void	setLocationConfig(LocationConfig* loc);
+	std::map<std::string, LocationConfig>	&getLocMap(void);
+	
+	void	setOneLocationConfig(LocationConfig* loc);
 	void	setMethods(std::string const str);
 	void	setOneMethod(std::string word);
 	void	setOneErrorPage(std::string error_page_str);
@@ -65,11 +66,11 @@ private:
 	std::string		_index;		// ex: index.html
 	unsigned long	_client_max_body_size; // ex: 10M // TODO should this be size_t?
 
+	std::vector<t_methods>		_methods;	// ex: GET
+
 	std::map<int, std::string>	_error_pages; // ex: 404 , ./www/errors/404.html
 
-	std::vector<t_methods>		_methods;	// ex: GET
-	std::vector<LocationConfig>	_locations;
-	//std::map<std::string, LocationConfig> // TODO sub-location é mais um elemento deste map, key é nome
+	std::map<std::string, LocationConfig>	_locations;
 };
 
 #endif

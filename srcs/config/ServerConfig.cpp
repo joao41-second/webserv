@@ -10,7 +10,7 @@
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	ServerConfig::parse_server(std::istream& server_file) // TODO Write function
+void	ServerConfig::parse_server(std::istream& server_file)
 {
 	std::string		line;
 
@@ -24,14 +24,15 @@ void	ServerConfig::parse_server(std::istream& server_file) // TODO Write functio
 			break ;
 		}
 
-		// TODO Consider using a switch for this
 		if (line.compare(0, 8, "location") == 0)
 		{
-			this->setLocationConfig(new LocationConfig(server_file, line));
+			LocationConfig	*tmp_loc = new LocationConfig(server_file, line);
+			std::string		tmp_name = tmp_loc->getName();
+			this->setOneLocationConfig(tmp_loc);
 
-			if (this->_locations.empty())
+			if (this->getLocMap()[tmp_name].checkSubLocation())
 			{
-				throw InputException("Input error (location)"); // TODO be more specific!
+				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation().clone());
 			}
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
@@ -173,6 +174,17 @@ void	ServerConfig::setOneErrorPage(std::string error_page_str)
 	this->_error_pages[error_num] = trim_whitespace(error_page_str.substr(3));
 }
 
+void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
+{
+	if (loc)
+	{
+		std::string	locname = loc->getName();
+		this->_locations[locname] = *loc;
+		//this->_locations[locname] = *loc->clone(); // TODO revisitar após testes
+		delete (loc);
+	}
+}
+
 void	ServerConfig::setClientMaxSize(std::string max_size)
 {
 	size_t	lim = max_size.size() - 1;
@@ -236,20 +248,25 @@ void	ServerConfig::setName(std::string name)
 	this->_name = name;
 }
 
-void	ServerConfig::setLocationConfig(LocationConfig* loc)
+std::map<std::string, LocationConfig>	&ServerConfig::getLocMap(void)
 {
-	if (loc)
-	{
-		this->_locations.push_back(*loc);
-		delete (loc);
-	}
+	return (this->_locations);
 }
 
 LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 {
 	if (num >= this->_locations.size())
 		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
-	return(this->_locations[num]);
+
+	std::map<std::string, LocationConfig>::const_iterator it = this->_locations.begin();
+	unsigned int i = 0;
+	while (i < num)
+	{
+		i++;
+		it++;
+	}
+
+	return(it->second);
 }
 
 size_t	ServerConfig::getLocNum(void) const
@@ -329,20 +346,20 @@ ServerConfig::ServerConfig(const ServerConfig &orig)
 ServerConfig::ServerConfig(std::istream& server_file)
 {
 	this->_client_max_body_size = 0;
-	this->setOneErrorPage("404 ./www/errors/404.html"); // TODO define the default error
+	this->setOneErrorPage("404 ./www/errors/404.html");
 	this->parse_server(server_file);
 	//std::cout << "ServerConfig constructed." << std::endl;
 }
 
 ServerConfig::ServerConfig(void)
 {
-	this->setLocationConfig(NULL);
+	this->setOneLocationConfig(NULL);
 	this->setMethods("");
 	this->setName("");
 	this->setPort("");
 	this->setRoot("");
 	this->setIndex("");
-	this->setOneErrorPage("404 ./www/errors/404.html"); // TODO define the default error
+	this->setOneErrorPage("404 ./www/errors/404.html");
 	this->_client_max_body_size = 0;
 	//std::cout << "ServerConfig constructed." << std::endl;
 }

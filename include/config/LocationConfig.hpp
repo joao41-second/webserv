@@ -44,7 +44,6 @@ public:
 	virtual ~LocationConfig();
 
 	std::string const		&getName(void) const;
-	//std::map<std::string, std::string> const	&getNameMap(void) const; // TODO
 	std::string const		&getRoot(void) const;
 	std::string const		&getIndex(void) const;
 	std::string const		&getPass(void) const;
@@ -60,7 +59,6 @@ public:
 	void	setIndex(std::string index);
 	void	setRoot(std::string root);
 	void	setName(std::string name);
-	//void	setOneName(std::string name); // TODO
 	void	setPass(std::string pass);
 	void	setClientBuffSize(std::string buff_size);
 	void	setAlias(bool alias);
@@ -69,8 +67,7 @@ public:
 
 	void	parse_location(std::istream& location_file, std::string line);
 
-private: // TODO Considerar guardar _name como map
-	//std::map<std::string, std::string>	_name;	// ex:	/post_body , directory	;	*.bla , files
+private:
 	std::string		_name;		// ex: /directory
 	std::string		_root;		// ex: joao-rib/
 	std::string		_index;		// ex: joao.bad_extension
@@ -82,8 +79,11 @@ private: // TODO Considerar guardar _name como map
 
 	LocationConfig*	_sub_location;
 
-	// maybe TODO (*.(json|jpeg|bla))
+	// maybe TODO (*.(json|jpeg|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
+	// if (compare("*.(")) --> adicionar os restantes usando | e ) como delimitadores relevantes
+
 	// maybe TODO ifs (cookies, bonus)
+	// if ($cookie_<name> [operator] <value>) { <action> }
 };
 
 #endif
@@ -97,5 +97,38 @@ Aplica as regras dessa location, por exemplo:
 Sobrescreve o root global para aquela rota.
 Decide se é CGI ou ficheiro estático.
 Define o index se for diretório.
+
+*/
+
+/*
+//Example 1
+if ($cookie_user) {
+    return 200 "Welcome back, $cookie_user!";
+}
+
+//Example 2
+if ($cookie_sessionid = "") {
+    return 403;
+}
+
+//Example 3
+if ($cookie_auth = "") {
+    return 302 /login;
+}
+
+//Example 4
+if ($cookie_sessionid = "") {
+    add_header Set-Cookie "sessionid=$request_id; Path=/;";
+}
+
+//Example 5
+if ($cookie_nocache) {
+    set $no_cache 1;
+}
+
+//Example 6
+if ($cookie_role = "admin") {
+    return 302 /admin_dashboard;
+}
 
 */

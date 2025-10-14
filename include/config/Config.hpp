@@ -23,7 +23,6 @@
 //#include <arpa/inet.h>//
 #include <cstring>
 class ServerConfig;
-//class LocationConfig;
 
 class Config
 {

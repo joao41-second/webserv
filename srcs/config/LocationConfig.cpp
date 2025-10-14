@@ -188,13 +188,19 @@ void	LocationConfig::setAlias(bool alias)
 	this->_alias = alias;
 }
 
-void	LocationConfig::setSubLocation(LocationConfig* loc) // TODO vector de sublocations
+void	LocationConfig::setSubLocation(LocationConfig* loc) 
 {
 	if (loc)
 	{
 		this->_sub_location = loc;
 		this->_sub_location->setName(this->getName() + "/" + this->_sub_location->getName());
 	}
+	/*if (loc)
+	{
+		loc->setName(this->getName() + "/" + loc->getName());
+		this->_sub_locations[loc->getName()] = loc;
+	}*/
+	// TODO vector de sublocations - Written
 }
 
 std::string const	&LocationConfig::getName(void) const
@@ -232,26 +238,42 @@ std::vector<t_methods> const	&LocationConfig::getMethods() const
 	return (this->_methods);
 }
 
-bool	LocationConfig::checkSubLocation(void) const // TODO vector de sublocations
+bool	LocationConfig::checkSubLocation(void) const
 {
 	if (this->_sub_location)
 	{
 		return(true);
 	}
 	return(false);
+	/*if (this->_sub_locations.empty())
+	{
+		return(false);
+	}
+	return(true);*/
+	// TODO vector de sublocations - Written
 }
 
-LocationConfig	&LocationConfig::getSubLocation(void) // TODO vector de sublocations
+std::map<std::string, LocationConfig>	&LocationConfig::getSubLocationMap(void) // TODO vector de sublocations - Written
+{
+	return(*this->_sub_locations);
+}
+
+std::map<std::string, LocationConfig> const	&LocationConfig::getSubLocationMap(void) const // TODO vector de sublocations - Written
+{
+	return(*this->_sub_locations);
+}
+
+LocationConfig	&LocationConfig::getSubLocation(void) // TODO vector de sublocations - tbw
 {
 	return(*this->_sub_location);
 }
 
-LocationConfig const	&LocationConfig::getSubLocation(void) const // TODO vector de sublocations
+LocationConfig const	&LocationConfig::getSubLocation(void) const // TODO vector de sublocations - tbw
 {
 	return(*this->_sub_location);
 }
 
-LocationConfig*	LocationConfig::clone(void) const // TODO vector de sublocations
+LocationConfig*	LocationConfig::clone(void) const // TODO vector de sublocations - tbw
 {
 	//std::cout << "LocationConfig was cloned" << std::endl;
 
@@ -271,7 +293,7 @@ LocationConfig*	LocationConfig::clone(void) const // TODO vector de sublocations
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
 
-LocationConfig &LocationConfig::operator = (const LocationConfig &orig) // TODO vector de sublocations
+LocationConfig &LocationConfig::operator = (const LocationConfig &orig) // TODO vector de sublocations - tbw
 {
 	if (this != &orig)
 	{
@@ -300,13 +322,13 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig) // TODO 
 	return (*this);
 }
 
-LocationConfig::LocationConfig(const LocationConfig &orig): _sub_location(NULL) // TODO vector de sublocations
+LocationConfig::LocationConfig(const LocationConfig &orig): _sub_location(NULL) // TODO vector de sublocations - tbw
 {
 	*this = orig;
 	//std::cout << "LocationConfig copy-constructed." << std::endl;
 }
 
-LocationConfig::LocationConfig(std::istream& location_file, std::string line): _sub_location(NULL) // TODO vector de sublocations
+LocationConfig::LocationConfig(std::istream& location_file, std::string line): _sub_location(NULL) // TODO vector de sublocations - tbw
 {
 	this->_client_body_buffer_size = 0;
 	this->setAlias(false);
@@ -314,7 +336,7 @@ LocationConfig::LocationConfig(std::istream& location_file, std::string line): _
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
 
-LocationConfig::LocationConfig(void): _sub_location(NULL) // TODO vector de sublocations
+LocationConfig::LocationConfig(void): _sub_location(NULL) // TODO vector de sublocations - tbw
 {
 	this->setMethods("");
 	this->setName("");
@@ -326,7 +348,7 @@ LocationConfig::LocationConfig(void): _sub_location(NULL) // TODO vector de subl
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
 
-LocationConfig::~LocationConfig(void) // TODO vector de sublocations
+LocationConfig::~LocationConfig(void) // TODO vector de sublocations - tbw
 {
 	if (this->_sub_location)
 		delete this->_sub_location;

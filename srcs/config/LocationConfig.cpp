@@ -102,6 +102,15 @@ bool	LocationConfig::hasMethod(t_methods method) const
 	return (false);
 }
 
+void	LocationConfig::copyMethods(std::vector<t_methods> const &orig)
+{
+	for (std::vector<t_methods>::const_iterator it = orig.begin();
+			it != orig.end(); it++)
+	{
+		this->_methods.push_back(*it);
+	}
+}
+
 void	LocationConfig::setMethods(std::string const str)
 {
 	for(unsigned int i = 0; i < str.size() ; i++)
@@ -218,6 +227,11 @@ bool const	&LocationConfig::getAlias(void) const
 	return(this->_alias);
 }
 
+std::vector<t_methods> const	&LocationConfig::getMethods() const
+{
+	return (this->_methods);
+}
+
 bool	LocationConfig::checkSubLocation(void) const
 {
 	if (this->_sub_location)
@@ -225,6 +239,11 @@ bool	LocationConfig::checkSubLocation(void) const
 		return(true);
 	}
 	return(false);
+}
+
+LocationConfig	&LocationConfig::getSubLocation(void)
+{
+	return(*this->_sub_location);
 }
 
 LocationConfig const	&LocationConfig::getSubLocation(void) const

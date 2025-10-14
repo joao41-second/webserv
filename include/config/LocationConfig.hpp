@@ -50,11 +50,15 @@ public:
 	unsigned long			getClientBuffSize(void) const;
 	bool const				&getAlias(void) const;
 	bool					checkSubLocation(void) const;
+	LocationConfig			&getSubLocation(void);
 	LocationConfig const	&getSubLocation(void) const;
 	bool					hasMethod(t_methods method) const;
 
+	std::vector<t_methods> const	&getMethods() const;
+
 	void	setSubLocation(LocationConfig* loc);
 	void	setMethods(std::string const str);
+	void	copyMethods(std::vector<t_methods> const &orig);
 	void	setOneMethod(std::string word);
 	void	setIndex(std::string index);
 	void	setRoot(std::string root);

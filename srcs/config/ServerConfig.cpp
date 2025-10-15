@@ -195,7 +195,6 @@ void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
 	{
 		std::string	locname = loc->getName();
 		this->_locations[locname] = *loc;
-		//this->_locations[locname] = *loc->clone(); // TODO revisitar após testes
 		delete (loc);
 	}
 }

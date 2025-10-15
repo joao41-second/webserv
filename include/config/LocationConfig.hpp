@@ -52,6 +52,8 @@ public:
 	bool					checkSubLocation(void) const; // TODO vector de sublocations - tbw
 	LocationConfig			&getSubLocation(void); // TODO vector de sublocations - tbw
 	LocationConfig const	&getSubLocation(void) const; // TODO vector de sublocations - tbw
+	LocationConfig			&getSubLocation(unsigned int num); // TODO vector de sublocations - Written
+	LocationConfig const	&getSubLocation(unsigned int num) const; // TODO vector de sublocations - Written
 	bool					hasMethod(t_methods method) const;
 
 	std::vector<t_methods> const					&getMethods() const;

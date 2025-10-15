@@ -193,15 +193,10 @@ void	LocationConfig::setSubLocation(LocationConfig* loc)
 {
 	if (loc)
 	{
-		this->_sub_location = loc;
-		this->_sub_location->setName(this->getName() + "/" + this->_sub_location->getName());
-	}
-	/*if (loc)
-	{
 		loc->setName(this->getName() + "/" + loc->getName());
-		this->_sub_locations[loc->getName()] = loc;
-	}*/
-	// TODO vector de sublocations - Written
+		this->_sub_locations[loc->getName()] = *loc;
+		delete (loc);
+	}
 }
 
 std::string const	&LocationConfig::getName(void) const
@@ -241,30 +236,24 @@ std::vector<t_methods> const	&LocationConfig::getMethods() const
 
 bool	LocationConfig::checkSubLocation(void) const
 {
-	if (this->_sub_location)
-	{
-		return(true);
-	}
-	return(false);
-	/*if (this->_sub_locations.empty())
+	if (this->_sub_locations.empty())
 	{
 		return(false);
 	}
-	return(true);*/
-	// TODO vector de sublocations - Written
+	return(true);
 }
 
-std::map<std::string, LocationConfig>	&LocationConfig::getSubLocationMap(void) // TODO vector de sublocations - Written
+std::map<std::string, LocationConfig>	&LocationConfig::getSubLocationMap(void)
 {
 	return(this->_sub_locations);
 }
 
-std::map<std::string, LocationConfig> const	&LocationConfig::getSubLocationMap(void) const // TODO vector de sublocations - Written
+std::map<std::string, LocationConfig> const	&LocationConfig::getSubLocationMap(void) const
 {
 	return(this->_sub_locations);
 }
 
-/*LocationConfig	&LocationConfig::getSubLocation(unsigned int num) // TODO vector de sublocations - Written
+LocationConfig	&LocationConfig::getSubLocation(unsigned int num)
 {
 	if (num >= this->_sub_locations.size())
 		throw InputException("Out of bounds (Sub-Locations)"); // TODO Write a proper exception
@@ -280,7 +269,7 @@ std::map<std::string, LocationConfig> const	&LocationConfig::getSubLocationMap(v
 	return(it->second);
 }
 
-LocationConfig const	&LocationConfig::getSubLocation(unsigned int num) const  // TODO vector de sublocations - Written
+LocationConfig const	&LocationConfig::getSubLocation(unsigned int num) const
 {
 	if (num >= this->_sub_locations.size())
 		throw InputException("Out of bounds (Sub-Locations)"); // TODO Write a proper exception
@@ -294,32 +283,12 @@ LocationConfig const	&LocationConfig::getSubLocation(unsigned int num) const  //
 	}
 
 	return(it->second);
-}*/
-
-LocationConfig	&LocationConfig::getSubLocation(void)
-{
-	return(*this->_sub_location);
-}
-
-LocationConfig const	&LocationConfig::getSubLocation(void) const
-{
-	return(*this->_sub_location);
 }
 
 LocationConfig*	LocationConfig::clone(void) const
 {
 	//std::cout << "LocationConfig was cloned" << std::endl;
-
 	LocationConfig *copy = new LocationConfig(*this);
-	if (this->_sub_location)
-	{
-		copy->_sub_location = this->_sub_location->clone();
-	}
-	else
-	{
-		copy->_sub_location = NULL;
-	}
-	// TODO vector de sublocations - Written
 	return (copy);
 }
 
@@ -331,20 +300,7 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 {
 	if (this != &orig)
 	{
-		if (this->_sub_location)
-		{
-			delete (this->_sub_location);
-		}
-
-		if (orig._sub_location)
-		{
-			this->_sub_location = orig._sub_location->clone();
-		}
-		else
-		{
-			this->_sub_location = NULL;
-		}
-		//this->_sub_locations = orig._sub_locations; // TODO vector de sublocations - Written
+		this->_sub_locations = orig._sub_locations;
 		this->_name = orig._name;
 		this->_root = orig._root;
 		this->_index = orig._index;
@@ -357,13 +313,13 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 	return (*this);
 }
 
-LocationConfig::LocationConfig(const LocationConfig &orig): _sub_location(NULL) // TODO vector de sublocations - Written
+LocationConfig::LocationConfig(const LocationConfig &orig)
 {
 	*this = orig;
 	//std::cout << "LocationConfig copy-constructed." << std::endl;
 }
 
-LocationConfig::LocationConfig(std::istream& location_file, std::string line): _sub_location(NULL) // TODO vector de sublocations - Written
+LocationConfig::LocationConfig(std::istream& location_file, std::string line)
 {
 	this->_client_body_buffer_size = 0;
 	this->setAlias(false);
@@ -371,7 +327,7 @@ LocationConfig::LocationConfig(std::istream& location_file, std::string line): _
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
 
-LocationConfig::LocationConfig(void): _sub_location(NULL) // TODO vector de sublocations - Written
+LocationConfig::LocationConfig(void)
 {
 	this->setMethods("");
 	this->setName("");
@@ -385,9 +341,6 @@ LocationConfig::LocationConfig(void): _sub_location(NULL) // TODO vector de subl
 
 LocationConfig::~LocationConfig(void)
 {
-	if (this->_sub_location)
-		delete this->_sub_location;
-	// TODO vector de sublocations - Written
 	//std::cout << "LocationConfig destructed." << std::endl;
 }
 

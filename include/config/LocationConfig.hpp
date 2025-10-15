@@ -50,15 +50,13 @@ public:
 	unsigned long			getClientBuffSize(void) const;
 	bool const				&getAlias(void) const;
 	bool					checkSubLocation(void) const;
-	LocationConfig			&getSubLocation(void);
-	LocationConfig const	&getSubLocation(void) const;
-	//LocationConfig			&getSubLocation(unsigned int num); // TODO vector de sublocations - Written
-	//LocationConfig const	&getSubLocation(unsigned int num) const; // TODO vector de sublocations - Written
+	LocationConfig			&getSubLocation(unsigned int num);
+	LocationConfig const	&getSubLocation(unsigned int num) const;
 	bool					hasMethod(t_methods method) const;
 
 	std::vector<t_methods> const					&getMethods() const;
-	std::map<std::string, LocationConfig>			&getSubLocationMap(void); // TODO vector de sublocations - Written
-	std::map<std::string, LocationConfig> const		&getSubLocationMap(void) const; // TODO vector de sublocations - Written
+	std::map<std::string, LocationConfig>			&getSubLocationMap(void);
+	std::map<std::string, LocationConfig> const		&getSubLocationMap(void) const;
 
 	void	setSubLocation(LocationConfig* loc);
 	void	setMethods(std::string const str);
@@ -85,8 +83,7 @@ private:
 
 	std::vector<t_methods>		_methods;	// ex: GET
 
-	LocationConfig*	_sub_location;
-	std::map<std::string, LocationConfig>	_sub_locations; // TODO vector de sublocations - Written
+	std::map<std::string, LocationConfig>	_sub_locations;
 
 	// TODO *.(jpeg|json|bla) -> dar throw
 	// maybe TODO (*.(jpeg|json|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?

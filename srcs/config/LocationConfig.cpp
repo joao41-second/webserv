@@ -84,6 +84,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setAlias(true); // TODO Alterar se se converter em string
 		}
 	}
+	// TODO Garantir que Sub-locations sem methods possam herdar methods desta location
 }
 
 // |----------------------

@@ -31,11 +31,12 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			// Set location in map
 			this->setOneLocationConfig(tmp_loc);
 
-			// If location or sub-location do not contain methods, inherit from server
+			// If location or sub-location does not contain methods, inherit from server
 			if (this->getLocMap()[tmp_name].getMethods().empty())
 			{
 				this->getLocMap()[tmp_name].copyMethods(this->getMethods());
 			}
+
 			if (this->getLocMap()[tmp_name].checkSubLocation() &&
 				this->getLocMap()[tmp_name].getSubLocation().getMethods().empty())
 			{
@@ -47,6 +48,20 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			{
 				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation().clone());
 			}
+
+			// Handle sub-locations
+			/*for (unsigned int i = 0; i < this->getLocMap()[tmp_name].getSubLocationMap().size(); i++) 
+			{
+				// If sub-location does not contain methods, inherit from server
+				if (this->getLocMap()[tmp_name].getSubLocation(i).getMethods().empty())
+				{
+					this->getLocMap()[tmp_name].getSubLocation(i).copyMethods(this->getMethods());
+				}
+
+				// Set sub-location in map, with appropriate name
+				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation(i).clone());
+			}*/
+			// TODO vector de sublocations - Written
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
 		{

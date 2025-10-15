@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:44:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/10 19:03:50 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/15 19:21:19 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "Connection.hpp"
 #include <poll.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 class Server;
 class Connection;
@@ -39,6 +40,6 @@ private:
 
 	std::vector<PollEntry>	_pollEntries;
 
-	void	handleNewConnection(PollEntry& entry);
+	void	handleNewConnection(const PollEntry& entry);
 	void	closeConnection(PollEntry& entry);
 };

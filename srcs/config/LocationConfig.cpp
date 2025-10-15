@@ -84,7 +84,18 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setAlias(true); // TODO Alterar se se converter em string
 		}
 	}
-	// TODO Garantir que Sub-locations sem methods possam herdar methods desta location
+
+	// If sub-location does not contain methods, inherit from this main location
+	if (!this->getMethods().empty())
+	{
+		for (unsigned int i = 0; i < this->getSubLocationMap().size(); i++)
+		{
+			if (this->getSubLocation(i).getMethods().empty())
+			{
+				this->getSubLocation(i).copyMethods(this->getMethods());
+			}
+		}
+	}
 }
 
 // |----------------------

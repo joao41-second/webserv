@@ -50,11 +50,17 @@ public:
 	unsigned long			getClientBuffSize(void) const;
 	bool const				&getAlias(void) const;
 	bool					checkSubLocation(void) const;
-	LocationConfig const	&getSubLocation(void) const;
+	LocationConfig			&getSubLocation(unsigned int num);
+	LocationConfig const	&getSubLocation(unsigned int num) const;
 	bool					hasMethod(t_methods method) const;
+
+	std::vector<t_methods> const					&getMethods() const;
+	std::map<std::string, LocationConfig>			&getSubLocationMap(void);
+	std::map<std::string, LocationConfig> const		&getSubLocationMap(void) const;
 
 	void	setSubLocation(LocationConfig* loc);
 	void	setMethods(std::string const str);
+	void	copyMethods(std::vector<t_methods> const &orig);
 	void	setOneMethod(std::string word);
 	void	setIndex(std::string index);
 	void	setRoot(std::string root);
@@ -75,11 +81,12 @@ private:
 	unsigned long	_client_body_buffer_size; // TODO should this be size_t?
 	bool			_alias;		// TODO should accept string?
 
-	std::vector<t_methods>	_methods;	// ex: GET
+	std::vector<t_methods>		_methods;	// ex: GET
 
-	LocationConfig*	_sub_location;
+	std::map<std::string, LocationConfig>	_sub_locations;
 
-	// maybe TODO (*.(json|jpeg|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
+	// TODO *.(jpeg|json|bla) -> dar throw
+	// maybe TODO (*.(jpeg|json|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
 	// if (compare("*.(")) --> adicionar os restantes usando | e ) como delimitadores relevantes
 
 	// maybe TODO ifs (cookies, bonus)

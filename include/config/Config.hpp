@@ -34,10 +34,11 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	size_t							getServNum(void) const;
-	ServerConfig const				&getServerConfig(uint16_t port) const; // TODO Should the return be const?
-	std::vector<ServerConfig> const	&getServerConfigVector() const; // TODO Should the return be const?
-	std::vector<Socket*> const		&getSocketVector() const; // TODO Should the return be const?
+	char**							getEnv() const; // maybe TODO considerar "const char *const *getEnv() const
+	size_t							getServNum() const;
+	ServerConfig const				&getServerConfig(uint16_t port) const;
+	std::vector<ServerConfig> const	&getServerConfigVector() const;
+	std::vector<Socket*> const		&getSocketVector() const;
 
 	void	setServerConfig(ServerConfig* serv);
 	void	setSockets(void);
@@ -60,7 +61,7 @@ private:
 
 	char	**_env;
 
-	ServerConfig const	&getServerConfig(unsigned int num) const; // TODO Should the return be const?
+	ServerConfig const	&getServerConfig(unsigned int num) const;
 };
 
 bool	isDelim(char c);

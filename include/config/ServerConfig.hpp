@@ -41,9 +41,10 @@ public:
 	unsigned long			getClientMaxSize(void) const;
 	std::string const		&getErrorPage(int error_num) const;
 	size_t					getLocNum(void) const;
-	LocationConfig const	&getLocationConfig(unsigned int num) const; // TODO Should the return be const Location?
+	LocationConfig const	&getLocationConfig(unsigned int num) const;
 
 	std::map<std::string, LocationConfig>	&getLocMap(void);
+	std::vector<t_methods> const			&getMethods() const;
 	
 	void	setOneLocationConfig(LocationConfig* loc);
 	void	setMethods(std::string const str);

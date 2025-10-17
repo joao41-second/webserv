@@ -127,9 +127,14 @@ ServerConfig const	&Config::getServerConfig(unsigned int num) const
 	return(this->_servers[num]);
 }
 
-size_t	Config::getServNum(void) const
+size_t	Config::getServNum() const
 {
 	return(this->_servers.size());
+}
+
+char**	Config::getEnv() const // maybe TODO considerar "const char *const *Config::getEnv() const"
+{
+	return(this->_env);
 }
 
 // |----------------------

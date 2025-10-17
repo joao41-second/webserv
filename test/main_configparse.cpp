@@ -104,17 +104,17 @@ try
 			std::cout << "\t\tMethods: ";
 			print_methods_loc(test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j));
 
-			if (test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).checkSubLocation())
+			for (unsigned int k = 0; k < test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocationMap().size(); k++)
 			{
 				std::cout << "\n\t\tSub-Location:" << std::endl;
-				std::cout << "\t\t\tName: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation().getName() << "$" << std::endl;
-				std::cout << "\t\t\tRoot: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation().getRoot() << "$" << std::endl;
-				std::cout << "\t\t\tIndex: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation().getIndex() << "$" << std::endl;
-				std::cout << "\t\t\tCGI Pass: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation().getPass() << "$" << std::endl;
-				std::cout << "\t\t\tClient body buffer size: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation().getClientBuffSize() << "$" << std::endl;
-				std::cout << "\t\t\tAlias: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation().getAlias() << "$" << std::endl;
+				std::cout << "\t\t\tName: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getName() << "$" << std::endl;
+				std::cout << "\t\t\tRoot: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getRoot() << "$" << std::endl;
+				std::cout << "\t\t\tIndex: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getIndex() << "$" << std::endl;
+				std::cout << "\t\t\tCGI Pass: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getPass() << "$" << std::endl;
+				std::cout << "\t\t\tClient body buffer size: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getClientBuffSize() << "$" << std::endl;
+				std::cout << "\t\t\tAlias: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getAlias() << "$" << std::endl;
 				std::cout << "\t\t\tMethods: ";
-				print_methods_loc(test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation());
+				print_methods_loc(test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k));
 			}
 			std::cout << std::endl;
 		}

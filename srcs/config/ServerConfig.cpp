@@ -28,11 +28,26 @@ void	ServerConfig::parse_server(std::istream& server_file)
 		{
 			LocationConfig	*tmp_loc = new LocationConfig(server_file, line);
 			std::string		tmp_name = tmp_loc->getName();
+			// Set location in map
 			this->setOneLocationConfig(tmp_loc);
 
-			if (this->getLocMap()[tmp_name].checkSubLocation())
+			// If location does not contain methods, inherit from server
+			if (this->getLocMap()[tmp_name].getMethods().empty())
 			{
-				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation().clone());
+				this->getLocMap()[tmp_name].copyMethods(this->getMethods());
+			}
+
+			// Handle sub-locations
+			for (unsigned int i = 0; i < this->getLocMap()[tmp_name].getSubLocationMap().size(); i++) 
+			{
+				// If sub-location does not contain methods, inherit from server
+				if (this->getLocMap()[tmp_name].getSubLocation(i).getMethods().empty())
+				{
+					this->getLocMap()[tmp_name].getSubLocation(i).copyMethods(this->getMethods());
+				}
+
+				// Set sub-location in map, with appropriate name
+				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation(i).clone());
 			}
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
@@ -180,7 +195,6 @@ void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
 	{
 		std::string	locname = loc->getName();
 		this->_locations[locname] = *loc;
-		//this->_locations[locname] = *loc->clone(); // TODO revisitar após testes
 		delete (loc);
 	}
 }
@@ -313,6 +327,11 @@ std::string const	&ServerConfig::getIndex(void) const
 unsigned long	ServerConfig::getClientMaxSize(void) const
 {
 	return(this->_client_max_body_size);
+}
+
+std::vector<t_methods> const	&ServerConfig::getMethods() const
+{
+	return (this->_methods);
 }
 
 // |----------------------

@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/15 19:51:51 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 16:53:38 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,19 @@ bool	Connection::readRequest() {
 	char	buffer[1024];
 	ssize_t	bytesRead;
 
-	std::cout << "REQUEST READ" << std::endl;
 	while ((bytesRead = read(_fd, buffer, sizeof(buffer))) > 0) {
 		_readBuffer.append(buffer, bytesRead);
 	}
 
-	if (bytesRead < 0) 
-	{
-    	perror("read");
+	if (bytesRead < 0) { 
+		if (errno == EAGAIN || errno == EWOULDBLOCK) 
+			return true;
+		perror("read");
     	return false;
 	}
+
 	if (bytesRead == 0)
-    	return false; // client closed connection
+    	return false; //client closed connection
 	return (true);
 }
 

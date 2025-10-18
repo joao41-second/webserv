@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/18 17:15:45 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:45:54 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void EventLoop::run()
 					socklen_t addrLen = sizeof(entry.socketAddr);
 					int clientFd = accept(entry.pfd.fd, (sockaddr *)&entry.socketAddr, &addrLen);
 					if (clientFd < 0)
-						std::cerr << "Failed to accept connection" << std::endl;
+						std::cerr << "Failed to accept connection..." << std::endl;
 					else {
 						int flags = fcntl(clientFd, F_GETFL, 0);
 						fcntl(clientFd, F_SETFL, flags | O_NONBLOCK);

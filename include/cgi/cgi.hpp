@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 16:04:44 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/14 15:37:21 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:18:56 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #ifndef CGI_HPP
 #define CGI_HPP
 
-#include "../http/HttpParser.hpp"
-#include "../config/debug.hpp"
-#include "../core/Server.hpp"
+#include <http/HttpParser.hpp>
+#include <config/debug.hpp>
+#include <core/Server.hpp>
 #include <string>
 
 

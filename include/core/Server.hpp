@@ -6,15 +6,15 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:46 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/14 14:39:12 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:16:22 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <string>
-#include "../include/net/Socket.hpp"
-#include "../include/config/ServerConfig.hpp"
+#include <net/Socket.hpp>
+#include <config/ServerConfig.hpp>
 
 class Server {
 
@@ -24,7 +24,6 @@ public:
 	~Server();
 
 	void launch(); // invoca o loop do eventLoop
-	void closeConnection();
 
 	std::vector<ServerConfig> getConfig();
 

@@ -6,12 +6,12 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:29 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/10 19:01:39 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:14:54 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/core/Server.hpp"
-#include "../../include/core/EventLoop.hpp"
+#include <core/Server.hpp>
+#include <core/EventLoop.hpp>
 
 Server::Server(const std::vector<ServerConfig>& configs,
 			   const std::vector<Socket*>& sockets)

@@ -6,13 +6,13 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/18 16:55:05 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:15:45 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/core/EventLoop.hpp"
-#include "../../include/core/Server.hpp"
-#include "../../include/core/Connection.hpp"
+#include <core/EventLoop.hpp>
+#include <core/Server.hpp>
+#include <core/Connection.hpp>
 
 EventLoop::EventLoop() { _pollEntries.reserve(1024); }
 

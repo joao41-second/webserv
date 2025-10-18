@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:37 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/14 15:54:49 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:19:33 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #ifndef HTTPRESPONSE_HPP
 #define HTTPRESPONSE_HPP
 
-#include "../config/Config.hpp"
+#include <config/Config.hpp>
 #include <string>
 
 #include <config/debug.hpp>

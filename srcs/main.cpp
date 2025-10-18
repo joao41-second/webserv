@@ -6,14 +6,14 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/18 17:03:02 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:14:41 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <core/Server.hpp>
 #include <config/ServerConfig.hpp>
-#include "../include/config/Config.hpp"
-#include "../include/net/Socket.hpp"
+#include <config/Config.hpp>
+#include <net/Socket.hpp>
 
 int	main(int argc, char **argv, char **envp)
 {

@@ -6,17 +6,17 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:38 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/14 15:56:24 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:18:27 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
-#include "../../include/http/HttpResponse.hpp"
-#include "../../include/http/HttpParser.hpp"
-#include "../../include/http/Http_throw.hpp"
-#include "../../include/core/Server.hpp"
+#include <http/HttpResponse.hpp>
+#include <http/HttpParser.hpp>
+#include <http/Http_throw.hpp>
+#include <core/Server.hpp>
 #include <iostream>
-#include "../../include/net/Socket.hpp"
+#include <net/Socket.hpp>
 #include <ostream>
 #include <string>
 #include <sstream>

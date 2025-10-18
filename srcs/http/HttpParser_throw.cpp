@@ -6,12 +6,12 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 15:24:36 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/14 15:58:39 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:17:39 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/http/HttpParser.hpp"
-#include "../include/http/Http_throw.hpp"
+#include <http/HttpParser.hpp>
+#include <http/Http_throw.hpp>
 
 const char *Badd_Request_400::what(void) const throw()
 {

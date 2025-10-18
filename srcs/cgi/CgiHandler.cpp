@@ -6,15 +6,15 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 14:03:03 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/14 15:42:19 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:17:08 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/config/color.hpp"
-#include "../../include/config/LocationConfig.hpp"
-#include "../../include/core/Server.hpp"
-#include "../../include/http/HttpParser.hpp"
-#include "../../include/cgi/cgi.hpp"
+#include <config/color.hpp>
+#include <config/LocationConfig.hpp>
+#include <core/Server.hpp>
+#include <http/HttpParser.hpp>
+#include <cgi/cgi.hpp>
 #include <ostream>
 #include <cstring>
 #include <netdb.h>

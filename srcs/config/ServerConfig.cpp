@@ -31,21 +31,23 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			// Set location in map
 			this->setOneLocationConfig(tmp_loc);
 
-			// If location or sub-location do not contain methods, inherit from server
+			// If location does not contain methods, inherit from server
 			if (this->getLocMap()[tmp_name].getMethods().empty())
 			{
 				this->getLocMap()[tmp_name].copyMethods(this->getMethods());
 			}
-			if (this->getLocMap()[tmp_name].checkSubLocation() &&
-				this->getLocMap()[tmp_name].getSubLocation().getMethods().empty())
-			{
-				this->getLocMap()[tmp_name].getSubLocation().copyMethods(this->getMethods());
-			}
 
-			// Set sub-locations in map, with appropriate names
-			if (this->getLocMap()[tmp_name].checkSubLocation())
+			// Handle sub-locations
+			for (unsigned int i = 0; i < this->getLocMap()[tmp_name].getSubLocationMap().size(); i++) 
 			{
-				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation().clone());
+				// If sub-location does not contain methods, inherit from server
+				if (this->getLocMap()[tmp_name].getSubLocation(i).getMethods().empty())
+				{
+					this->getLocMap()[tmp_name].getSubLocation(i).copyMethods(this->getMethods());
+				}
+
+				// Set sub-location in map, with appropriate name
+				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation(i).clone());
 			}
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
@@ -193,7 +195,6 @@ void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
 	{
 		std::string	locname = loc->getName();
 		this->_locations[locname] = *loc;
-		//this->_locations[locname] = *loc->clone(); // TODO revisitar após testes
 		delete (loc);
 	}
 }

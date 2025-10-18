@@ -49,16 +49,16 @@ public:
 	std::string const		&getPass(void) const;
 	unsigned long			getClientBuffSize(void) const;
 	bool const				&getAlias(void) const;
-	bool					checkSubLocation(void) const; // TODO vector de sublocations - tbw
-	LocationConfig			&getSubLocation(void); // TODO vector de sublocations - tbw
-	LocationConfig const	&getSubLocation(void) const; // TODO vector de sublocations - tbw
+	bool					checkSubLocation(void) const;
+	LocationConfig			&getSubLocation(unsigned int num);
+	LocationConfig const	&getSubLocation(unsigned int num) const;
 	bool					hasMethod(t_methods method) const;
 
 	std::vector<t_methods> const					&getMethods() const;
-	std::map<std::string, LocationConfig>			&getSubLocationMap(void); // TODO vector de sublocations - Written
-	std::map<std::string, LocationConfig> const		&getSubLocationMap(void) const; // TODO vector de sublocations - Written
+	std::map<std::string, LocationConfig>			&getSubLocationMap(void);
+	std::map<std::string, LocationConfig> const		&getSubLocationMap(void) const;
 
-	void	setSubLocation(LocationConfig* loc); // TODO vector de sublocations - tbw
+	void	setSubLocation(LocationConfig* loc);
 	void	setMethods(std::string const str);
 	void	copyMethods(std::vector<t_methods> const &orig);
 	void	setOneMethod(std::string word);
@@ -69,7 +69,7 @@ public:
 	void	setClientBuffSize(std::string buff_size);
 	void	setAlias(bool alias);
 
-	LocationConfig*	clone(void) const; // TODO vector de sublocations - tbw
+	LocationConfig*	clone(void) const;
 
 	void	parse_location(std::istream& location_file, std::string line);
 
@@ -83,8 +83,7 @@ private:
 
 	std::vector<t_methods>		_methods;	// ex: GET
 
-	LocationConfig*	_sub_location;
-	//std::map<std::string, LocationConfig>	_sub_locations; // TODO vector de sublocations - Written
+	std::map<std::string, LocationConfig>	_sub_locations;
 
 	// TODO *.(jpeg|json|bla) -> dar throw
 	// maybe TODO (*.(jpeg|json|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?

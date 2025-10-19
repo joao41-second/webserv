@@ -95,3 +95,8 @@ std::string	Connection::getReadBuffer() const {
 	
 	return (_readBuffer);
 }
+
+void	Connection::setWriteBuffer(std::string buffer) {
+
+	_writeBuffer = buffer;
+}

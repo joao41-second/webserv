@@ -110,6 +110,8 @@ void EventLoop::run() {
 					}
 					else if (entry.conn->isRequestComplete()) {
 						std::cout << entry.conn->getReadBuffer() << std::endl;
+						//send to joao entry.conn->getReadBuffer()
+						//joao returns his string to entry.con->setWriteBuffer(string);
 						entry.pfd.events = POLLIN;
 					}
 				}

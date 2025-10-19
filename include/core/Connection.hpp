@@ -26,7 +26,7 @@ public:
 	bool	isRequestComplete();		// check if _readbuffer contains a complete HTTP request
 
 	std::string		getReadBuffer() const;
-	//void			setWriteBuffer();
+	void			setWriteBuffer(std::string buffer);
 private:
 	int				_fd;
 	std::string		_readBuffer;

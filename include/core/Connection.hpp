@@ -6,20 +6,18 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/14 14:15:03 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/19 18:54:46 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "Server.hpp"
-
-class Sever;
+#include <string>
 
 class Connection {
 
 public:
-	Connection(int fd, Server &server);
+	Connection(int fd);
 	~Connection();
 	Connection(const Connection &copy);
 
@@ -31,7 +29,6 @@ public:
 	//void			setWriteBuffer();
 private:
 	int				_fd;
-	Server&			_server;
 	std::string		_readBuffer;
 	std::string		_writeBuffer;
 };

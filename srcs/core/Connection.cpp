@@ -6,14 +6,14 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/18 17:15:27 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/19 18:53:36 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <core/Connection.hpp>
 #include <core/Server.hpp>
 
-Connection::Connection(int fd, Server &server) : _fd(fd), _server(server) {
+Connection::Connection(int fd) : _fd(fd) {
 	_readBuffer = "";
 	_writeBuffer = "";
 }
@@ -23,8 +23,7 @@ Connection::~Connection() {
 	//probably deletes server?
 }
 
-Connection::Connection(const Connection &copy) : 
-	_server(copy._server) {
+Connection::Connection(const Connection &copy) {
 	
 	this->_fd = copy._fd;
 	this->_readBuffer = copy._readBuffer;
@@ -44,14 +43,13 @@ bool	Connection::readRequest() {
 		if (errno == EAGAIN || errno == EWOULDBLOCK) 
 			return true;
 		perror("read");
-    	return false;
+    	return (false);
 	}
 
 	if (bytesRead == 0)
-    	return false; //client closed connection
+    	return (false); //client closed connection
 	return (true);
 }
-
 
 bool	Connection::writeResponse() {
 	

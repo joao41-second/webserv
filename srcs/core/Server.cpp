@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:29 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/18 17:14:54 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/19 18:55:20 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	Server::launch() {
 	EventLoop	loop;
 
 	for (size_t i = 0; i < _listeningSockets.size(); i++)
-		loop.addListeningSocket(_listeningSockets[i], *this);
+		loop.addListeningSocket(_listeningSockets[i]);
 
 	std::cout << "Server running..." << std::endl;
 	loop.run();

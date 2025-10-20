@@ -111,21 +111,19 @@ void EventLoop::run() {
 					}
 					else if (entry.conn->isRequestComplete()) {
 						std::cout << entry.conn->getReadBuffer() << std::endl;
-						entry.conn->setWriteBuffer("ola mundo");
+						entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer()));
 						
 						//send to joao entry.conn->getReadBuffer()
 						//joao returns his string to entry.con->setWriteBuffer(string);
-						entry.pfd.events = POLLIN;
+						entry.pfd.events = POLLOUT;
 					}
 				}
 			}
 
 			if (entry.pfd.revents & POLLOUT) {
 				
-	std::cout  << RED << "ola"  << std::endl;
 				if (entry.conn && !entry.conn->writeResponse()) {
 
-				std::cout  << RED << "ola2"  << std::endl;
 					closeConnection(entry);
 					entry.pfd.fd = -1;
 				}

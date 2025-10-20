@@ -58,7 +58,6 @@ bool	Connection::writeResponse() {
 
 	if (_writeBuffer.empty())
 		return (true);
-	std::cout  << RED << "ola"  << std::endl;
 	bytesWritten = write(_fd, _writeBuffer.c_str(), _writeBuffer.size()); 
 	if (bytesWritten < 0) {
 		perror("write");

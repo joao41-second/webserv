@@ -19,15 +19,15 @@ Server::Server(const std::vector<ServerConfig>& configs,
 {
 	std::cout << "Server initialized with " 
 			  << _configs.size() << " configs and " 
-			  << _listeningSockets.size() << " sockets." << std::endl;
+			  << _listeningSockets.size() << " sockets: " << std::endl;
+	for (size_t i = 0; i < _listeningSockets.size(); i++) {
+		std::cout << "  - Socket fd: " << _listeningSockets[i]->getFd()
+				  << " with port: " << _configs[i].getPort() << std::endl;
+	}
+	std::cout << std::endl;
 }
 
 Server::~Server() {
-
-	/* for (size_t i = 0; i < _listeningSockets.size(); i++)
-		_listeningSockets[i].close(); */
-
-	std::cout << "Server stopped." << std::endl;
 }
 
 void	Server::launch() {

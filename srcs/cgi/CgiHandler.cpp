@@ -10,6 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "config/color.hpp"
+#include "config/LocationConfig.hpp"
+#include "core/Server.hpp"
+#include "http/HttpParser.hpp"
 #include <config/color.hpp>
 #include <config/LocationConfig.hpp>
 #include <core/Server.hpp>

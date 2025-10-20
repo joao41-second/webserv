@@ -19,8 +19,6 @@ Connection::Connection(int fd) : _fd(fd) {
 }
 
 Connection::~Connection() {
-
-	//probably deletes server?
 }
 
 Connection::Connection(const Connection &copy) {
@@ -94,6 +92,11 @@ bool	Connection::isRequestComplete() {
 std::string	Connection::getReadBuffer() const {
 	
 	return (_readBuffer);
+}
+
+std::string	Connection::getWriteBuffer() const {
+	
+	return (_writeBuffer);
 }
 
 void	Connection::setWriteBuffer(std::string buffer) {

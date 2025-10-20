@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "config/color.hpp"
+#include <config/color.hpp>
 #include <core/Server.hpp>
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>

@@ -14,6 +14,7 @@
 
 //works with HttpStatus
 
+
 #ifndef HTTPRESPONSE_HPP
 #define HTTPRESPONSE_HPP
 
@@ -28,19 +29,19 @@ class HttpResponse
 {
 
 	private:
-		int size_max;
-		Config conf;
-	public:
-		bool _request_status;
+	  static int size_max;
+	  static Config conf;
 		HttpResponse();
 		~HttpResponse();
-		void set_config(Config);
-		bool chek_cig_or_static(std::string);
-		std::string return_path_use();
-		std::string rediect_path(std::string);
-		std::string request_and_response(std::string request);
-		std::string open_static_file(std::string feile);
-		std::string gener_erro_page(int error,std::string status);
+	public:
+		static bool _request_status;
+	 	static	void set_config(Config);
+		static bool chek_cig_or_static(std::string);
+		static std::string return_path_use();
+		static std::string rediect_path(std::string);
+		static std::string request_and_response(std::string request);
+		static std::string open_static_file(std::string feile);
+		static std::string gener_erro_page(int error,std::string status);
 };
 
 

@@ -6,6 +6,7 @@ CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -I./include
 SRC_DIR  := srcs
 OBJ_DIR  := obj
 
+		
 SRCS_ALL :=	\
 		$(SRC_DIR)/cgi/CgiHandler.cpp \
 		$(SRC_DIR)/config/Config.cpp $(SRC_DIR)/config/LocationConfig.cpp $(SRC_DIR)/config/ServerConfig.cpp \

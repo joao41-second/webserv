@@ -13,6 +13,16 @@
 #include <core/EventLoop.hpp>
 #include <core/Server.hpp>
 #include <core/Connection.hpp>
+#include <http/HttpResponse.hpp>
+
+volatile sig_atomic_t stopServer = 0;
+
+static void signalHandler(int signum) {
+	if (signum == SIGINT) {
+		std::cout << "\nShutting down the server gracefully...\n" << std::endl;
+		stopServer = 1;
+	}
+}
 
 EventLoop::EventLoop() { _pollEntries.reserve(1024); }
 
@@ -23,6 +33,7 @@ EventLoop::~EventLoop() {
 			delete _pollEntries[i].conn;
 		if (_pollEntries[i].pfd.fd >= 0)
 			close(_pollEntries[i].pfd.fd);
+		std::cout << "Connection closed: fd " << _pollEntries[i].pfd.fd << std::endl;
 	}
 }
 
@@ -42,7 +53,17 @@ void EventLoop::addListeningSocket(const Socket *socket) {
 
 void EventLoop::run() {
 
+	
 	while (true) {
+		
+		signal(SIGINT, signalHandler);
+		if (stopServer) {
+			while (!_pollEntries.empty()) {
+				closeConnection(_pollEntries.back());
+				_pollEntries.pop_back();
+			}
+			break;
+		}
 		// build contiguous temp pollfd array
 		std::vector<struct pollfd> pfdArray;
 		std::vector<size_t> indexMap;
@@ -58,6 +79,9 @@ void EventLoop::run() {
 		if (!pfdArray.empty()) {
 			int errorCode = poll(&pfdArray[0], pfdArray.size(), 5000);
 			if (errorCode < 0) {
+				if (errno == EINTR) {
+					break;
+				}
 				perror("poll");
 				break;
 			}
@@ -74,7 +98,7 @@ void EventLoop::run() {
 				std::cout << "Strange error, but client was brutally disconected :(" << std::endl;
 				closeConnection(entry);
 				entry.pfd.fd = -1;
-				continue;
+				continue ;
 			}
 
 			if (entry.pfd.revents & POLLIN) {
@@ -109,10 +133,8 @@ void EventLoop::run() {
 						entry.pfd.fd = -1;
 					}
 					else if (entry.conn->isRequestComplete()) {
-						std::cout << entry.conn->getReadBuffer() << std::endl;
-						//send to joao entry.conn->getReadBuffer()
-						//joao returns his string to entry.con->setWriteBuffer(string);
-						entry.pfd.events = POLLIN;
+						entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer()));
+						entry.pfd.events = POLLOUT;
 					}
 				}
 			}
@@ -122,8 +144,8 @@ void EventLoop::run() {
 					closeConnection(entry);
 					entry.pfd.fd = -1;
 				}
+				entry.pfd.events = POLLIN;
 			}
-
 			entry.pfd.revents = 0;
 		}
 
@@ -144,8 +166,7 @@ void EventLoop::run() {
 	}
 }
 
-void EventLoop::closeConnection(PollEntry &entry)
-{
+void EventLoop::closeConnection(PollEntry &entry) {
 	if (entry.pfd.fd >= 0)
 		close(entry.pfd.fd);
 	if (entry.conn)

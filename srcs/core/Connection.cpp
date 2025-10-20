@@ -19,8 +19,6 @@ Connection::Connection(int fd) : _fd(fd) {
 }
 
 Connection::~Connection() {
-
-	//probably deletes server?
 }
 
 Connection::Connection(const Connection &copy) {

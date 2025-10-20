@@ -22,9 +22,10 @@
 #include <sstream>
 #include <vector>
 
-HttpResponse::HttpResponse() : _request_status(false) {}
 
-HttpResponse::~HttpResponse() {}
+bool   HttpResponse::_request_status = false;
+int HttpResponse::size_max = 500;
+
 
 std::string HttpResponse::open_static_file(std::string file)
 {
@@ -48,7 +49,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		throw Not_found_404();
 	}
 	request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
-	file_fd.read(&temp[0], this->size_max);
+	file_fd.read(&temp[0], size_max);
 	std::string data;
 	for (int i = 0; i < (int)temp.size() && temp[i] != '\0'; i++)
 		data += temp[i];

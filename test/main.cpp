@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "config/Config.hpp"
+#include <exception>
 #include <http/HttpResponse.hpp>
+#include "config/color.hpp"
 #include "test.hpp"
 
 
@@ -20,9 +22,16 @@ void config_and_http_implemente( int argc ,char ** argv,char**env)
 	(void)argc;
 	(void)argv;
 	(void)env;
+	try
+	{
 	std::string conf = "_configtest/youpi.conf";
-	Config config("_configtest/youpi.conf",env);
-	
+	Config config("test/youpi.conf",env);
+	}
+	catch(std::exception &e)
+	{
+
+		std::cout << RED <<"error:" << e.what() << RESET << std::endl;
+	}	
 	
 }
 

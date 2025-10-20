@@ -2,7 +2,7 @@
 
 . Start and maintain the server with the main loop;
 
-. Monitor multiple sockets (select(), poll() or epoll()) (coming from the parser setup);
+. Monitor multiple sockets with poll();
 
 . Accept new connections (accept()) and register them in the loop (one per client);
 

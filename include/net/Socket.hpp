@@ -1,5 +1,9 @@
 #pragma once
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
 #ifndef SOCKET_H
 #define SOCKET_H
 
@@ -21,8 +25,8 @@ public:
 	uint16_t					getAddrPort() const;
 
 private:
-	struct sockaddr_in	_addr;
-	int					_fd;
+	struct sockaddr_in	_addr; // TODO testar?
+	int					_fd; // TODO testar
 };
 
 #endif

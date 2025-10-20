@@ -3,59 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:46 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/23 15:27:37 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:16:22 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <config/debug.hpp>
-#include <vector>
-#include <sys/socket.h>
-#include <fstream>
-#include <algorithm>
-
-class Socket;
-class ServerConfig;
+#include <string>
+#include <net/Socket.hpp>
+#include <config/ServerConfig.hpp>
 
 class Server {
 
 public:
-    Server(const std::vector<ServerConfig>& configs,
-           const std::vector<Socket>& sockets);
+    Server(const std::vector<ServerConfig> &configs,
+	    const std::vector<Socket*> &sockets);
 	~Server();
 
-    void run(); //invoca o loop do eventLoop
-    //void?   closeConnection();
+	void launch(); // invoca o loop do eventLoop
+
+	std::vector<ServerConfig> getConfig();
 
 private:
-    std::vector<ServerConfig> _configs;
-    std::vector<Socket> _listeningSockets;
+	std::vector<ServerConfig> _configs;
+	std::vector<Socket*> _listeningSockets;
 };
 
 /*
 Server guarda:
 
-std::vector<Socket> listeningSockets (cada um tem um fd).
-
 std::map<int, Connection*> activeConnections (mapa fd → Connection*).
 
-EventLoop loop (a abstracção de select/poll).
+EventLoop loop (a abstracção de poll).
 
-std::vector<ServerConfig> configs.
 
-EventLoop encapsula select() (ou poll/epoll) e provê:
+EventLoop encapsula poll e provê:
 
 addFd(fd, mode) / removeFd(fd).
 
 pollEvents() → devolve lista de eventos (fd + tipo: readable/writable).
-*/
-
-/*
-when CGI is the way, create this environment variables
-EQUEST_METHOD, QUERY_STRING, CONTENT_LENGTH, CONTENT_TYPE,
-SCRIPT_NAME, PATH_INFO, SERVER_NAME, SERVER_PORT
 */

@@ -3,24 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:03:54 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/26 14:41:50 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/14 15:31:44 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <config/color.hpp>
-#include <http/HttpResponse.hpp>
-#include <core/Server.hpp>
-#include <config/ServerConfig.hpp>
-#include <net/Socket.hpp>
-#include <http/HttpParser.hpp>
-#include <dirent.h>
-#include <config/debug.hpp>
-#include <cgi/cgi.hpp>
-#include <string>
 
-void HTTP_test_parser()
+#include "config/Config.hpp"
+#include <http/HttpResponse.hpp>
+#include "test.hpp"
+
+
+void config_and_http_implemente( int argc ,char ** argv,char**env)
+{
+	(void)argc;
+	(void)argv;
+	(void)env;
+	std::string conf = "_configtest/youpi.conf";
+	Config config("_configtest/youpi.conf");
+	
+	
+}
+
+
+void HTTP_test_request()
 {
 
 	std::string pasta = "./HTTP_request_files";  // caminho da pasta
@@ -54,7 +61,9 @@ void HTTP_test_parser()
 
         file.close();
 	try{
-		HttpParser::new_request(conteudo);
+		HttpResponse ok;
+
+		HTTP_MSG("what" <<   ok.request_and_response(conteudo));
 	}
 	catch(std::exception &e)
 	{
@@ -64,46 +73,17 @@ void HTTP_test_parser()
     closedir(dir);
 }
 
-void test_httprespons()
+
+int main(int argc ,char ** argv,char**env) 
 {
-	std::string  request;
-	HttpResponse ok;	
-	try
-	{	
-	  while (ok._request_status == false)
-	  {	 
- 		request += ok.open_static_file("./HTTP_request_files/index.html");
-	  }
-	  T_MSG(request,GREEN);
-	  request = "";
-	  ok._request_status = false;
-	  while (ok._request_status == false)
-	  {
-		  request += ok.open_static_file("./HTTP_request_files/index_simple.html");
-	  }
-	  T_MSG(request,GREEN);
-	}
-	catch(std::exception &e)
-	{
-		std::cout << RED << "error: "<< e.what() << RESET << std::endl;
-	}
-}
-
-
-void execute()
-{
-	Cgi ok;
- 	ok.execute("ola.chg");
-
-	T_MSG( ok.execute("ola.chg"),GREEN);
-
-
-}
-
-int main() {
-//	HTTP_test_parser();	
-//test_httprespons();
-	execute();
+	//HTTP_test_parser();	
+ //	test_httprespons();
+	(void)argv;
+	(void)argc;
+	(void)env;
+	//execute(env);
+	config_and_http_implemente(argc,argv,env);
+	HTTP_test_request();
         return 0;
 }
 

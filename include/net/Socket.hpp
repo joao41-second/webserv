@@ -1,5 +1,9 @@
 #pragma once
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
 #ifndef SOCKET_H
 #define SOCKET_H
 
@@ -10,10 +14,11 @@
 class Socket
 {
 public:
-	//Socket();
+	Socket();
 	Socket(uint16_t port);
-	//Socket(const Socket& orig);
-	//Socket& operator=(const Socket& orig);
+	//Socket(const Socket& copy);
+	//Socket& operator=(const Socket& src);
+
 	virtual ~Socket();
 
 	int							getFd() const;
@@ -21,8 +26,8 @@ public:
 	uint16_t					getAddrPort() const;
 
 private:
-	struct sockaddr_in	_addr;
-	int					_fd;
+	struct sockaddr_in	_addr; // TODO testar?
+	int					_fd; // TODO testar
 };
 
 #endif

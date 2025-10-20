@@ -1,32 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HttpParser_thorw.cpp                               :+:      :+:    :+:   */
+/*   HttpParser_throw.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 15:24:36 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 15:40:38 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:17:39 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <http/Http_thow.hpp>
 
+#include <http/HttpParser.hpp>
+#include <http/Http_throw.hpp>
 
 const char *Badd_Request_400::what(void) const throw()
 {
-	return "400";
+	HttpParser::_pach_info = "/400.html";
+	HttpParser::_http_page_error = 400;
+	return "Bad Request";
 };
 
 const char *Not_Implemented_501::what(void) const throw()
 {
-	return "501";
+	HttpParser::_pach_info = "/501.html";
+	HttpParser::_http_page_error = 501;
+	return "Not Implemented";
 };
 
 const char *Version_Not_Supported_505::what(void) const throw()
 {
-	return "505";
+	HttpParser::_pach_info = "/505.html";
+	HttpParser::_http_page_error = 505;
+	return "HTTP Version Not Supported";
 };
 const char *Not_found_404::what(void) const throw()
 {
-	return "404";
+	HttpParser::_pach_info = "/404.html";
+	HttpParser::_http_page_error = 404;
+	return "Not Found";
 }

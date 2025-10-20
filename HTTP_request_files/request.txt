@@ -1,4 +1,4 @@
-GET /ficheiro.zip HTTP/1.1
+GET /index.html HTTP/1.1
 Host: www.exemplo.com
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
 Accept: */*

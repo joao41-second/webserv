@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connection.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/15 19:16:01 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/19 18:54:46 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,22 @@
 
 #include <string>
 
-//Connection represents each client connected to the server
-//usage of accept() if the fd is readable
-
-class ServerConfig;
-
 class Connection {
-	
+
 public:
-	Connection(int fd, const ServerConfig& cfg);
+	Connection(int fd);
 	~Connection();
+	Connection(const Connection &copy);
 
-	void	handleRead();               // le dados do socket
-    void	handleWrite(); 				// envia dados do socket
-	void	processRequest();           // decide CGI, estático || erros
+	bool	readRequest();				// read data from socket
+	bool	writeResponse(); 			// sends data to socket
+	bool	isRequestComplete();		// check if _readbuffer contains a complete HTTP request
 
+	std::string		getReadBuffer() const;
+	std::string		getWriteBuffer() const;
+	void			setWriteBuffer(std::string buffer);
 private:
-	std::string	_readBuffer;
-    std::string	_writeBuffer;
-	
+	int				_fd;
+	std::string		_readBuffer;
+	std::string		_writeBuffer;
 };

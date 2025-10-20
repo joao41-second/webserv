@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   debug.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:55:56 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 11:32:47 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/14 14:56:13 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <config/color.hpp>
+#include "color.hpp"
 
 #define TESTER 1
 
 #define DEBUG_HTTP 1
 
-#define DEBUG_CGI 0
+#define DEBUG_CGI 1
 
 
 

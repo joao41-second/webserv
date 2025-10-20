@@ -20,10 +20,13 @@
 #include <fcntl.h>		// TODO Ver se ha melhor
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
-#include <arpa/inet.h>	// TODO Ver se ha melhor
+
+#include <arpa/inet.h>
+#include <cstring>
+
+class ServerConfig;
 
 class Socket;
-class ServerConfig;
 
 class Config
 {

@@ -3,38 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   EventLoop.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:44:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/15 18:53:18 by joseoliv         ###   ########.fr       */
+/*   Updated: 2025/10/19 18:53:51 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-/*
+#include "Server.hpp"
+#include "Connection.hpp"
+#include <poll.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <signal.h>
 
-LOOP PRINCIPAL
+class Server;
+class Connection;
 
-Recebe uma lista de listening sockets (fd)
+class EventLoop {
 
-Cria estruturas internas para acompanhar:
+public:
+	EventLoop();
+	~EventLoop();
 
-fds de leitura
+	void	addListeningSocket(const Socket* socket);
+	void	run();
 
-fds de escrita
+private:
+	struct PollEntry {
+		struct pollfd		pfd;
+		struct sockaddr_in	socketAddr;
+		Connection*			conn;
+	};
 
-fds de erro (exception)
+	std::vector<PollEntry>	_pollEntries;
 
-
-
-Monitora fds usando select() / poll() / epoll().
-
-Quando um listening socket fica pronto chama Server::acceptConnection() -> cria uma nova Connection.
-
-Quando um client socket fica pronto para leitura chama Connection::handleRead() -> acumula dados e parseia request.
-
-Quando um client socket fica pronto para escrita chama Connection::handleWrite()-> envia resposta parcial ou completa.
-
-Repete tudo até o servidor ser encerrado.
-*/
+	void	closeConnection(PollEntry& entry);
+};

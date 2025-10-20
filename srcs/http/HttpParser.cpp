@@ -3,24 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   HttpParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/09/24 14:29:33 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:18:00 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "config/color.hpp"
+#include <config/color.hpp>
 #include <core/Server.hpp>
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>
-#include <http/Http_thow.hpp>
+#include <http/Http_throw.hpp>
+#include <sys/ucontext.h>
 
 std::vector<std::string> HttpParser::env;
 bool HttpParser::_request = false;
 std::string HttpParser::mensage = "";
 std::string HttpParser::_pach_info = "";
 std::string HttpParser::_type = "";
+int HttpParser::_http_page_error = 0;
 
 HttpParser::HttpParser(void)
 {
@@ -60,7 +62,6 @@ void HttpParser::parsing_request_line(std::string buffer)
 	buffer = buffer.substr(size+1,buffer.size());
 	// set paht info
 	size = buffer.find('?');
-
 	if (size == std::string::npos || size == 0)
 	{
 		query_string = false;
@@ -70,6 +71,8 @@ void HttpParser::parsing_request_line(std::string buffer)
 	}
 	method = buffer.substr(0,size);
 	buffer = buffer.substr(size+1,buffer.size());
+	HttpParser::_pach_info = method;
+	T_MSG(_pach_info, REG_CR2);
 
 	env.push_back("PATH_INFO='" + method + "'");
 	// set query_string if true
@@ -87,6 +90,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 		env.push_back("SERVER_PROTOCOL='" + buffer + "'");
 	else
 	   throw Version_Not_Supported_505();
+	
 	
 }
 

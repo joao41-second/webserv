@@ -31,7 +31,6 @@
 class HttpParser
 {
 	protected: 
-		static	int _http_page_error;
 	        static std::vector<std::string> env;
 		static std::string mensage;
 		static bool 	    _request;
@@ -43,8 +42,9 @@ class HttpParser
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
 	public:   
-	     static std::string _type;
-	     static std::string _pach_info; 
+	      static std::string _type;
+	      static std::string _pach_info; 
+	      static	int _http_page_error;
 
 	      static void new_request(std::string buffer); 
 	      static std::string get_request_msg();

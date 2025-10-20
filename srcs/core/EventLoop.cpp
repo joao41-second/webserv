@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:35:11 by joseoliv          #+#    #+#             */
-/*   Updated: 2025/10/18 17:45:54 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/19 18:54:08 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,9 @@
 
 EventLoop::EventLoop() { _pollEntries.reserve(1024); }
 
-EventLoop::~EventLoop()
-{
-	for (size_t i = 0; i < _pollEntries.size(); ++i)
-	{
+EventLoop::~EventLoop() {
+
+	for (size_t i = 0; i < _pollEntries.size(); ++i) {
 		if (_pollEntries[i].conn)
 			delete _pollEntries[i].conn;
 		if (_pollEntries[i].pfd.fd >= 0)
@@ -27,8 +26,7 @@ EventLoop::~EventLoop()
 	}
 }
 
-void EventLoop::addListeningSocket(const Socket *socket, Server &server)
-{
+void EventLoop::addListeningSocket(const Socket *socket) {
 	struct pollfd pfd;
 	pfd.fd = socket->getFd();
 	pfd.events = POLLIN;
@@ -37,16 +35,14 @@ void EventLoop::addListeningSocket(const Socket *socket, Server &server)
 	PollEntry entry;
 	entry.pfd = pfd;
 	entry.conn = NULL;
-	entry.server = &server;
 	entry.socketAddr = socket->getAddr();
 
 	_pollEntries.push_back(entry);
 }
 
-void EventLoop::run()
-{
-	while (true)
-	{
+void EventLoop::run() {
+
+	while (true) {
 		// build contiguous temp pollfd array
 		std::vector<struct pollfd> pfdArray;
 		std::vector<size_t> indexMap;
@@ -68,8 +64,6 @@ void EventLoop::run()
 			for (size_t j = 0; j < pfdArray.size(); ++j)
 				_pollEntries[indexMap[j]].pfd.revents = pfdArray[j].revents;
 		}
-		else
-			usleep(1000);
 
 		std::vector<PollEntry> newClients;
 
@@ -94,7 +88,7 @@ void EventLoop::run()
 						int flags = fcntl(clientFd, F_GETFL, 0);
 						fcntl(clientFd, F_SETFL, flags | O_NONBLOCK);
 
-						Connection *conn = new Connection(clientFd, *entry.server);
+						Connection *conn = new Connection(clientFd);
 						struct pollfd pfd;
 						pfd.fd = clientFd;
 						pfd.events = POLLIN;
@@ -103,7 +97,6 @@ void EventLoop::run()
 						PollEntry clientEntry;
 						clientEntry.pfd = pfd;
 						clientEntry.conn = conn;
-						clientEntry.server = entry.server;
 						clientEntry.socketAddr = entry.socketAddr;
 
 						newClients.push_back(clientEntry);
@@ -117,6 +110,8 @@ void EventLoop::run()
 					}
 					else if (entry.conn->isRequestComplete()) {
 						std::cout << entry.conn->getReadBuffer() << std::endl;
+						//send to joao entry.conn->getReadBuffer()
+						//joao returns his string to entry.con->setWriteBuffer(string);
 						entry.pfd.events = POLLIN;
 					}
 				}

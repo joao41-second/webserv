@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:46 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/18 17:16:22 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/19 18:55:04 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,3 @@ private:
 	std::vector<ServerConfig> _configs;
 	std::vector<Socket*> _listeningSockets;
 };
-
-/*
-Server guarda:
-
-std::map<int, Connection*> activeConnections (mapa fd → Connection*).
-
-EventLoop loop (a abstracção de poll).
-
-
-EventLoop encapsula poll e provê:
-
-addFd(fd, mode) / removeFd(fd).
-
-pollEvents() → devolve lista de eventos (fd + tipo: readable/writable).
-*/

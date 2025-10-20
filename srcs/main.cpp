@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/19 18:23:00 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/19 18:33:42 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,31 +17,31 @@
 #include <signal.h>
 #include <termios.h>
 
-static void disable_ctrlc_echo() {
+static void	disable_ctrlc_echo() {
 
-    struct termios	t;
-    if (tcgetattr(STDIN_FILENO, &t) == 0)
-    {
-        t.c_lflag &= ~ECHOCTL;   //stop echoing ^C
-        tcsetattr(STDIN_FILENO, TCSANOW, &t);
-    }
+	struct termios	t;
+	if (tcgetattr(STDIN_FILENO, &t) == 0) {
+
+		t.c_lflag &= ~ECHOCTL;   //stop echoing ^C
+		tcsetattr(STDIN_FILENO, TCSANOW, &t);
+	}
 }
 
-static void signalHandler(int) {
-    std::cout << "Shutting down server..." << std::endl;
-    std::cout << "..." << std::endl;
-    std::cout << "..." << std::endl;
+static void	signalHandler(int) {
+	std::cout << "Shutting down server..." << std::endl;
+	std::cout << "..." << std::endl;
+	std::cout << "..." << std::endl;
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	if (argc != 2)
-	{
-		throw InputException("The program should use the template './webserv [configuration file]'");
+	if (argc != 2) {
+		std::cout << "The program should use the template './webserv [configuration file]'" << std::endl;
+		exit(EXIT_FAILURE);
 	}
 
 	disable_ctrlc_echo();
-    signal(SIGINT, signalHandler);
+	signal(SIGINT, signalHandler);
 
 	Config conf_info(argv[1], envp);
 

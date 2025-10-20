@@ -1,5 +1,9 @@
 #pragma once
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
 #ifndef SOCKET_H
 #define SOCKET_H
 

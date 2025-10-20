@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseoliv <joseoliv@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:45:37 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/26 12:22:06 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:19:33 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 //works with HttpStatus
 
 
-#include "config/Config.hpp"
-#include <string>
 #ifndef HTTPRESPONSE_HPP
 #define HTTPRESPONSE_HPP
 
+#include <config/Config.hpp>
+#include <string>
+
 #include <config/debug.hpp>
-#include <http/HttpParser.hpp>
+#include "HttpParser.hpp"
 
 
 class HttpResponse

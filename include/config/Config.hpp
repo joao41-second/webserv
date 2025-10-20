@@ -20,12 +20,13 @@
 #include <fcntl.h>		// TODO Ver se ha melhor
 #include <sys/socket.h> // TODO Ver se ha melhor
 #include <netinet/in.h> // TODO Ver se ha melhor
-#include <iostream>
+
+#include <arpa/inet.h>
 #include <cstring>
-#include <arpa/inet.h>	// TODO Ver se ha melhor
+
+class ServerConfig;
 
 class Socket;
-class ServerConfig;
 
 class Config
 {
@@ -58,7 +59,7 @@ public:
 		std::string _msg;
 	};
 private:
-	std::vector<ServerConfig>	_servers; // TODO construir um getter para isto
+	std::vector<ServerConfig>	_servers;
 	std::vector<Socket*>		_sockets;
 
 	char	**_env;

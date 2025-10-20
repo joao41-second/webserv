@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HttpParser_thorw.cpp                               :+:      :+:    :+:   */
+/*   HttpParser_throw.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 15:24:36 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/09 12:17:43 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:17:39 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <http/Http_thow.hpp>
-#include <http/HttpParser.hpp>
 
+#include <http/HttpParser.hpp>
+#include <http/Http_throw.hpp>
 
 const char *Badd_Request_400::what(void) const throw()
 {

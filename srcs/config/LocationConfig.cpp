@@ -1,6 +1,7 @@
-#include <config/Config.hpp>
 #include "../../include/config/ServerConfig.hpp"
 #include "../../include/config/LocationConfig.hpp"
+#include "../../include/config/Config.hpp"
+
 // |----------------------
 // | HELPER FUNCTIONS
 // |----------------------

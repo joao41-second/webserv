@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperpct <jperpect@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 13:16:35 by jperpct           #+#    #+#             */
-/*   Updated: 2025/10/09 12:05:27 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/10/18 17:18:00 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <core/Server.hpp>
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>
-#include <http/Http_thow.hpp>
+#include <http/Http_throw.hpp>
 #include <sys/ucontext.h>
 
 std::vector<std::string> HttpParser::env;

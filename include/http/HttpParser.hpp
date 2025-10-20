@@ -45,6 +45,7 @@ class HttpParser
 	      static std::string _type;
 	      static std::string _pach_info; 
 	      static	int _http_page_error;
+		static std::string _host;
 
 	      static void new_request(std::string buffer); 
 	      static std::string get_request_msg();

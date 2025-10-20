@@ -20,7 +20,6 @@
 
 #include <config/Config.hpp>
 #include <string>
-
 #include <config/debug.hpp>
 #include "HttpParser.hpp"
 
@@ -30,12 +29,12 @@ class HttpResponse
 
 	private:
 	  static int size_max;
-	  static Config conf;
+	  static std::vector<ServerConfig> _configs;
 		HttpResponse();
 		~HttpResponse();
 	public:
 		static bool _request_status;
-	 	static	void set_config(Config);
+	 	static	void set_config(std::vector<ServerConfig>& conf);
 		static bool chek_cig_or_static(std::string);
 		static std::string return_path_use();
 		static std::string rediect_path(std::string);

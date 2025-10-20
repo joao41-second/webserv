@@ -12,11 +12,9 @@
 
 #include <config/color.hpp>
 #include <core/Server.hpp>
-#include <cstdlib>
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>
 #include <http/Http_throw.hpp>
-#include <string>
 #include <sys/ucontext.h>
 
 std::vector<std::string> HttpParser::env;
@@ -25,7 +23,6 @@ std::string HttpParser::mensage = "";
 std::string HttpParser::_pach_info = "";
 std::string HttpParser::_type = "";
 int HttpParser::_http_page_error = 0;
-std::string HttpParser::_host = "";
 
 HttpParser::HttpParser(void)
 {
@@ -90,18 +87,10 @@ void HttpParser::parsing_request_line(std::string buffer)
 	}
 	//set protocl
 	HTTP_MSG(buffer);
-	method = buffer.substr(0,5);
-
-	HTTP_MSG(method);
-	if(method != "HTTP/")
-	   throw Version_Not_Supported_505();
-
-	method = buffer.substr(5,buffer.size());
-	buffer = method; 
-
-	if(std::atof(buffer.c_str()) == 1.1)
+	if(buffer == "HTTP/1.1\n")
 	{
 
+	HTTP_MSG(buffer);
 		env.push_back("SERVER_PROTOCOL='" + buffer + "'");}
 	else
 	   throw Version_Not_Supported_505();
@@ -117,7 +106,7 @@ void HttpParser::parsing_env(std::string buffer)
 	std::string var;
 	std::string content;
 
-	if( size == std::string::npos || line == "\n" || size == 1 )
+	if( size == std::string::npos || line == "\n" )
 	{
 		mensage = buffer_new;
 		return;
@@ -138,8 +127,6 @@ void HttpParser::parsing_env(std::string buffer)
 		var = line.substr(0,size);	
 		content = line.substr(size+1,line.size());
 		std::replace(var.begin(), var.end(), '-', '_');
-		if(var == "host")
-			_host = content;
 		env.push_back("HTTP_"+var+"='"+ content+"'");
 		parsing_env(buffer_new);
 	}
@@ -151,9 +138,8 @@ void HttpParser::new_request(std::string buffer)
 	_request = false;
 	env.clear();
 	mensage = "";
-	_pach_info = "/index.html";
+	_pach_info = "";
 	_type = "";
-	_host = "";
 	HTTP_MSG("Parse the new request");
 	parsing_env(buffer);
 	T_MSG("ok",GREEN);

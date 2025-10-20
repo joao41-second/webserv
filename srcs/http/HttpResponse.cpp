@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "config/Config.hpp"
+#include "config/ServerConfig.hpp"
 #include <cstdlib>
 #include <http/HttpResponse.hpp>
 #include <http/HttpParser.hpp>
@@ -26,6 +28,12 @@
 bool   HttpResponse::_request_status = false;
 int HttpResponse::size_max = 500;
 
+std::vector<ServerConfig> HttpResponse::_configs;
+
+void HttpResponse::set_config(std::vector<ServerConfig> &conf)
+{
+	HttpResponse::_configs = conf;
+}
 
 std::string HttpResponse::open_static_file(std::string file)
 {
@@ -113,13 +121,16 @@ std::string HttpResponse::request_and_response(std::string request)
 	try
 	{
 		HttpParser::new_request(request);
+		HTTP_MSG( "ola o error e "<< HttpParser::_host)
 		if (chek_cig_or_static(HttpParser::_pach_info))
 		{
+
 			// execute in exeve
 		}
 		else
 		{
 			// open and send file j
+		
 			path = rediect_path(HttpParser::_pach_info);
 			HTTP_MSG("_pach_info: " << path << std::endl);
 			response = HttpResponse::open_static_file(path);

@@ -12,6 +12,7 @@
 
 #include <core/Connection.hpp>
 #include <core/Server.hpp>
+#include <config/color.hpp>
 
 Connection::Connection(int fd) : _fd(fd) {
 	_readBuffer = "";
@@ -57,8 +58,8 @@ bool	Connection::writeResponse() {
 
 	if (_writeBuffer.empty())
 		return (true);
-
-	bytesWritten = write(_fd, _writeBuffer.c_str(), _writeBuffer.size());
+	std::cout  << RED << "ola"  << std::endl;
+	bytesWritten = write(_fd, _writeBuffer.c_str(), _writeBuffer.size()); 
 	if (bytesWritten < 0) {
 		perror("write");
 		return (false);

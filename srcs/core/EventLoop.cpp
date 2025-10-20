@@ -13,6 +13,7 @@
 #include <core/EventLoop.hpp>
 #include <core/Server.hpp>
 #include <core/Connection.hpp>
+#include <http/HttpResponse.hpp>
 
 EventLoop::EventLoop() { _pollEntries.reserve(1024); }
 
@@ -110,6 +111,8 @@ void EventLoop::run() {
 					}
 					else if (entry.conn->isRequestComplete()) {
 						std::cout << entry.conn->getReadBuffer() << std::endl;
+						entry.conn->setWriteBuffer("ola mundo");
+						
 						//send to joao entry.conn->getReadBuffer()
 						//joao returns his string to entry.con->setWriteBuffer(string);
 						entry.pfd.events = POLLIN;
@@ -118,7 +121,11 @@ void EventLoop::run() {
 			}
 
 			if (entry.pfd.revents & POLLOUT) {
+				
+	std::cout  << RED << "ola"  << std::endl;
 				if (entry.conn && !entry.conn->writeResponse()) {
+
+				std::cout  << RED << "ola2"  << std::endl;
 					closeConnection(entry);
 					entry.pfd.fd = -1;
 				}

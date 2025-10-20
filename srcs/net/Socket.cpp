@@ -56,26 +56,26 @@ Socket::Socket(const Socket &orig): _fd(orig._fd), _addr(orig._addr)
 	//std::cout << "Socket copy-constructed." << std::endl;
 }*/
 
-Socket::Socket(uint16_t port)
+Socket::Socket(uint16_t port) // TODO If an exception is thrown here, will all FDs be closed properly?
 {
 	// Create socket
 	this->_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (this->_fd < 0)
 	{
-		throw InputException("Could not create socket");
+		throw Config::BadPortException("Could not create socket: Port ", port);
 	}
 
 	// Set SO_REUSEADDR to allow immediate reuse of the port
 	int opt = 1;
 	if (setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
-		throw InputException("Could not set SO_REUSEADDR");
+		throw Config::BadPortException("Could not set SO_REUSEADDR: Port ", port);
 	}
 
 	// F_SETFL → set socket's status flags ; O_NONBLOCK → Set socket's flag to non-blocking
 	if (fcntl(this->_fd, F_SETFL, O_NONBLOCK) == -1)
 	{
-		throw InputException("Could not set socket to non-blocking");
+		throw Config::BadPortException("Could not set socket to non-blocking: Port ", port);
 	}
 
 	// Listen to port on the address
@@ -86,12 +86,12 @@ Socket::Socket(uint16_t port)
 	// Bind port to socket
 	if (bind(this->_fd, (struct sockaddr*)&this->_addr, sizeof(this->_addr)) < 0)
 	{
-		throw InputException("Failed to bind to the port");
+		throw Config::BadPortException("Failed to bind to the port: ", port);
 	}
 
 	if (listen(this->_fd, 1024) < 0)
 	{
-		throw InputException("Failed to listen on socket");
+		throw Config::BadPortException("Failed to listen on socket: Port ", port);
 	}
 	//std::cout << "Socket constructed." << std::endl;
 }

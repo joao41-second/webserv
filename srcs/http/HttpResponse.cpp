@@ -12,6 +12,7 @@
 
 #include "config/Config.hpp"
 #include "config/ServerConfig.hpp"
+#include <atomic>
 #include <cstdlib>
 #include <http/HttpResponse.hpp>
 #include <http/HttpParser.hpp>
@@ -56,7 +57,11 @@ std::string HttpResponse::open_static_file(std::string file)
 		index = false;
 		throw Not_found_404();
 	}
+
 	request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
+
+	//TODO add config for set if file for download
+	/request += "Content-Type: text/html; charset=UTF-8 \n";
 	file_fd.read(&temp[0], size_max);
 	std::string data;
 	for (int i = 0; i < (int)temp.size() && temp[i] != '\0'; i++)
@@ -67,7 +72,7 @@ std::string HttpResponse::open_static_file(std::string file)
 	ss << (int)data.size();
 	request += "Content-Length: " + ss.str() + "\r\n";
 	// request += "Connection: close\r\n";
-	request += "Connection: keep-alive\r\n";
+	request += "Connection: keep-alive\r\n\n";
 	if (index == true)
 		request = "";
 	if (index == false)
@@ -98,12 +103,12 @@ std::string HttpResponse::rediect_path(std::string path)
 	size = path.find('/'); // TODO  if not 1 not good parsing
 	file = path.substr(size, path.size());
 	size = path.find('/');
-	if (size == (int)std::string::npos)
-		return "ola" + file; // TODO the check the local file not implemtn
+//	if (size == (int)std::string::npos)
+//		return "ola" + file; // TODO the check the local file not implemtn
 
 	// this funsicon is recorsive;
 
-	return "ola" + file;
+	return ("ola/index.html");
 }
 
 bool HttpResponse::chek_cig_or_static(std::string)
@@ -146,7 +151,7 @@ std::string HttpResponse::request_and_response(std::string request)
 		return (gener_erro_page(HttpParser::_http_page_error, e.what()));
 		std::cout << RED << "error: " << e.what() << RESET << std::endl;
 	}
-
+	HTTP_MSG(response);
 	return (response);
 }
 

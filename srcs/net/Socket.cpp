@@ -65,6 +65,13 @@ Socket::Socket(uint16_t port)
 		throw InputException("Could not create socket");
 	}
 
+	// Set SO_REUSEADDR to allow immediate reuse of the port
+	int opt = 1;
+	if (setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+	{
+		throw InputException("Could not set SO_REUSEADDR");
+	}
+
 	// F_SETFL → set socket's status flags ; O_NONBLOCK → Set socket's flag to non-blocking
 	if (fcntl(this->_fd, F_SETFL, O_NONBLOCK) == -1)
 	{
@@ -82,8 +89,7 @@ Socket::Socket(uint16_t port)
 		throw InputException("Failed to bind to the port");
 	}
 
-	// Start listening. Hold at most 10 connections in the queue
-	if (listen(this->_fd, 10) < 0) // TODO only 10 connections? Or 1024?
+	if (listen(this->_fd, 1024) < 0)
 	{
 		throw InputException("Failed to listen on socket");
 	}
@@ -95,11 +101,7 @@ Socket::Socket(uint16_t port)
 	//std::cout << "Socket constructed." << std::endl;
 }*/
 
-Socket::~Socket(void)
-{
-	if (this->_fd >= 0)
-		close(this->_fd);
-	//std::cout << "Socket destructed." << std::endl;
+Socket::~Socket(void) {
 }
 
 // |----------------------

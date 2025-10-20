@@ -55,6 +55,16 @@ public:
 	private:
 		std::string _msg;
 	};
+
+	class BadPortException: public std::exception
+	{
+	public:
+		BadPortException(std::string msg, uint16_t port);
+		virtual ~BadPortException() throw();
+		virtual const char *what() const throw();
+	private:
+		std::string _msg;
+	};
 private:
 	std::vector<ServerConfig>	_servers;
 	std::vector<Socket*>		_sockets;

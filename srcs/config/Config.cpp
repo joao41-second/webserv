@@ -117,13 +117,17 @@ ServerConfig const	&Config::getServerConfig(uint16_t port) const
 			return (this->_servers[i]);
 		}
 	}
-	throw BadConfigException("Port not found", "");
+	throw BadPortException("Could not find Port ", port);
 }
 
 ServerConfig const	&Config::getServerConfig(unsigned int num) const
 {
 	if (num >= this->_servers.size())
-		throw BadConfigException("Out of bounds", " - Servers");
+	{
+		std::ostringstream oss;
+		oss << (_servers.size() - 1);
+		throw BadConfigException("Out of bounds: Servers only go to ", oss.str());
+	}
 	return(this->_servers[num]);
 }
 
@@ -203,6 +207,23 @@ Config::BadConfigException::~BadConfigException() throw()
 }
 
 const char *Config::BadConfigException::what() const throw()
+{
+	return (this->_msg.c_str());
+}
+
+Config::BadPortException::BadPortException(std::string msg, uint16_t port)
+{
+	std::ostringstream out;
+	out << msg << port;
+	_msg = out.str();
+}
+
+Config::BadPortException::~BadPortException() throw()
+{
+	//std::cout << "Error message destroyed" << std::endl;
+}
+
+const char *Config::BadPortException::what() const throw()
 {
 	return (this->_msg.c_str());
 }

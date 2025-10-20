@@ -22,7 +22,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 
 	if (this->getName() == "")
 	{
-		throw InputException("Empty field (server_name)");
+		throw BadConfigException("Empty field (location name): ", line);
 	}
 
 	// Printing loop, once per line in Configuration file
@@ -40,7 +40,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setSubLocation(new LocationConfig(location_file, line));
 			if (!this->checkSubLocation())
 			{
-				throw InputException("Input error (sub-location)"); // TODO be more specific!
+				throw BadConfigException("Input error (sub-location): ", line);
 			}
 		}
 		else if (line.compare(0, 4, "root") == 0)
@@ -48,7 +48,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setRoot(trim_whitespace(line.substr(4)));
 			if (this->getRoot() == "")
 			{
-				throw InputException("Empty field (root)"); // TODO be more specific!
+				throw BadConfigException("Empty field (root): ", line);
 			}
 		}
 		else if (line.compare(0, 5, "index") == 0)
@@ -56,7 +56,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setIndex(trim_whitespace(line.substr(5)));
 			if (this->getIndex() == "")
 			{
-				throw InputException("Empty field (index)"); // TODO be more specific!
+				throw BadConfigException("Empty field (index): ", line);
 			}
 		}
 		else if (line.compare(0, 8, "cgi_pass") == 0)
@@ -64,7 +64,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setPass(trim_whitespace(line.substr(9)));
 			if (this->getPass() == "")
 			{
-				throw InputException("Empty field (cgi_pass)"); // TODO be more specific!
+				throw BadConfigException("Empty field (cgi_pass): ", line);
 			}
 		}
 		else if (line.compare(0, 13, "allow_methods") == 0)
@@ -72,7 +72,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setMethods(trim_whitespace(line.substr(13)));
 			if (this->_methods.empty())
 			{
-				throw InputException("Empty field (allow_methods)"); // TODO be more specific!
+				throw BadConfigException("Empty field (allow_methods): ", line);
 			}
 		}
 		else if (line.compare(0, 23, "client_body_buffer_size") == 0)
@@ -162,7 +162,7 @@ void	LocationConfig::setOneMethod(std::string word)
 			return ;
 		}
 	}
-	throw InputException("Invalid method");
+	throw BadConfigException("Invalid method: ", capitalize(word));
 }
 
 void	LocationConfig::setIndex(std::string index)
@@ -191,7 +191,7 @@ void	LocationConfig::setClientBuffSize(std::string buff_size)
 	this->_client_body_buffer_size = std::strtoul(buff_size.c_str(), &safeguard, 10);
 	if (*safeguard != '\0')
 	{
-		throw InputException("Invalid client_body_buffer_size");
+		throw BadConfigException("Invalid client_body_buffer_size", "");
 	}
 }
 
@@ -267,7 +267,11 @@ std::map<std::string, LocationConfig> const	&LocationConfig::getSubLocationMap(v
 LocationConfig	&LocationConfig::getSubLocation(unsigned int num)
 {
 	if (num >= this->_sub_locations.size())
-		throw InputException("Out of bounds (Sub-Locations)"); // TODO Write a proper exception
+	{
+		std::ostringstream oss;
+		oss << (_sub_locations.size() - 1);
+		throw BadConfigException("Out of bounds: Sub-Locations only go to ", oss.str());
+	}
 
 	std::map<std::string, LocationConfig>::iterator it = this->_sub_locations.begin();
 	unsigned int i = 0;
@@ -283,7 +287,11 @@ LocationConfig	&LocationConfig::getSubLocation(unsigned int num)
 LocationConfig const	&LocationConfig::getSubLocation(unsigned int num) const
 {
 	if (num >= this->_sub_locations.size())
-		throw InputException("Out of bounds (Sub-Locations)"); // TODO Write a proper exception
+	{
+		std::ostringstream oss;
+		oss << (_sub_locations.size() - 1);
+		throw BadConfigException("Out of bounds: Sub-Locations only go to ", oss.str());
+	}
 
 	std::map<std::string, LocationConfig>::const_iterator it = this->_sub_locations.begin();
 	unsigned int i = 0;

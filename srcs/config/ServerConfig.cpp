@@ -55,7 +55,7 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			this->setName(trim_whitespace(line.substr(11)));
 			if (this->getName() == "")
 			{
-				throw InputException("Empty field (server_name)"); // TODO be more specific!
+				throw BadConfigException("Empty field (server_name): ", line);
 			}
 		}
 		else if (line.compare(0, 6, "listen") == 0)
@@ -63,7 +63,7 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			this->setPort(trim_whitespace(line.substr(6)));
 			if (this->getPort() == 0 || this->getInterface() == "") // TODO Can ports actually be 0?
 			{
-				throw InputException("Empty field (listen)"); // TODO be more specific!
+				throw BadConfigException("Empty field (listen): ", line);
 			}
 		}
 		else if (line.compare(0, 4, "root") == 0)
@@ -71,7 +71,7 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			this->setRoot(trim_whitespace(line.substr(4)));
 			if (this->getRoot() == "")
 			{
-				throw InputException("Empty field (root)"); // TODO be more specific!
+				throw BadConfigException("Empty field (root): ", line);
 			}
 		}
 		else if (line.compare(0, 5, "index") == 0)
@@ -79,7 +79,7 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			this->setIndex(trim_whitespace(line.substr(5)));
 			if (this->getIndex() == "")
 			{
-				throw InputException("Empty field (index)"); // TODO be more specific!
+				throw BadConfigException("Empty field (index): ", line);
 			}
 		}
 		else if (line.compare(0, 13, "allow_methods") == 0)
@@ -87,7 +87,7 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			this->setMethods(trim_whitespace(line.substr(13)));
 			if (this->_methods.empty())
 			{
-				throw InputException("Empty field (allow_methods)"); // TODO be more specific!
+				throw BadConfigException("Empty field (allow_methods): ", line);
 			}
 		}
 		else if (line.compare(0, 20, "client_max_body_size") == 0)
@@ -108,12 +108,14 @@ uint16_t ServerConfig::stringToUint16(const std::string &str)
 
 	if (*safeguard != '\0')
 	{
-		throw InputException("Input port is not a number");
+		throw BadConfigException("Input port is not a number: ", str);
 	}
 
 	if (ul > 65535)
 	{
-		throw InputException("Port cannot be higher than uint_16 max (65535)");
+		std::ostringstream oss;
+		oss << ul;
+		throw BadConfigException("Port cannot be higher than uint_16 max (65535): ", oss.str());
 	}
 
 	return (static_cast<uint16_t>(ul));
@@ -174,7 +176,7 @@ void	ServerConfig::setOneMethod(std::string word)
 			return ;
 		}
 	}
-	throw InputException("Invalid method");
+	throw BadConfigException("Invalid method: ", capitalize(word));
 }
 
 void	ServerConfig::setOneErrorPage(std::string error_page_str)
@@ -183,7 +185,7 @@ void	ServerConfig::setOneErrorPage(std::string error_page_str)
 	unsigned long	error_num = static_cast<int>(std::strtoul(error_page_str.substr(0, 3).c_str(), &safeguard, 10));
 	if (*safeguard != '\0')
 	{
-		throw InputException("Invalid Error Page in configuration file");
+		throw BadConfigException("Invalid Error Page in configuration file: ", error_page_str);
 	}
 
 	this->_error_pages[error_num] = trim_whitespace(error_page_str.substr(3));
@@ -208,7 +210,7 @@ void	ServerConfig::setClientMaxSize(std::string max_size)
 	this->_client_max_body_size = std::strtoul(max_size.substr(0, lim).c_str(), &safeguard, 10);
 	if (*safeguard != '\0')
 	{
-		throw InputException("Invalid client_max_body_size");
+		throw BadConfigException("Invalid client_max_body_size", "");
 	}
 
 	if (unit == 'k' || unit == 'K')
@@ -244,7 +246,7 @@ void	ServerConfig::setPort(std::string str)
 		}
 	}
 
-	throw InputException("Invalid syntax (listen)");
+	throw BadConfigException("Invalid syntax (listen): ", str);
 }
 
 void	ServerConfig::setIndex(std::string index)
@@ -270,7 +272,11 @@ std::map<std::string, LocationConfig>	&ServerConfig::getLocMap(void)
 LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 {
 	if (num >= this->_locations.size())
-		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
+	{
+		std::ostringstream oss;
+		oss << (_sub_locations.size() - 1);
+		throw BadConfigException("Out of bounds: Locations only go to ", oss.str());
+	}
 
 	std::map<std::string, LocationConfig>::const_iterator it = this->_locations.begin();
 	unsigned int i = 0;

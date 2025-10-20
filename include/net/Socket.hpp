@@ -14,10 +14,11 @@
 class Socket
 {
 public:
-	//Socket();
+	Socket();
 	Socket(uint16_t port);
-	//Socket(const Socket& orig);
-	//Socket& operator=(const Socket& orig);
+	//Socket(const Socket& copy);
+	//Socket& operator=(const Socket& src);
+
 	virtual ~Socket();
 
 	int							getFd() const;

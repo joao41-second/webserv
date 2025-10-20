@@ -1,4 +1,4 @@
-#include "../../include/config/Config.hpp"
+#include <config/Config.hpp>
 #include "../../include/config/ServerConfig.hpp"
 #include "../../include/net/Socket.hpp"
 

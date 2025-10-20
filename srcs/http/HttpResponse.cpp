@@ -22,9 +22,10 @@
 #include <sstream>
 #include <vector>
 
-HttpResponse::HttpResponse() : _request_status(false) {}
 
-HttpResponse::~HttpResponse() {}
+bool   HttpResponse::_request_status = false;
+int HttpResponse::size_max = 500;
+
 
 std::string HttpResponse::open_static_file(std::string file)
 {
@@ -48,7 +49,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		throw Not_found_404();
 	}
 	request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
-	file_fd.read(&temp[0], this->size_max);
+	file_fd.read(&temp[0], size_max);
 	std::string data;
 	for (int i = 0; i < (int)temp.size() && temp[i] != '\0'; i++)
 		data += temp[i];
@@ -106,7 +107,7 @@ bool HttpResponse::chek_cig_or_static(std::string)
 
 std::string HttpResponse::request_and_response(std::string request)
 {
-	//int error;
+	int error;
 	std::string response;
 	std::string path;
 	try
@@ -126,6 +127,9 @@ std::string HttpResponse::request_and_response(std::string request)
 	}
 	catch (std::exception &e)
 	{
+		error = std::atoi(e.what());
+		(void)error;
+		//TODO not inplemente use paths setd in config
 		//error = std::atoi(e.what());
 		// TODO not inplemente use paths setd in config
 		return (gener_erro_page(HttpParser::_http_page_error, e.what()));

@@ -35,8 +35,10 @@ static void	signalHandler(int) {
 
 int	main(int argc, char **argv, char **envp)
 {
-	if (argc != 2)
-		throw InputException("The program should use the template './webserv [configuration file]'");
+	if (argc != 2) {
+		std::cout << "The program should use the template './webserv [configuration file]'" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
 	disable_ctrlc_echo();
 	signal(SIGINT, signalHandler);

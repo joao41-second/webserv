@@ -15,7 +15,7 @@
 //works with HttpStatus
 
 
-#include "config/config.hpp"
+#include "config/Config.hpp"
 #include <string>
 #ifndef HTTPRESPONSE_HPP
 #define HTTPRESPONSE_HPP

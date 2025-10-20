@@ -132,6 +132,7 @@ std::string HttpResponse::request_and_response(std::string request)
 	catch(std::exception &e)
 	{
 		error = std::atoi(e.what());
+		(void)error;
 		//TODO not inplemente use paths setd in config
 		return (gener_erro_page(HttpParser::_http_page_error, e.what()));
 		std::cout << RED << "error: "<< e.what() << RESET << std::endl;

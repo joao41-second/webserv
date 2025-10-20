@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "config/color.hpp"
-#include "config/locationconfig.hpp"
+#include "config/LocationConfig.hpp"
 #include "core/Server.hpp"
 #include "http/HttpParser.hpp"
 #include <cgi/cgi.hpp>

@@ -6,12 +6,37 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:30:05 by cereais           #+#    #+#             */
-/*   Updated: 2025/09/26 14:03:15 by jperpct          ###   ########.fr       */
+/*   Updated: 2025/09/16 13:39:16 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <core/Server.hpp>
-#include <config/serverconfig.hpp>
+#include "../include/core/Server.hpp"
+#include "../include/config/ServerConfig.hpp"
+#include "../include/config/Config.hpp"
+#include "../include/net/Socket.hpp"
+
+int	main(int argc, char **argv, char **envp)
+{
+	if (argc != 2)
+	{
+		throw InputException("The program should use the template './webserv [configuration file]'");
+	}
+
+	Config conf_info(argv[1], envp);
+
+	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+	std::vector<Socket*>		sockets = conf_info.getSocketVector();
+
+	//Server server(configs, sockets);
+	//server.run();
+
+	return 0;
+}
+
+/*#include <core/Server.hpp>
+#include <config/ServerConfig.hpp>
+>>>>>>> main
 #include <net/Socket.hpp>
 #include <http/HttpParser.hpp>
 
@@ -41,5 +66,4 @@ int	main(int argc, char **argv, char **env)
 	catch(std::exception &e)
 	{
 		std::cout << e.what() <<std::endl;
-	}
-}
+	}*/

@@ -13,9 +13,9 @@ SRCS_ALL := $(SRC_DIR)/http/HttpParser.cpp \
 	    $(SRC_DIR)/http/HttpResponse.cpp \
 	    $(SRC_DIR)/http/HttpParser_thorw.cpp \
 	    $(SRC_DIR)/cgi/CgiHandler.cpp \
-	    $(SRC_DIR)/config/config.cpp \
-	    $(SRC_DIR)/config/locationconfig.cpp \
-	    $(SRC_DIR)/config/serverconfig.cpp \
+	    $(SRC_DIR)/config/Config.cpp \
+	    $(SRC_DIR)/config/LocationConfig.cpp \
+	    $(SRC_DIR)/config/ServerConfig.cpp \
 	    $(SRC_DIR)/net/Socket.cpp
 			
 

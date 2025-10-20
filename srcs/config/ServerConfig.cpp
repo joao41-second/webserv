@@ -1,6 +1,6 @@
-#include "../../include/config/config.hpp"
-#include "../../include/config/serverconfig.hpp"
-#include "../../include/config/locationconfig.hpp"
+#include "../../include/config/Config.hpp"
+#include "../../include/config/ServerConfig.hpp"
+#include "../../include/config/LocationConfig.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -10,7 +10,7 @@
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	ServerConfig::parse_server(std::istream& server_file) // TODO Write function
+void	ServerConfig::parse_server(std::istream& server_file)
 {
 	std::string		line;
 
@@ -24,14 +24,30 @@ void	ServerConfig::parse_server(std::istream& server_file) // TODO Write functio
 			break ;
 		}
 
-		// TODO Consider using a switch for this
 		if (line.compare(0, 8, "location") == 0)
 		{
-			this->setLocationConfig(new LocationConfig(server_file, line));
+			LocationConfig	*tmp_loc = new LocationConfig(server_file, line);
+			std::string		tmp_name = tmp_loc->getName();
+			// Set location in map
+			this->setOneLocationConfig(tmp_loc);
 
-			if (this->_locations.empty())
+			// If location does not contain methods, inherit from server
+			if (this->getLocMap()[tmp_name].getMethods().empty())
 			{
-				throw InputException("Input error (location)"); // TODO be more specific!
+				this->getLocMap()[tmp_name].copyMethods(this->getMethods());
+			}
+
+			// Handle sub-locations
+			for (unsigned int i = 0; i < this->getLocMap()[tmp_name].getSubLocationMap().size(); i++) 
+			{
+				// If sub-location does not contain methods, inherit from server
+				if (this->getLocMap()[tmp_name].getSubLocation(i).getMethods().empty())
+				{
+					this->getLocMap()[tmp_name].getSubLocation(i).copyMethods(this->getMethods());
+				}
+
+				// Set sub-location in map, with appropriate name
+				this->setOneLocationConfig(this->getLocMap()[tmp_name].getSubLocation(i).clone());
 			}
 		}
 		else if (line.compare(0, 11, "server_name") == 0)
@@ -73,6 +89,14 @@ void	ServerConfig::parse_server(std::istream& server_file) // TODO Write functio
 			{
 				throw InputException("Empty field (allow_methods)"); // TODO be more specific!
 			}
+		}
+		else if (line.compare(0, 20, "client_max_body_size") == 0)
+		{
+			this->setClientMaxSize(trim_whitespace(line.substr(20)));
+		}
+		else if (line.compare(0, 10, "error_page") == 0)
+		{
+			this->setOneErrorPage(trim_whitespace(line.substr(10)));
 		}
 	}
 }
@@ -153,6 +177,54 @@ void	ServerConfig::setOneMethod(std::string word)
 	throw InputException("Invalid method");
 }
 
+void	ServerConfig::setOneErrorPage(std::string error_page_str)
+{
+	char 			*safeguard;
+	unsigned long	error_num = static_cast<int>(std::strtoul(error_page_str.substr(0, 3).c_str(), &safeguard, 10));
+	if (*safeguard != '\0')
+	{
+		throw InputException("Invalid Error Page in configuration file");
+	}
+
+	this->_error_pages[error_num] = trim_whitespace(error_page_str.substr(3));
+}
+
+void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
+{
+	if (loc)
+	{
+		std::string	locname = loc->getName();
+		this->_locations[locname] = *loc;
+		delete (loc);
+	}
+}
+
+void	ServerConfig::setClientMaxSize(std::string max_size)
+{
+	size_t	lim = max_size.size() - 1;
+	char	unit = max_size[lim];
+	char	*safeguard;
+
+	this->_client_max_body_size = std::strtoul(max_size.substr(0, lim).c_str(), &safeguard, 10);
+	if (*safeguard != '\0')
+	{
+		throw InputException("Invalid client_max_body_size");
+	}
+
+	if (unit == 'k' || unit == 'K')
+	{
+		this->_client_max_body_size *= 1024;
+	}
+	else if (unit == 'm' || unit == 'M')
+	{
+		this->_client_max_body_size *= 1024 * 1024;
+	}
+	else if (unit == 'g' || unit == 'G')
+	{
+		this->_client_max_body_size *= 1024 * 1024 * 1024;
+	}
+}
+
 void	ServerConfig::setPort(std::string str)
 {
 	if (str == "")
@@ -190,24 +262,41 @@ void	ServerConfig::setName(std::string name)
 	this->_name = name;
 }
 
-void	ServerConfig::setLocationConfig(LocationConfig* loc)
+std::map<std::string, LocationConfig>	&ServerConfig::getLocMap(void)
 {
-	if (loc)
-	{
-		this->_locations.push_back(*loc);
-	}
+	return (this->_locations);
 }
 
 LocationConfig const	&ServerConfig::getLocationConfig(unsigned int num) const
 {
 	if (num >= this->_locations.size())
 		throw InputException("Out of bounds (Locations)"); // TODO Write a proper exception
-	return(this->_locations[num]);
+
+	std::map<std::string, LocationConfig>::const_iterator it = this->_locations.begin();
+	unsigned int i = 0;
+	while (i < num)
+	{
+		i++;
+		it++;
+	}
+
+	return(it->second);
 }
 
 size_t	ServerConfig::getLocNum(void) const
 {
 	return(this->_locations.size());
+}
+
+std::string const		&ServerConfig::getErrorPage(int error_num) const
+{
+	std::map<int, std::string>::const_iterator it = this->_error_pages.find(error_num);
+	if (it != this->_error_pages.end())
+	{
+		return (it->second);
+	}
+
+	return(this->_error_pages.find(404)->second); // Default error page
 }
 
 std::string const	&ServerConfig::getName(void) const
@@ -235,6 +324,16 @@ std::string const	&ServerConfig::getIndex(void) const
 	return(this->_index);
 }
 
+unsigned long	ServerConfig::getClientMaxSize(void) const
+{
+	return(this->_client_max_body_size);
+}
+
+std::vector<t_methods> const	&ServerConfig::getMethods() const
+{
+	return (this->_methods);
+}
+
 // |----------------------
 // | CONSTRUCTORS & DESTRUCTORS
 // |----------------------
@@ -250,6 +349,8 @@ ServerConfig &ServerConfig::operator = (const ServerConfig &orig)
 		this->_port = orig._port;
 		this->_root = orig._root;
 		this->_index = orig._index;
+		this->_client_max_body_size = orig._client_max_body_size;
+		this->_error_pages = orig._error_pages;
 	}
 	//std::cout << "ServerConfig assignment copy-constructed." << std::endl;
 	return (*this);
@@ -263,24 +364,27 @@ ServerConfig::ServerConfig(const ServerConfig &orig)
 
 ServerConfig::ServerConfig(std::istream& server_file)
 {
+	this->_client_max_body_size = 0;
+	this->setOneErrorPage("404 ./www/errors/404.html");
 	this->parse_server(server_file);
 	//std::cout << "ServerConfig constructed." << std::endl;
 }
 
 ServerConfig::ServerConfig(void)
 {
-	this->setLocationConfig(NULL);
+	this->setOneLocationConfig(NULL);
 	this->setMethods("");
 	this->setName("");
 	this->setPort("");
 	this->setRoot("");
 	this->setIndex("");
+	this->setOneErrorPage("404 ./www/errors/404.html");
+	this->_client_max_body_size = 0;
 	//std::cout << "ServerConfig constructed." << std::endl;
 }
 
 ServerConfig::~ServerConfig(void)
 {
-	//delete[] _locations;
 	//std::cout << "ServerConfig destructed." << std::endl;
 }
 

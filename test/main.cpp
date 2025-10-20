@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "config/config.hpp"
+#include "config/Config.hpp"
 #include <http/HttpResponse.hpp>
 #include "test.hpp"
 
@@ -21,7 +21,7 @@ void config_and_http_implemente( int argc ,char ** argv,char**env)
 	(void)argv;
 	(void)env;
 	std::string conf = "_configtest/youpi.conf";
-	Config config("_configtest/youpi.conf");
+	Config config("_configtest/youpi.conf",env);
 	
 	
 }

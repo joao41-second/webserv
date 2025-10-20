@@ -1,5 +1,6 @@
-#include <config/config.hpp>
-#include <config/serverconfig.hpp>
+#include <config/Config.hpp>
+#include "../../include/config/ServerConfig.hpp"
+#include "../../include/net/Socket.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -42,7 +43,7 @@ std::string capitalize(std::string str)
 // | MEMBER FUNCTIONS
 // |----------------------
 
-void	Config::parse_file(std::string filename) // TODO Write function
+void	Config::parse_file(std::string filename)
 {
 	std::ifstream	config_file(filename.c_str());
 	if (!config_file.is_open())
@@ -59,7 +60,7 @@ void	Config::parse_file(std::string filename) // TODO Write function
 			continue ;
 
 		ServerConfig* curr_server = new ServerConfig();
-		curr_server->parse_server(config_file); // TODO Add error case (ex.: bool)
+		curr_server->parse_server(config_file);
 
 		// Set the server into the vector
 		this->setServerConfig(curr_server);
@@ -73,20 +74,39 @@ void	Config::parse_file(std::string filename) // TODO Write function
 // | GETTERS & SETTERS
 // |----------------------
 
+void	Config::setEnv(char **env)
+{
+	this->_env = env;
+}
+
 void	Config::setServerConfig(ServerConfig* serv)
 {
 	if (serv)
 	{
 		this->_servers.push_back(*serv);
+		delete (serv);
 	}
 }
 
-/*Server const	&Config::getServerConfig(unsigned int num) const
+void	Config::setSockets(void)
 {
-	if (num >= this->_servers.size())
-		throw BadConfigException("Out of bounds", " - Servers");
-	return(this->_servers[num]);
-}*/
+	size_t	sock_num = this->getServNum();
+	for (unsigned int i = 0 ; i < sock_num ; i++)
+	{
+		Socket *curr_sock = new Socket(this->getServerConfig(i).getPort());
+		this->_sockets.push_back(curr_sock);
+	}
+}
+
+std::vector<Socket*> const	&Config::getSocketVector() const
+{
+	return (this->_sockets);
+}
+
+std::vector<ServerConfig> const	&Config::getServerConfigVector() const
+{
+	return (this->_servers);
+}
 
 ServerConfig const	&Config::getServerConfig(uint16_t port) const
 {
@@ -100,9 +120,21 @@ ServerConfig const	&Config::getServerConfig(uint16_t port) const
 	throw BadConfigException("Port not found", "");
 }
 
-size_t	Config::getServNum(void) const
+ServerConfig const	&Config::getServerConfig(unsigned int num) const
+{
+	if (num >= this->_servers.size())
+		throw BadConfigException("Out of bounds", " - Servers");
+	return(this->_servers[num]);
+}
+
+size_t	Config::getServNum() const
 {
 	return(this->_servers.size());
+}
+
+char**	Config::getEnv() const // maybe TODO considerar "const char *const *Config::getEnv() const"
+{
+	return(this->_env);
 }
 
 // |----------------------
@@ -124,9 +156,11 @@ Config::Config(const Config &orig): _servers(orig._servers)
 	//std::cout << "Config copy-constructed." << std::endl;
 }
 
-Config::Config(std::string filename)
+Config::Config(std::string filename, char **env)
 {
 	this->parse_file(filename);
+	this->setSockets();
+	this->setEnv(env);
 	//std::cout << "Config constructed." << std::endl;
 }
 
@@ -138,7 +172,13 @@ Config::Config(void)
 
 Config::~Config(void)
 {
-	//delete[] this->_servers;
+	// Delete vector of sockets
+	for (std::vector<Socket*>::iterator it = this->_sockets.begin();
+		it != this->_sockets.end(); ++it)
+	{
+		delete (*it);
+	}
+	this->_sockets.clear();
 	//std::cout << "Config destructed." << std::endl;
 }
 

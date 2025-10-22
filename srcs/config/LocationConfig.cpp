@@ -24,6 +24,10 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 	{
 		throw Config::BadConfigException("Empty field (location name): ", line);
 	}
+	else if (this->getName().find(".(") != std::string::npos && this->getName().find("|") != std::string::npos)
+	{
+		throw Config::BadConfigException("Syntax not supported by this project: ", line);
+	}
 
 	// Printing loop, once per line in Configuration file
 	while (getline(location_file, line))

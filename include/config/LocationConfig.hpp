@@ -85,10 +85,6 @@ private:
 
 	std::map<std::string, LocationConfig>	_sub_locations;
 
-	// TODO *.(jpeg|json|bla) -> dar throw
-	// maybe TODO (*.(jpeg|json|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
-	// if (compare("*.(")) --> adicionar os restantes usando | e ) como delimitadores relevantes
-
 	// maybe TODO ifs (cookies, bonus)
 	// if ($cookie_<name> [operator] <value>) { <action> }
 };

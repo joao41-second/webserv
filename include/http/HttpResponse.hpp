@@ -15,6 +15,7 @@
 //works with HttpStatus
 
 
+#include "config/ServerConfig.hpp"
 #ifndef HTTPRESPONSE_HPP
 #define HTTPRESPONSE_HPP
 
@@ -32,6 +33,7 @@ class HttpResponse
 	  static std::vector<ServerConfig> _configs;
 		HttpResponse();
 		~HttpResponse();
+		 static std::string  search_folder_file(std::string file ,std::string path , std::map<std::string, LocationConfig> loc);
 	public:
 		static bool _request_status;
 	 	static	void set_config(std::vector<ServerConfig>& conf);

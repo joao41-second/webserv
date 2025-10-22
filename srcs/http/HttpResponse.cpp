@@ -12,7 +12,7 @@
 
 #include "config/Config.hpp"
 #include "config/ServerConfig.hpp"
-#include <atomic>
+#include <cstddef>
 #include <cstdlib>
 #include <http/HttpResponse.hpp>
 #include <http/HttpParser.hpp>
@@ -40,7 +40,11 @@ std::string HttpResponse::open_static_file(std::string file)
 {
 	size_max = 500; // var do jota
 	std::string request = "HTTP/1.1 200 OK\r\n";
+	size_t size  = file.rfind('.');
+	std::string type_file = file.substr(size,file.size());
+	
 	std::vector<char> temp(size_max);
+	
 
 	// adicionar data  info do server
 	static std::ifstream file_fd(file.c_str());
@@ -58,10 +62,21 @@ std::string HttpResponse::open_static_file(std::string file)
 		throw Not_found_404();
 	}
 
-	request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
+	
+	// TODO not correct use de .css and .js
 
-	//TODO add config for set if file for download
-	/request += "Content-Type: text/html; charset=UTF-8 \n";
+	if(type_file == ".js" || type_file == ".css" || type_file == ".html")
+	{
+
+		request += "Content-Type: text/html; charset=UTF-8 \n";
+		
+	}else
+	{
+		//TODO do not check is wor
+
+		request += "Content-Disposition: attachment; filename= " +   file+ '\n' ;
+		request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
+	}
 	file_fd.read(&temp[0], size_max);
 	std::string data;
 	for (int i = 0; i < (int)temp.size() && temp[i] != '\0'; i++)
@@ -96,20 +111,54 @@ std::string HttpResponse::open_static_file(std::string file)
 	return (request);
 }
 
-std::string HttpResponse::rediect_path(std::string path)
+std::string HttpResponse::rediect_path(std::string file_path)
 {
 	std::string file;
-	int size;
-	size = path.find('/'); // TODO  if not 1 not good parsing
-	file = path.substr(size, path.size());
-	size = path.find('/');
-//	if (size == (int)std::string::npos)
-//		return "ola" + file; // TODO the check the local file not implemtn
+	std::string path;
+	int size;	
+	HttpParser::_host.find(':');
+	int port = std::atoi(HttpParser::_host.substr(HttpParser::_host.find(':')+1,HttpParser::_host.size()).c_str());
+	if(port == 0)
+		throw Not_found_404();
+	int i = -1;
+	while (++i < (int)_configs.size())
 
-	// this funsicon is recorsive;
+		if( port == (int) _configs[i].getPort())
+			break;
+	std::map<std::string, LocationConfig>	_locations = _configs[i].getLocMap();
+	if(file_path == "")	
+		return "index.html"; // todo cireate find index
+	
+	size = file_path.rfind('/'); // TODO  if not 1 not good parsing
+	file = file_path.substr(size, file_path.size());
+	path = file_path.substr(0,size);
 
-	return ("ola/index.html");
+	HTTP_MSG(path <<  " oi " <<   file <<  "file  " << file_path << "end" << std::endl);	
+	HTTP_MSG(_locations[path].getRoot()  <<  "locla");
+
+
+	return (search_folder_file(file, path, _locations));
 }
+
+
+
+std::string HttpResponse::search_folder_file(std::string file ,std::string path , std::map<std::string, LocationConfig> loc)
+{
+	std::string real_path;
+
+	while (path.find('/')) {
+	
+	
+		if(loc[path].getRoot() != "" )
+		{
+			return( loc[path].getRoot() + file);
+		}
+	}
+
+
+	return("");
+}
+
 
 bool HttpResponse::chek_cig_or_static(std::string)
 {
@@ -122,11 +171,10 @@ std::string HttpResponse::request_and_response(std::string request)
 {
 	int error;
 	std::string response;
-	std::string path;
+	std::string path = "";
 	try
 	{
 		HttpParser::new_request(request);
-		HTTP_MSG( "ola o error e "<< HttpParser::_host)
 		if (chek_cig_or_static(HttpParser::_pach_info))
 		{
 
@@ -137,8 +185,9 @@ std::string HttpResponse::request_and_response(std::string request)
 			// open and send file j
 		
 			path = rediect_path(HttpParser::_pach_info);
-			HTTP_MSG("_pach_info: " << path << std::endl);
+			HTTP_MSG("ola ");
 			response = HttpResponse::open_static_file(path);
+			HTTP_MSG("ola ");
 		}
 	}
 	catch (std::exception &e)
@@ -151,7 +200,7 @@ std::string HttpResponse::request_and_response(std::string request)
 		return (gener_erro_page(HttpParser::_http_page_error, e.what()));
 		std::cout << RED << "error: " << e.what() << RESET << std::endl;
 	}
-	HTTP_MSG(response);
+	HTTP_MSG("ola ");
 	return (response);
 }
 

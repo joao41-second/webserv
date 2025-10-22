@@ -51,4 +51,5 @@ tests:
 	$(CXX) $(CXXFLAGS) -g $(SRCS_T) $(SRCS_ALL) -o $(T_NAME)
 	./$(T_NAME)
 	
-
+run:
+	make re && ./webserv ./test/youpi.conf

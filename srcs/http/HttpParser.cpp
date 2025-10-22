@@ -138,7 +138,7 @@ void HttpParser::parsing_env(std::string buffer)
 		var = line.substr(0,size);	
 		content = line.substr(size+1,line.size());
 		std::replace(var.begin(), var.end(), '-', '_');
-		if(var == "host")
+		if(var == "Host")
 			_host = content;
 		env.push_back("HTTP_"+var+"='"+ content+"'");
 		parsing_env(buffer_new);
@@ -148,13 +148,13 @@ void HttpParser::parsing_env(std::string buffer)
 
 void HttpParser::new_request(std::string buffer)
 {
-	_request = false;
+
 	env.clear();
 	mensage = "";
-	_pach_info = "/index.html";
+	_pach_info = "";
 	_type = "";
 	_host = "";
-	HTTP_MSG("Parse the new request");
+	HTTP_MSG("Parse the new request" << std::endl << std::endl << buffer);
 	parsing_env(buffer);
 	T_MSG("ok",GREEN);
 

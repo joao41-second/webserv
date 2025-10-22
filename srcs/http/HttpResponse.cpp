@@ -145,18 +145,30 @@ std::string HttpResponse::rediect_path(std::string file_path)
 std::string HttpResponse::search_folder_file(std::string file ,std::string path , std::map<std::string, LocationConfig> loc)
 {
 	std::string real_path;
+	int size;
 
-	while (path.find('/')) {
+
+		HTTP_MSG("st_aaaaaa");
+	while (path.rfind('/') != std::string::npos) {
 	
 	
 		if(loc[path].getRoot() != "" )
 		{
+
+			HTTP_MSG(loc[path].getRoot() + file)
 			return( loc[path].getRoot() + file);
 		}
+		HTTP_MSG(path);
+		size =path.rfind('/');
+		file = path.substr(size,path.size()-1) + file;
+		path = path.substr(0,size);
+
+		//TODO duble alias not work
+
 	}
 
 
-	return("");
+	return("./index.html");
 }
 
 

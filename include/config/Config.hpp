@@ -75,6 +75,8 @@ private:
 	char	**_env;
 
 	ServerConfig const	&getServerConfig(unsigned int num) const;
+	void				removeServerConfig(unsigned int num);
+	bool				hasServerConfigPort(uint16_t port);
 };
 
 bool	isDelim(char c);

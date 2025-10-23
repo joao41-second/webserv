@@ -39,7 +39,7 @@ std::string capitalize(std::string str)
 	return (str);
 }
 
-// |----------------------
+// |----------------------hasServerConfigPorts
 // | MEMBER FUNCTIONS
 // |----------------------
 
@@ -62,8 +62,19 @@ void	Config::parse_file(std::string filename)
 		ServerConfig* curr_server = new ServerConfig();
 		curr_server->parse_server(config_file);
 
-		// Set the server into the vector
-		this->setServerConfig(curr_server);
+		if (!this->hasServerConfigPort(curr_server->getPort()))
+		{
+			// Set the server into the vector
+			this->setServerConfig(curr_server);
+		}
+		else
+		{
+			// Invalid server, do not add
+			std::cout << "Warning: Config_file contains servers with repeated ports!" << std::endl;
+			std::cout << "Warning: Adding only the first server of Port " << curr_server->getPort() << std::endl;
+			delete (curr_server);
+			// TODO esclarecer se se deve dar throw
+		}
 	}
 
 	// Close configuration file
@@ -73,6 +84,14 @@ void	Config::parse_file(std::string filename)
 // |----------------------
 // | GETTERS & SETTERS
 // |----------------------
+
+void	Config::removeServerConfig(unsigned int num)
+{
+	if (num < this->getServNum())
+	{
+		this->_servers.erase(this->_servers.begin() + num);
+	}
+}
 
 void	Config::setEnv(char **env)
 {
@@ -91,10 +110,22 @@ void	Config::setServerConfig(ServerConfig* serv)
 void	Config::setSockets(void)
 {
 	size_t	sock_num = this->getServNum();
-	for (unsigned int i = 0 ; i < sock_num ; i++)
+	unsigned int i = 0;
+	while (i < sock_num)
 	{
-		Socket *curr_sock = new Socket(this->getServerConfig(i).getPort());
-		this->_sockets.push_back(curr_sock);
+		try
+		{
+			Socket *curr_sock = new Socket(this->getServerConfig(i).getPort());
+			this->_sockets.push_back(curr_sock);
+			i++;
+		}
+		catch (std::exception &e)
+		{
+			std::cerr << "Error: " << e.what() << std::endl;
+			std::cerr << "Warning: Removing server for Port " << this->getServerConfig(i).getPort() << std::endl;
+			this->removeServerConfig(i);
+			sock_num--;
+		}
 	}
 }
 
@@ -139,6 +170,18 @@ size_t	Config::getServNum() const
 char**	Config::getEnv() const // maybe TODO considerar "const char *const *Config::getEnv() const"
 {
 	return(this->_env);
+}
+
+bool	Config::hasServerConfigPort(uint16_t port)
+{
+	for (unsigned int i = 0; i < this->_servers.size(); i++)
+	{
+		if (this->_servers[i].getPort() == port)
+		{
+			return (true);
+		}
+	}
+	return (false);
 }
 
 // |----------------------

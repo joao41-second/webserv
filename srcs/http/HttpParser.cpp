@@ -133,6 +133,7 @@ void HttpParser::parsing_env(std::string buffer)
 			parsing_env(buffer_new);
 			return;
 		}
+		T_MSG(size << "-" << line,RED );
 		if (size == std::string::npos || size == 0)
 			throw Badd_Request_400();	
 		var = line.substr(0,size);	
@@ -154,7 +155,8 @@ void HttpParser::new_request(std::string buffer)
 	_pach_info = "";
 	_type = "";
 	_host = "";
-	HTTP_MSG("Parse the new request" << std::endl << std::endl << buffer);
+	_request = false;
+	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
 	parsing_env(buffer);
 	T_MSG("ok",GREEN);
 

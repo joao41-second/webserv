@@ -10,8 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "cgi/cgi.hpp"
 #include "config/Config.hpp"
 #include "config/ServerConfig.hpp"
+#include "config/color.hpp"
 #include <cstddef>
 #include <cstdlib>
 #include <http/HttpResponse.hpp>
@@ -126,6 +128,12 @@ std::string HttpResponse::rediect_path(std::string file_path)
 		if( port == (int) _configs[i].getPort())
 			break;
 	std::map<std::string, LocationConfig>	_locations = _configs[i].getLocMap();
+
+	for( std::map<std::string, LocationConfig>::iterator  it = _locations.begin();  it != _locations.end();++it)
+	{
+		HTTP_MSG( " loc-> " << it->first)
+	}
+
 	if(file_path == "")	
 		return "index.html"; // todo cireate find index
 	
@@ -184,6 +192,9 @@ std::string HttpResponse::request_and_response(std::string request)
 	int error;
 	std::string response;
 	std::string path = "";
+	HttpParser::_http_page_error = 0;
+
+	T_MSG("Start request", YELLOW)
 	try
 	{
 		HttpParser::new_request(request);
@@ -197,22 +208,20 @@ std::string HttpResponse::request_and_response(std::string request)
 			// open and send file j
 		
 			path = rediect_path(HttpParser::_pach_info);
-			HTTP_MSG("ola ");
 			response = HttpResponse::open_static_file(path);
-			HTTP_MSG("ola ");
 		}
 	}
 	catch (std::exception &e)
 	{
 		error = std::atoi(e.what());
 		(void)error;
-		//TODO not inplemente use paths setd in config
-		//error = std::atoi(e.what());
-		// TODO not inplemente use paths setd in config
+
+		T_MSG("Finich request - error:"  << e.what()  , RED)
 		return (gener_erro_page(HttpParser::_http_page_error, e.what()));
-		std::cout << RED << "error: " << e.what() << RESET << std::endl;
 	}
-	HTTP_MSG("ola ");
+
+
+	T_MSG("Finich request ", GREEN)
 	return (response);
 }
 

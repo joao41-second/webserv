@@ -208,7 +208,10 @@ void	LocationConfig::setSubLocation(LocationConfig* loc)
 {
 	if (loc)
 	{
-		loc->setName(this->getName() + "/" + loc->getName());
+		if (loc->getName()[0] == '/')
+			loc->setName(this->getName() + loc->getName());
+		else
+			loc->setName(this->getName() + "/" + loc->getName());
 		this->_sub_locations[loc->getName()] = *loc;
 		delete (loc);
 	}

@@ -56,7 +56,7 @@ Socket::Socket(const Socket &orig): _fd(orig._fd), _addr(orig._addr)
 	//std::cout << "Socket copy-constructed." << std::endl;
 }*/
 
-Socket::Socket(uint16_t port) // TODO If an exception is thrown here, will all FDs be closed properly?
+Socket::Socket(uint16_t port) // TODO If an exception is thrown here, remove server information from config
 {
 	// Create socket
 	this->_fd = socket(AF_INET, SOCK_STREAM, 0);

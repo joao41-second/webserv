@@ -14,7 +14,6 @@
 #include <core/Server.hpp>
 
 Connection::Connection(int fd) : _fd(fd) {
-	_readBuffer = "";
 	_writeBuffer = "";
 }
 
@@ -33,6 +32,7 @@ bool	Connection::readRequest() {
 	char	buffer[1024];
 	ssize_t	bytesRead;
 
+	_readBuffer = "";
 	while ((bytesRead = read(_fd, buffer, sizeof(buffer))) > 0) {
 		_readBuffer.append(buffer, bytesRead);
 	}

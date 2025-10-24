@@ -56,7 +56,7 @@ Socket::Socket(const Socket &orig): _fd(orig._fd), _addr(orig._addr)
 	//std::cout << "Socket copy-constructed." << std::endl;
 }*/
 
-Socket::Socket(uint16_t port) // TODO Os throws agora apagam o server... mas o fd ainda precisa de ser fechado?
+Socket::Socket(uint16_t port)
 {
 	// Create socket
 	this->_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -69,12 +69,14 @@ Socket::Socket(uint16_t port) // TODO Os throws agora apagam o server... mas o f
 	int opt = 1;
 	if (setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
+		close(this->_fd);
 		throw Config::BadPortException("Could not set SO_REUSEADDR: Port ", port);
 	}
 
 	// F_SETFL → set socket's status flags ; O_NONBLOCK → Set socket's flag to non-blocking
 	if (fcntl(this->_fd, F_SETFL, O_NONBLOCK) == -1)
 	{
+		close(this->_fd);
 		throw Config::BadPortException("Could not set socket to non-blocking: Port ", port);
 	}
 
@@ -86,11 +88,13 @@ Socket::Socket(uint16_t port) // TODO Os throws agora apagam o server... mas o f
 	// Bind port to socket
 	if (bind(this->_fd, (struct sockaddr*)&this->_addr, sizeof(this->_addr)) < 0)
 	{
+		close(this->_fd);
 		throw Config::BadPortException("Failed to bind to the port: ", port);
 	}
 
 	if (listen(this->_fd, 1024) < 0)
 	{
+		close(this->_fd);
 		throw Config::BadPortException("Failed to listen on socket: Port ", port);
 	}
 	//std::cout << "Socket constructed." << std::endl;

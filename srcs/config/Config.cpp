@@ -72,7 +72,6 @@ void	Config::parse_file(std::string filename)
 			// Invalid server, do not add
 			std::cout << "Warning: Configuration file contains servers with repeated ports!" << std::endl;
 			std::cout << "Warning: Considering only the first server of Port " << curr_server.getPort() << std::endl;
-			// TODO esclarecer se se deve dar throw
 		}
 	}
 

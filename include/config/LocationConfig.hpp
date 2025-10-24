@@ -79,7 +79,7 @@ private:
 	std::string		_index;		// ex: joao.bad_extension
 	std::string		_cgi_pass;	// ex: test_linux/ubuntu_cgi_tester
 	unsigned long	_client_body_buffer_size; // TODO should this be size_t?
-	//bool			_alias;		// TODO Should be a string, if implemented
+	//bool			_alias;		// Should be a string, if implemented
 
 	std::vector<t_methods>		_methods;	// ex: GET
 

@@ -70,8 +70,8 @@ void	Config::parse_file(std::string filename)
 		else
 		{
 			// Invalid server, do not add
-			std::cout << "Warning: Config_file contains servers with repeated ports!" << std::endl;
-			std::cout << "Warning: Adding only the first server of Port " << curr_server.getPort() << std::endl;
+			std::cout << "Warning: Configuration file contains servers with repeated ports!" << std::endl;
+			std::cout << "Warning: Considering only the first server of Port " << curr_server.getPort() << std::endl;
 			// TODO esclarecer se se deve dar throw
 		}
 	}

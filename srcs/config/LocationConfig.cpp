@@ -85,7 +85,9 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 		}
 		else if (line.compare(0, 5, "alias") == 0)
 		{
-			this->setAlias(true); // TODO Alterar se se converter em string
+			std::cout << "Warning: Alias is not supported by this project." << std::endl;
+			//throw Config::BadConfigException("Alias is not supported by this project", "");
+			//this->setAlias(true);
 		}
 	}
 
@@ -199,10 +201,10 @@ void	LocationConfig::setClientBuffSize(std::string buff_size)
 	}
 }
 
-void	LocationConfig::setAlias(bool alias)
+/*void	LocationConfig::setAlias(bool alias)
 {
 	this->_alias = alias;
-}
+}*/
 
 void	LocationConfig::setSubLocation(LocationConfig* loc) 
 {
@@ -242,10 +244,10 @@ unsigned long	LocationConfig::getClientBuffSize(void) const
 	return(this->_client_body_buffer_size);
 }
 
-bool const	&LocationConfig::getAlias(void) const
+/*bool const	&LocationConfig::getAlias(void) const
 {
 	return(this->_alias);
-}
+}*/
 
 std::vector<t_methods> const	&LocationConfig::getMethods() const
 {
@@ -333,7 +335,7 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 		this->_cgi_pass = orig._cgi_pass;
 		this->_methods = orig._methods;
 		this->_client_body_buffer_size = orig._client_body_buffer_size;
-		this->_alias = orig._alias;
+		//this->_alias = orig._alias;
 	}
 	//std::cout << "LocationConfig assignment copy-constructed." << std::endl;
 	return (*this);
@@ -348,7 +350,7 @@ LocationConfig::LocationConfig(const LocationConfig &orig)
 LocationConfig::LocationConfig(std::istream& location_file, std::string line)
 {
 	this->_client_body_buffer_size = 0;
-	this->setAlias(false);
+	//this->setAlias(false);
 	this->parse_location(location_file, line);
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
@@ -361,7 +363,7 @@ LocationConfig::LocationConfig(void)
 	this->setIndex("");
 	this->setPass("");
 	this->_client_body_buffer_size = 0;
-	this->setAlias(false);
+	//this->setAlias(false);
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
 

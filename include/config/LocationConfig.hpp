@@ -48,7 +48,7 @@ public:
 	std::string const		&getIndex(void) const;
 	std::string const		&getPass(void) const;
 	unsigned long			getClientBuffSize(void) const;
-	bool const				&getAlias(void) const;
+	//bool const				&getAlias(void) const;
 	bool					checkSubLocation(void) const;
 	LocationConfig			&getSubLocation(unsigned int num);
 	LocationConfig const	&getSubLocation(unsigned int num) const;
@@ -67,7 +67,7 @@ public:
 	void	setName(std::string name);
 	void	setPass(std::string pass);
 	void	setClientBuffSize(std::string buff_size);
-	void	setAlias(bool alias);
+	//void	setAlias(bool alias);
 
 	LocationConfig*	clone(void) const;
 
@@ -79,7 +79,7 @@ private:
 	std::string		_index;		// ex: joao.bad_extension
 	std::string		_cgi_pass;	// ex: test_linux/ubuntu_cgi_tester
 	unsigned long	_client_body_buffer_size; // TODO should this be size_t?
-	bool			_alias;		// TODO should accept string?
+	//bool			_alias;		// TODO Should be a string, if implemented
 
 	std::vector<t_methods>		_methods;	// ex: GET
 

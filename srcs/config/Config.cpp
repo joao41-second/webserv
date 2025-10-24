@@ -59,20 +59,19 @@ void	Config::parse_file(std::string filename)
 		if (line != "server {")
 			continue ;
 
-		ServerConfig* curr_server = new ServerConfig();
-		curr_server->parse_server(config_file);
+		ServerConfig curr_server = ServerConfig();
+		curr_server.parse_server(config_file);
 
-		if (!this->hasServerConfigPort(curr_server->getPort()))
+		if (!this->hasServerConfigPort(curr_server.getPort()))
 		{
 			// Set the server into the vector
-			this->setServerConfig(curr_server);
+			this->setServerConfig(&curr_server);
 		}
 		else
 		{
 			// Invalid server, do not add
 			std::cout << "Warning: Config_file contains servers with repeated ports!" << std::endl;
-			std::cout << "Warning: Adding only the first server of Port " << curr_server->getPort() << std::endl;
-			delete (curr_server);
+			std::cout << "Warning: Adding only the first server of Port " << curr_server.getPort() << std::endl;
 			// TODO esclarecer se se deve dar throw
 		}
 	}
@@ -103,7 +102,6 @@ void	Config::setServerConfig(ServerConfig* serv)
 	if (serv)
 	{
 		this->_servers.push_back(*serv);
-		delete (serv);
 	}
 }
 

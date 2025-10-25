@@ -133,7 +133,6 @@ void HttpParser::parsing_env(std::string buffer)
 			parsing_env(buffer_new);
 			return;
 		}
-		T_MSG(size << "-" << line,RED );
 		if (size == std::string::npos || size == 0)
 			throw Badd_Request_400();	
 		var = line.substr(0,size);	

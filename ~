@@ -187,16 +187,13 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 
  ServerConfig HttpResponse::get_config(int port )
 {
-	int i = -1 ;
+	int i;
 	while (++i < (int)_configs.size())
-	{
-
+		
 		if( port == (int) _configs[i].getPort())
 			break;
-	}
-
-	if( i == (int) _configs.size() )	
-		 throw Not_found_404();
+	if(_configs[i] == _configs.end())	
+		exception Http_throw::Not_found_404()
 	return _configs[i];
 }
 
@@ -246,9 +243,9 @@ std::string HttpResponse::request_and_response(std::string request)
 		{
 
 		config = get_config(8022);
-		T_MSG(config.getErrorPage(error) << " ola " << error, GREEN)
-		if(!config.getErrorPage(error).empty())
-			 response = HttpResponse::open_static_file(config.getErrorPage(error));
+		if(!config.getErrorPage((int)HttpParser::_http_page_error).empty())
+
+			 response = HttpResponse::open_static_file(path);
 		}
 		catch(std::exception &d)
 		{

@@ -31,9 +31,11 @@ class HttpResponse
 	private:
 	  static int size_max;
 	  static std::vector<ServerConfig> _configs;
-		HttpResponse();
-		~HttpResponse();
-		 static std::string  search_folder_file(std::string file ,std::string path , std::map<std::string, LocationConfig> loc);
+	  static ServerConfig get_config(int port);
+	HttpResponse();
+	~HttpResponse();
+	static std::string  search_folder_file(std::string file ,std::string path , std::map<std::string, LocationConfig> loc);
+		 
 	public:
 		static bool _request_status;
 	 	static	void set_config(std::vector<ServerConfig>& conf);

@@ -15,8 +15,6 @@ def pagina_principal():
     <html>
         <head>
             <title>Página com Botões</title>
-            <!-- Favicon inline para evitar requisição automática -->
-            <link rel="icon" href="data:;base64,iVBORw0KGgo=">
         </head>
         <body>
             <h1>Escolha uma das opções:</h1>

@@ -29,21 +29,38 @@
 
 
 bool   HttpResponse::_request_status = false;
-int HttpResponse::size_max = 500;
+int HttpResponse::size_max = 50000;
 char ** HttpResponse::_env;
 std::string HttpResponse::_pg = "";
 
 std::vector<ServerConfig> HttpResponse::_configs;
+std::map<std::string,std::string> HttpResponse::_types;
 
 void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 {
 	HttpResponse::_env = env;
 	HttpResponse::_configs = conf;
+  	_types[".html"] = "text/html";
+        _types[".htm"]  = "text/html";
+        _types[".css"]  = "text/css";
+        _types[".js"]   = "application/javascript";
+        _types[".json"] = "application/json";
+        _types[".png"]  = "image/png";
+        _types[".jpg"]  = "image/jpeg";
+        _types[".jpeg"] = "image/jpeg";
+        _types[".gif"]  = "image/gif";
+        _types[".ico"]  = "image/x-icon";
+        _types[".svg"]  = "image/svg+xml";
+        _types[".txt"]  = "text/plain";
+        _types[".cgi"]  = "text/html;charset=UTF-8";
+        _types[".py"]   = "text/html;charset=UTF-8";
+        _types[".php"]  = "text/html;charset=UTF-8";
+
+
 }
 
 std::string HttpResponse::open_static_file(std::string file)
 {
-	size_max = 500; // var do jota
 	std::string request = "HTTP/1.1 200 OK\r\n";
 	size_t size  = file.rfind('.');
 	std::string type_file = file.substr(size,file.size());
@@ -69,11 +86,12 @@ std::string HttpResponse::open_static_file(std::string file)
 
 	
 	// TODO not correct use de .css and .js
+	
 
-	if(type_file == ".js" || type_file == ".css" || type_file == ".html")
+	if(!_types[type_file].empty())
 	{
 
-		request += "Content-Type: text/html; charset=UTF-8 \n";
+		request += "Content-Type: " + _types[type_file] +"\n";
 		
 	}else
 	{
@@ -142,10 +160,8 @@ std::string HttpResponse::rediect_path(std::string file_path)
 	
 	size = file_path.rfind('/'); // TODO  if not 1 not good parsing
 	file = file_path.substr(size, file_path.size());
-	path = file_path.substr(0,size);
+	path = file_path.substr(0,size+1);
 
-	HTTP_MSG(path <<  " oi " <<   file <<  "file  " << file_path << "end" << std::endl);	
-	HTTP_MSG(_locations[path].getRoot()  <<  "locla");
 
 
 	return (search_folder_file(file, path, _locations));
@@ -159,9 +175,9 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 	int size;
 
 
-	HTTP_MSG("st_aaaaaa");
+	HTTP_MSG("start shearch folder " << path <<" "<<file);
 	if( loc[path+file].getRoot() != "")
-			return loc[path+file].getRoot() ;
+			return loc[path+file].getRoot();
 	
 	while (path.rfind('/') != std::string::npos) {
 	
@@ -172,18 +188,14 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 	
 		if(loc[path].getRoot() != "" )
 		{
-
-			HTTP_MSG(loc[path].getRoot() + file)
 			return( loc[path].getRoot() + file);
 		}
-		HTTP_MSG(path);
 		size =path.rfind('/');
 		file = path.substr(size,path.size()-1) + file;
 		path = path.substr(0,size);
 
 		//TODO duble alias not work
 	}
-
 
 	return("./index.html");
 }
@@ -248,7 +260,7 @@ std::string HttpResponse::request_and_response(std::string request)
 			// execute in exeve		
 			response = "HTTP/1.1 200 OK\r\n";
 			response += cgi.execute( HttpParser::get_request_msg(), _pg);
-			T_MSG(response, RED);
+			T_MSG(response, YELLOW);
 		}
 		else
 		{
@@ -268,9 +280,8 @@ std::string HttpResponse::request_and_response(std::string request)
 		try
 		{
 
-		T_MSG(config.getErrorPage(error) << " ola " << error, GREEN)
-		if(!config.getErrorPage(error).empty())
-			 response = HttpResponse::open_static_file(config.getErrorPage(error));
+			if(!config.getErrorPage(error).empty())
+				return  response = HttpResponse::open_static_file(config.getErrorPage(error));
 		}
 		catch(std::exception &d)
 		{
@@ -282,7 +293,7 @@ std::string HttpResponse::request_and_response(std::string request)
 	}
 
 
-	T_MSG("Finich request ", GREEN)
+	T_MSG("Finich request \n\n" << response , GREEN)
 	return (response);
 }
 

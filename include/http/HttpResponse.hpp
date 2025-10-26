@@ -41,6 +41,7 @@ class HttpResponse
 		 
 	public:
 		static bool _request_status;
+	  	static std::map<std::string ,std::string> _types;
 	 	static	void set_config(std::vector<ServerConfig>& conf, char** env);
 		static bool chek_cig_or_static(std::string, ServerConfig);
 		static std::string return_path_use();

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "config/color.hpp"
+#include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
 #include "config/LocationConfig.hpp"
@@ -123,6 +124,7 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 	int status,read_bits;
 	char buffer[1024];
 	std::vector<char *> v;
+
 v.push_back(const_cast<char*>(porgram.c_str()));          // script
 v.push_back(NULL);
 
@@ -168,11 +170,12 @@ v.push_back(NULL);
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
     		std::cout << "CGI exited with code: " << exit_code << std::endl;
-		if(exit_code != 1) // TODO change this value for 0 
+		if(exit_code != 0) // TODO change this value for 0 
 			throw Not_found_404();
 
 		}
-
+		std::cout << response << std::endl;
+ 
 	}	
 	return response;
 }

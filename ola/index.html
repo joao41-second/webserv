@@ -1,8 +1,98 @@
-<!DOCTYPE html>
-<html>
-	<body>
+<!-- index.html -->
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Site Exemplo — Minha Página</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="#">MinhaMarca</a>
+      <nav class="nav">
+        <a href="#features">Serviços</a>
+        <a href="#about">Sobre</a>
+        <a href="#contact">Contacto</a>
+      </nav>
+      <button class="menu-btn" aria-label="Abrir menu">☰</button>
+    </div>
+  </header>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <h1>Bem-vindo à Minha Página</h1>
+          <p>Um site simples, responsivo e bonito — pronto para personalizar. Feito com HTML e CSS em ficheiros separados.</p>
+          <p><a class="cta" href="#contact">Contacte-nos</a></p>
+        </div>
+        <div class="hero-image" aria-hidden="true">
+          <div class="device-mock"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features container">
+      <article class="card">
+        <h3>Design Responsivo</h3>
+        <p>Funciona bem em telemóveis, tablets e desktops.</p>
+      </article>
+      <article class="card">
+        <h3>Performance</h3>
+        <p>Estrutura leve e otimizada para carregamento rápido.</p>
+      </article>
+      <article class="card">
+        <h3>Fácil de Personalizar</h3>
+        <p>Classes simples e comentários para facilitar alterações.</p>
+      </article>
+    </section>
+
+    <section id="about" class="about">
+      <div class="container about-inner">
+        <h2>Sobre Nós</h2>
+        <p>Somos uma equipa dedicada a construir experiências web claras, rápidas e acessíveis. Este modelo é um ponto de partida para o seu projecto.</p>
+      </div>
+    </section>
+
+    <section id="contact" class="contact container">
+      <h2>Contacto</h2>
+      <form class="contact-form" action="#" method="post">
+        <label>
+          Nome
+          <input type="text" name="name" required>
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required>
+        </label>
+        <label>
+          Mensagem
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button type="submit" class="btn">Enviar</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> MinhaMarca — Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+  <script>
+    // pequeno script para ano atual e menu móvel
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const menuBtn = document.querySelector('.menu-btn');
+    const nav = document.querySelector('.nav');
+    menuBtn.addEventListener('click', () => nav.classList.toggle('open'));
+  </script>
 </body>
 </html>
+
+/* styles.css */
+/* Guarda este bloco no ficheiro separado styles.css */
+
+

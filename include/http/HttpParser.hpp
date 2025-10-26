@@ -49,7 +49,7 @@ class HttpParser
 
 	      static void new_request(std::string buffer); 
 	      static std::string get_request_msg();
-	      static std::vector<std::string> get_request_env();		
+	      static std::vector<char *> get_request_env();		
 };
 
 

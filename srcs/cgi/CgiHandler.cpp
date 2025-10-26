@@ -11,8 +11,11 @@
 /* ************************************************************************** */
 
 #include "config/color.hpp"
+#include <stdlib.h>
+#include <unistd.h>
 #include "config/LocationConfig.hpp"
 #include "core/Server.hpp"
+#include <http/Http_throw.hpp>
 #include "http/HttpParser.hpp"
 #include <config/color.hpp>
 #include <config/LocationConfig.hpp>
@@ -82,6 +85,7 @@ std::string Cgi::chek_program_pach(std::string porgram)
 				 else
 				 {
 					 // tenho que chekar que error por aqui 
+					 throw Not_found_404();
 				 }
 			}
 			name_dir = readdir(dir);
@@ -97,40 +101,55 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 {
 	int i = 0;
 	_envs = env_request;
+
+	for (int e = 0; e < (int)env_request.size();e++) 
+	{
+		HTTP_MSG(env_request[e]);
+	}
 	while (env[i] != NULL)
 	{
 		_envs.push_back(env[i]);
+
 		i++;
 	} 
-	Cgi::chek_program_pach("python3");
+
 }
 
-std::string Cgi::execute(std::string _request)
+std::string Cgi::execute(std::string _request, std::string porgram )
 {
 	int pid ;
 	int fd_in[2];
 	int fd_out[2];
 	int status,read_bits;
 	char buffer[1024];
-	std::string response = "";	
+	std::vector<char *> v;
+v.push_back(const_cast<char*>(porgram.c_str()));          // script
+v.push_back(NULL);
+
+
+	std::string response = "";
 	
 	if(pipe(fd_in) == -1)
 		exit(1);
 	if(pipe(fd_out) == -1)
 		exit(1);
-
+	
+	HTTP_MSG(porgram);
 	pid = fork();
 	if(pid == -1)
 		exit(1);	
 
 	if(pid == 0)
 	{
-
+	
 		dup2(fd_in[0],0);
 		dup2(fd_out[1],1);	
 		close(fd_in[1]);
 		close(fd_out[0]);
-		execlp("cat", "cat" , NULL);
+
+		T_MSG(porgram.c_str(), RED);
+		int i  = execve(porgram.c_str(),v.data(),_envs.data());
+		HTTP_MSG("merda = " << i)
 		exit(1);
 	}
 	else
@@ -145,6 +164,15 @@ std::string Cgi::execute(std::string _request)
 		}
 		close(fd_out[0]);
 		waitpid(pid, &status, 0);
+
+		if (WIFEXITED(status)) {
+   		 int exit_code = WEXITSTATUS(status);
+    		std::cout << "CGI exited with code: " << exit_code << std::endl;
+		if(exit_code != 1) // TODO change this value for 0 
+			throw Not_found_404();
+
+		}
+
 	}	
 	return response;
 }

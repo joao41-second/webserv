@@ -30,11 +30,14 @@
 
 bool   HttpResponse::_request_status = false;
 int HttpResponse::size_max = 500;
+char ** HttpResponse::_env;
+std::string HttpResponse::_pg = "";
 
 std::vector<ServerConfig> HttpResponse::_configs;
 
-void HttpResponse::set_config(std::vector<ServerConfig> &conf)
+void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 {
+	HttpResponse::_env = env;
 	HttpResponse::_configs = conf;
 }
 
@@ -201,8 +204,21 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 }
 
 
-bool HttpResponse::chek_cig_or_static(std::string)
+bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 {
+
+	int size = file.find('.');
+	std::string type =  file.substr(size,file.size()); 
+	size = file.find('/');
+	std::string path = file.substr(0,size);
+	
+	path += "*"+type;
+	T_MSG( server.getLocMap()[path]._cgi_pass << "->" << path, YELLOW);
+	if(server.getLocMap()[path]._cgi_pass != "")
+	{
+		_pg =  server.getLocMap()[path]._cgi_pass;
+		return true;	
+	}
 
 	// TODO  implemtn the check string execute cig or no
 	return (false);
@@ -215,21 +231,28 @@ std::string HttpResponse::request_and_response(std::string request)
 	std::string path = "";
 	HttpParser::_http_page_error = 0;
 	ServerConfig config;
+	Cgi cgi;
+	_pg = "";
 	
 
 	T_MSG("Start request", YELLOW)
 	try
 	{
+		config = get_config(8022);
 		HttpParser::new_request(request);
-		if (chek_cig_or_static(HttpParser::_pach_info))
-		{
+		cgi.create_env(_env, HttpParser::get_request_env());
 
-			// execute in exeve
+		//check of the index
+		if (chek_cig_or_static(HttpParser::_pach_info, config))
+		{
+			// execute in exeve		
+			response = "HTTP/1.1 200 OK\r\n";
+			response += cgi.execute( HttpParser::get_request_msg(), _pg);
+			T_MSG(response, RED);
 		}
 		else
 		{
-			// open and send file j
-		
+			// open and send file 
 			path = rediect_path(HttpParser::_pach_info);
 			response = HttpResponse::open_static_file(path);
 		}
@@ -245,7 +268,6 @@ std::string HttpResponse::request_and_response(std::string request)
 		try
 		{
 
-		config = get_config(8022);
 		T_MSG(config.getErrorPage(error) << " ola " << error, GREEN)
 		if(!config.getErrorPage(error).empty())
 			 response = HttpResponse::open_static_file(config.getErrorPage(error));

@@ -1,0 +1,3 @@
+./ola/cgi_in_py/main.py: 4: import: not found
+./ola/cgi_in_py/main.py: 5: import: not found
+./ola/cgi_in_py/main.py: 6: Syntax error: Bad function name

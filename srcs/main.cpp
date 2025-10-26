@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **envp)
 
 	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
 	std::vector<Socket*>		sockets = conf_info.getSocketVector();
-	HttpResponse::set_config(configs);
+	HttpResponse::set_config(configs,envp);
 
 	Server server(configs, sockets);
 	server.launch();

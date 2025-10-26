@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cctype>
 #include <config/color.hpp>
 #include <core/Server.hpp>
 #include <cstdlib>
@@ -49,6 +50,16 @@ HttpParser& HttpParser::operator=(const HttpParser &value)
 HttpParser::~HttpParser()
 {
 	HTTP_MSG("end parser");
+}
+
+
+static std::string trim(const std::string &s)
+{
+    std::string::size_type start = s.find_first_not_of(" \t\r\n");
+    std::string::size_type end   = s.find_last_not_of(" \t\r\n");
+    if (start == std::string::npos || end == std::string::npos)
+        return "";
+    return s.substr(start, end - start + 1);
 }
 
 void HttpParser::parsing_request_line(std::string buffer)
@@ -102,12 +113,14 @@ void HttpParser::parsing_request_line(std::string buffer)
 	if(std::atof(buffer.c_str()) == 1.1)
 	{
 
-		env.push_back("SERVER_PROTOCOL='" + buffer + "'");}
+		env.push_back("SERVER_PROTOCOL='HTTP/"+trim (buffer)+ "'\r");}
 	else
 	   throw Version_Not_Supported_505();
 	
 	
 }
+
+
 
 void HttpParser::parsing_env(std::string buffer)
 {
@@ -136,11 +149,15 @@ void HttpParser::parsing_env(std::string buffer)
 		if (size == std::string::npos || size == 0)
 			throw Badd_Request_400();	
 		var = line.substr(0,size);	
-		content = line.substr(size+1,line.size());
+		content = line.substr(size+1,line.size()-2);
 		std::replace(var.begin(), var.end(), '-', '_');
 		if(var == "Host")
 			_host = content;
-		env.push_back("HTTP_"+var+"='"+ content+"'");
+		for (int i =0; i < (int)var.size(); ++i) {
+			int char_ = var[i];
+			var[i] = std::toupper(char_);
+		}
+		env.push_back("HTTP_"+trim(var)+"='"+trim( content)+"'");
 		parsing_env(buffer_new);
 	}
 
@@ -167,8 +184,15 @@ std::string HttpParser::get_request_msg()
 	return (mensage);
 }
 
-std::vector <std::string> HttpParser::get_request_env()
+std::vector <char *> HttpParser::get_request_env()
 {
-      return (env);
+	std::vector<char *> envp;
+
+	for (int i = 0; i < (int) env.size(); i++)
+	{
+	  envp.push_back((char *)env[i].c_str());
+	}
+	
+      return (envp);
 }
 

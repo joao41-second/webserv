@@ -61,7 +61,7 @@ void	ServerConfig::parse_server(std::istream& server_file)
 		else if (line.compare(0, 6, "listen") == 0)
 		{
 			this->setPort(trim_whitespace(line.substr(6)));
-			if (this->getPort() == 0 || this->getInterface() == "") // TODO Can ports actually be 0?
+			if (this->getPort() == 0 || this->getInterface() == "")
 			{
 				throw Config::BadConfigException("Empty field (listen): ", line);
 			}

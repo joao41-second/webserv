@@ -22,7 +22,7 @@ public:
 	virtual ~Socket();
 
 	int							getFd() const;
-	struct sockaddr_in const	&getAddr() const; // TODO Should the return be const sockaddr_in?
+	struct sockaddr_in const	&getAddr() const;
 	uint16_t					getAddrPort() const;
 
 private:

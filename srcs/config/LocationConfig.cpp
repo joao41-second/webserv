@@ -24,6 +24,10 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 	{
 		throw Config::BadConfigException("Empty field (location name): ", line);
 	}
+	else if (this->getName().find("//") != std::string::npos)
+	{
+		throw Config::BadConfigException("Bad syntax (location name): ", line);
+	}
 	else if (this->getName().find(".(") != std::string::npos && this->getName().find("|") != std::string::npos)
 	{
 		throw Config::BadConfigException("Syntax not supported by this project: ", line);
@@ -54,6 +58,10 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			{
 				throw Config::BadConfigException("Empty field (root): ", line);
 			}
+			else if (this->getRoot().find("//") != std::string::npos)
+			{
+				throw Config::BadConfigException("Bad syntax (root): ", line);
+			}
 		}
 		else if (line.compare(0, 5, "index") == 0)
 		{
@@ -69,6 +77,10 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			if (this->getPass() == "")
 			{
 				throw Config::BadConfigException("Empty field (cgi_pass): ", line);
+			}
+			else if (this->getPass().find("//") != std::string::npos)
+			{
+				throw Config::BadConfigException("Bad syntax (cgi_pass): ", line);
 			}
 		}
 		else if (line.compare(0, 13, "allow_methods") == 0)

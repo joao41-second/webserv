@@ -56,7 +56,7 @@ Socket::Socket(const Socket &orig): _fd(orig._fd), _addr(orig._addr)
 	//std::cout << "Socket copy-constructed." << std::endl;
 }*/
 
-Socket::Socket(uint16_t port) // TODO verificar se Port ja aberto por outro motivo!
+Socket::Socket(uint16_t port)
 {
 	// Create socket
 	this->_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -80,7 +80,7 @@ Socket::Socket(uint16_t port) // TODO verificar se Port ja aberto por outro moti
 		throw Config::BadPortException("Could not set socket to non-blocking: Port ", port);
 	}
 
-	// Listen to port on the address
+	// Setup the address
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	this->_addr.sin_port = htons(port);
@@ -89,9 +89,14 @@ Socket::Socket(uint16_t port) // TODO verificar se Port ja aberto por outro moti
 	if (bind(this->_fd, (struct sockaddr*)&this->_addr, sizeof(this->_addr)) < 0)
 	{
 		close(this->_fd);
+		if (errno == EADDRINUSE)
+		{
+			throw Config::BadPortException("Already using port ", port);
+		}
 		throw Config::BadPortException("Failed to bind to the port: ", port);
 	}
 
+	// Listen to port on the address
 	if (listen(this->_fd, 1024) < 0)
 	{
 		close(this->_fd);

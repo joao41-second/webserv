@@ -200,12 +200,13 @@ Config::Config(const Config &orig): _servers(orig._servers)
 	//std::cout << "Config copy-constructed." << std::endl;
 }
 
-Config::Config(std::string filename, char **env) // TODO Location default "/"
+Config::Config(std::string filename, char **env)
 {
 	this->parse_file(filename);
+	// TODO Ver se pastas têm permissões
 	this->setSockets();
 	this->setEnv(env);
-	// TODO Funcao de validacao geral: por exemplo, verificar se ha nomes incluindo "//"
+
 	//std::cout << "Config constructed." << std::endl;
 }
 

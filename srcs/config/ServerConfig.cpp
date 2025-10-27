@@ -57,6 +57,10 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			{
 				throw Config::BadConfigException("Empty field (server_name): ", line);
 			}
+			else if (this->getName().find("//") != std::string::npos)
+			{
+				throw Config::BadConfigException("Bad syntax (server_name): ", line);
+			}
 		}
 		else if (line.compare(0, 6, "listen") == 0)
 		{
@@ -72,6 +76,10 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			if (this->getRoot() == "")
 			{
 				throw Config::BadConfigException("Empty field (root): ", line);
+			}
+			else if (this->getRoot().find("//") != std::string::npos)
+			{
+				throw Config::BadConfigException("Bad syntax (root): ", line);
 			}
 		}
 		else if (line.compare(0, 5, "index") == 0)
@@ -99,6 +107,8 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			this->setOneErrorPage(trim_whitespace(line.substr(10)));
 		}
 	}
+
+	// TODO Location default "/"
 }
 
 uint16_t ServerConfig::stringToUint16(const std::string &str)

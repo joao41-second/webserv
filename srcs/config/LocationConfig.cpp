@@ -24,6 +24,10 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 	{
 		throw Config::BadConfigException("Empty field (location name): ", line);
 	}
+	else if (!isPath(this->getName()) && this->getName().find(".") == std::string::npos)
+	{
+		throw Config::BadConfigException("Invalid path for location name: ", line);
+	}
 	else if (this->getName().find("//") != std::string::npos)
 	{
 		throw Config::BadConfigException("Bad syntax (location name): ", line);
@@ -58,6 +62,10 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			{
 				throw Config::BadConfigException("Empty field (root): ", line);
 			}
+			else if (!isPath(this->getRoot()))
+			{
+				throw Config::BadConfigException("Invalid path for root: ", line);
+			}
 			else if (this->getRoot().find("//") != std::string::npos)
 			{
 				throw Config::BadConfigException("Bad syntax (root): ", line);
@@ -82,6 +90,10 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			{
 				throw Config::BadConfigException("Bad syntax (cgi_pass): ", line);
 			}
+			/*else if (!isPath(this->getPass()))
+			{
+				throw Config::BadConfigException("Invalid path for cgi_pass: ", line);
+			}*/
 		}
 		else if (line.compare(0, 13, "allow_methods") == 0)
 		{
@@ -361,7 +373,7 @@ LocationConfig::LocationConfig(const LocationConfig &orig)
 
 LocationConfig::LocationConfig(std::istream& location_file, std::string line)
 {
-	this->_client_body_buffer_size = 0; // TODO better default?
+	this->_client_body_buffer_size = 100000;
 	//this->setAlias(false);
 	this->parse_location(location_file, line);
 	//std::cout << "LocationConfig constructed." << std::endl;
@@ -374,7 +386,7 @@ LocationConfig::LocationConfig(void)
 	this->setRoot("");
 	this->setIndex("");
 	this->setPass("");
-	this->_client_body_buffer_size = 0; // TODO better default?
+	this->_client_body_buffer_size = 100000;
 	//this->setAlias(false);
 	//std::cout << "LocationConfig constructed." << std::endl;
 }

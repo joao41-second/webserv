@@ -81,6 +81,10 @@ void	ServerConfig::parse_server(std::istream& server_file)
 			{
 				throw Config::BadConfigException("Bad syntax (root): ", line);
 			}
+			else if (!isPath(this->getRoot()))
+			{
+				throw Config::BadConfigException("Bad syntax (root): ", line);
+			}
 		}
 		else if (line.compare(0, 5, "index") == 0)
 		{
@@ -205,7 +209,12 @@ void	ServerConfig::setOneErrorPage(std::string error_page_str)
 		throw Config::BadConfigException("Invalid Error Page in configuration file: ", error_page_str);
 	}
 
-	this->_error_pages[error_num] = trim_whitespace(error_page_str.substr(3));
+	const std::string page_path = trim_whitespace(error_page_str.substr(3));
+	if (!isPath(page_path))
+	{
+		throw Config::BadConfigException("Invalid path for Error Page: ", error_page_str);
+	}
+	this->_error_pages[error_num] = page_path;
 }
 
 void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
@@ -387,7 +396,7 @@ ServerConfig::ServerConfig(const ServerConfig &orig)
 
 ServerConfig::ServerConfig(std::istream& server_file)
 {
-	this->_client_max_body_size = 0;
+	this->_client_max_body_size = 10485760; // 10M
 	this->setOneErrorPage("404 ./www/errors/404.html");
 	this->parse_server(server_file);
 	//std::cout << "ServerConfig constructed." << std::endl;
@@ -402,7 +411,7 @@ ServerConfig::ServerConfig(void)
 	this->setRoot("");
 	this->setIndex("");
 	this->setOneErrorPage("404 ./www/errors/404.html");
-	this->_client_max_body_size = 0;
+	this->_client_max_body_size = 10485760; // 10M
 	//std::cout << "ServerConfig constructed." << std::endl;
 }
 

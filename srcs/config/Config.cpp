@@ -6,6 +6,15 @@
 // | HELPER FUNCTIONS
 // |----------------------
 
+bool	isPath(const std::string& str)
+{
+	if (str.size() < 2)
+	{
+		return (false);
+	}
+	return (str[0] == '/' || str.compare(0, 2, "./") == 0 || str[str.size() - 1] == '/');
+}
+
 bool	isDelim(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n'

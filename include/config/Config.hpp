@@ -79,6 +79,7 @@ private:
 	bool				hasServerConfigPort(uint16_t port);
 };
 
+bool	isPath(const std::string& str);
 bool	isDelim(char c);
 const std::string	trim_whitespace(const std::string& str);
 std::string capitalize(std::string str);

@@ -18,15 +18,11 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 	{
 		range--;
 	}
-	this->setName(trim_whitespace(line.substr(8, range - 8)));
+	this->setName(formatPath(trim_whitespace(line.substr(8, range - 8))));
 
 	if (this->getName() == "")
 	{
 		throw Config::BadConfigException("Empty field (location name): ", line);
-	}
-	else if (!isPath(this->getName()) && this->getName().find(".") == std::string::npos)
-	{
-		throw Config::BadConfigException("Invalid path for location name: ", line);
 	}
 	else if (this->getName().find("//") != std::string::npos)
 	{
@@ -57,14 +53,10 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 		}
 		else if (line.compare(0, 4, "root") == 0)
 		{
-			this->setRoot(trim_whitespace(line.substr(4)));
+			this->setRoot(formatPath(trim_whitespace(line.substr(4))));
 			if (this->getRoot() == "")
 			{
 				throw Config::BadConfigException("Empty field (root): ", line);
-			}
-			else if (!isPath(this->getRoot()))
-			{
-				throw Config::BadConfigException("Invalid path for root: ", line);
 			}
 			else if (this->getRoot().find("//") != std::string::npos)
 			{
@@ -81,7 +73,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 		}
 		else if (line.compare(0, 8, "cgi_pass") == 0)
 		{
-			this->setPass(trim_whitespace(line.substr(9)));
+			this->setPass(formatPath(trim_whitespace(line.substr(9))));
 			if (this->getPass() == "")
 			{
 				throw Config::BadConfigException("Empty field (cgi_pass): ", line);
@@ -90,10 +82,6 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			{
 				throw Config::BadConfigException("Bad syntax (cgi_pass): ", line);
 			}
-			/*else if (!isPath(this->getPass()))
-			{
-				throw Config::BadConfigException("Invalid path for cgi_pass: ", line);
-			}*/
 		}
 		else if (line.compare(0, 13, "allow_methods") == 0)
 		{

@@ -6,13 +6,29 @@
 // | HELPER FUNCTIONS
 // |----------------------
 
-bool	isPath(const std::string& str)
+std::string	formatPath(const std::string& str)
 {
-	if (str.size() < 2)
+	if (str.empty() || str == "/")
 	{
-		return (false);
+		return (str);
 	}
-	return (str[0] == '/' || str.compare(0, 2, "./") == 0 || str[str.size() - 1] == '/');
+
+	std::string tmp = str;
+
+	if (str[str.size() - 1] == '/')
+	{
+		tmp.erase(str.size() - 1);
+	}
+	if (str.compare(0, 2, "./") == 0)
+	{
+		tmp.erase(0, 1);
+	}
+	else if (str[0] != '/')
+	{
+		tmp = "/" + tmp;
+	}
+
+	return (tmp);
 }
 
 bool	isDelim(char c)

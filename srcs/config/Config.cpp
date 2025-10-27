@@ -212,7 +212,6 @@ Config::Config(const Config &orig): _servers(orig._servers)
 Config::Config(std::string filename, char **env)
 {
 	this->parse_file(filename);
-	// TODO Ver se pastas têm permissões
 	this->setSockets();
 	this->setEnv(env);
 

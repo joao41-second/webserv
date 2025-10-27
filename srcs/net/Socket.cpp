@@ -56,7 +56,7 @@ Socket::Socket(const Socket &orig): _fd(orig._fd), _addr(orig._addr)
 	//std::cout << "Socket copy-constructed." << std::endl;
 }*/
 
-Socket::Socket(uint16_t port)
+Socket::Socket(uint16_t port) // TODO verificar se Port ja aberto por outro motivo!
 {
 	// Create socket
 	this->_fd = socket(AF_INET, SOCK_STREAM, 0);

@@ -108,7 +108,14 @@ void	ServerConfig::parse_server(std::istream& server_file)
 		}
 	}
 
-	// TODO Location default "/"
+	// If default "/" location does not exist in server, add it
+	if (this->getLocMap().find("/") == this->getLocMap().end())
+	{
+		LocationConfig	*def_loc = new LocationConfig();
+		def_loc->setName("/");
+		def_loc->copyMethods(this->getMethods());
+		this->setOneLocationConfig(def_loc);
+	}
 }
 
 uint16_t ServerConfig::stringToUint16(const std::string &str)

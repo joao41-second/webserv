@@ -361,7 +361,7 @@ LocationConfig::LocationConfig(const LocationConfig &orig)
 
 LocationConfig::LocationConfig(std::istream& location_file, std::string line)
 {
-	this->_client_body_buffer_size = 0;
+	this->_client_body_buffer_size = 0; // TODO better default?
 	//this->setAlias(false);
 	this->parse_location(location_file, line);
 	//std::cout << "LocationConfig constructed." << std::endl;
@@ -374,7 +374,7 @@ LocationConfig::LocationConfig(void)
 	this->setRoot("");
 	this->setIndex("");
 	this->setPass("");
-	this->_client_body_buffer_size = 0;
+	this->_client_body_buffer_size = 0; // TODO better default?
 	//this->setAlias(false);
 	//std::cout << "LocationConfig constructed." << std::endl;
 }

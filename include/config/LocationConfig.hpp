@@ -48,7 +48,7 @@ public:
 	std::string const		&getIndex(void) const;
 	std::string const		&getPass(void) const;
 	unsigned long			getClientBuffSize(void) const;
-	bool const				&getAlias(void) const;
+	//bool const				&getAlias(void) const;
 	bool					checkSubLocation(void) const;
 	LocationConfig			&getSubLocation(unsigned int num);
 	LocationConfig const	&getSubLocation(unsigned int num) const;
@@ -67,7 +67,7 @@ public:
 	void	setName(std::string name);
 	void	setPass(std::string pass);
 	void	setClientBuffSize(std::string buff_size);
-	void	setAlias(bool alias);
+	//void	setAlias(bool alias);
 
 	LocationConfig*	clone(void) const;
 
@@ -79,16 +79,13 @@ private:
 	std::string		_name;		// ex: /directory
 	std::string		_root;		// ex: joao-rib/
 	std::string		_index;		// ex: joao.bad_extension
-	unsigned long	_client_body_buffer_size; // TODO should this be size_t?
 	bool			_alias;		// TODO should accept string?
+	unsigned long	_client_body_buffer_size; // ex: 100
+	//bool			_alias;		// Should be a string, if implemented
 
 	std::vector<t_methods>		_methods;	// ex: GET
 
 	std::map<std::string, LocationConfig>	_sub_locations;
-
-	// TODO *.(jpeg|json|bla) -> dar throw
-	// maybe TODO (*.(jpeg|json|bla)) ...incluir locations diferentes? Incluir variavel que nos da as extensoes?
-	// if (compare("*.(")) --> adicionar os restantes usando | e ) como delimitadores relevantes
 
 	// maybe TODO ifs (cookies, bonus)
 	// if ($cookie_<name> [operator] <value>) { <action> }

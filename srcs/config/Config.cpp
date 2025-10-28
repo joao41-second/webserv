@@ -1,10 +1,35 @@
-#include <config/Config.hpp>
+#include "../../include/config/Config.hpp"
 #include "../../include/config/ServerConfig.hpp"
 #include "../../include/net/Socket.hpp"
 
 // |----------------------
 // | HELPER FUNCTIONS
 // |----------------------
+
+std::string	formatPath(const std::string& str)
+{
+	if (str.empty() || str == "/")
+	{
+		return (str);
+	}
+
+	std::string tmp = str;
+
+	if (str[str.size() - 1] == '/')
+	{
+		tmp.erase(str.size() - 1);
+	}
+	//if (str.compare(0, 2, "./") == 0)
+	//{
+	//	tmp.erase(0, 1);
+	//}
+	//else if (str[0] != '/')
+	//{
+	//	tmp = "/" + tmp;
+	//}
+
+	return (tmp);
+}
 
 bool	isDelim(char c)
 {
@@ -39,7 +64,7 @@ std::string capitalize(std::string str)
 	return (str);
 }
 
-// |----------------------
+// |----------------------hasServerConfigPorts
 // | MEMBER FUNCTIONS
 // |----------------------
 
@@ -59,11 +84,20 @@ void	Config::parse_file(std::string filename)
 		if (line != "server {")
 			continue ;
 
-		ServerConfig* curr_server = new ServerConfig();
-		curr_server->parse_server(config_file);
+		ServerConfig curr_server = ServerConfig();
+		curr_server.parse_server(config_file);
 
-		// Set the server into the vector
-		this->setServerConfig(curr_server);
+		if (!this->hasServerConfigPort(curr_server.getPort()))
+		{
+			// Set the server into the vector
+			this->setServerConfig(&curr_server);
+		}
+		else
+		{
+			// Invalid server, do not add
+			std::cout << "Warning: Configuration file contains servers with repeated ports!" << std::endl;
+			std::cout << "Warning: Considering only the first server of Port " << curr_server.getPort() << std::endl;
+		}
 	}
 
 	// Close configuration file
@@ -73,6 +107,14 @@ void	Config::parse_file(std::string filename)
 // |----------------------
 // | GETTERS & SETTERS
 // |----------------------
+
+void	Config::removeServerConfig(unsigned int num)
+{
+	if (num < this->getServNum())
+	{
+		this->_servers.erase(this->_servers.begin() + num);
+	}
+}
 
 void	Config::setEnv(char **env)
 {
@@ -84,17 +126,28 @@ void	Config::setServerConfig(ServerConfig* serv)
 	if (serv)
 	{
 		this->_servers.push_back(*serv);
-		delete (serv);
 	}
 }
 
 void	Config::setSockets(void)
 {
 	size_t	sock_num = this->getServNum();
-	for (unsigned int i = 0 ; i < sock_num ; i++)
+	unsigned int i = 0;
+	while (i < sock_num)
 	{
-		Socket *curr_sock = new Socket(this->getServerConfig(i).getPort());
-		this->_sockets.push_back(curr_sock);
+		try
+		{
+			Socket *curr_sock = new Socket(this->getServerConfig(i).getPort());
+			this->_sockets.push_back(curr_sock);
+			i++;
+		}
+		catch (std::exception &e)
+		{
+			std::cerr << "Error: " << e.what() << std::endl;
+			std::cerr << "Warning: Removing server for Port " << this->getServerConfig(i).getPort() << std::endl;
+			this->removeServerConfig(i);
+			sock_num--;
+		}
 	}
 }
 
@@ -117,13 +170,17 @@ ServerConfig const	&Config::getServerConfig(uint16_t port) const
 			return (this->_servers[i]);
 		}
 	}
-	throw BadConfigException("Port not found", "");
+	throw BadPortException("Could not find Port ", port);
 }
 
 ServerConfig const	&Config::getServerConfig(unsigned int num) const
 {
 	if (num >= this->_servers.size())
-		throw BadConfigException("Out of bounds", " - Servers");
+	{
+		std::ostringstream oss;
+		oss << (_servers.size() - 1);
+		throw BadConfigException("Out of bounds: Servers only go to ", oss.str());
+	}
 	return(this->_servers[num]);
 }
 
@@ -135,6 +192,18 @@ size_t	Config::getServNum() const
 char**	Config::getEnv() const // maybe TODO considerar "const char *const *Config::getEnv() const"
 {
 	return(this->_env);
+}
+
+bool	Config::hasServerConfigPort(uint16_t port)
+{
+	for (unsigned int i = 0; i < this->_servers.size(); i++)
+	{
+		if (this->_servers[i].getPort() == port)
+		{
+			return (true);
+		}
+	}
+	return (false);
 }
 
 // |----------------------
@@ -161,6 +230,7 @@ Config::Config(std::string filename, char **env)
 	this->parse_file(filename);
 	this->setSockets();
 	this->setEnv(env);
+
 	//std::cout << "Config constructed." << std::endl;
 }
 
@@ -203,6 +273,23 @@ Config::BadConfigException::~BadConfigException() throw()
 }
 
 const char *Config::BadConfigException::what() const throw()
+{
+	return (this->_msg.c_str());
+}
+
+Config::BadPortException::BadPortException(std::string msg, uint16_t port)
+{
+	std::ostringstream out;
+	out << msg << port;
+	_msg = out.str();
+}
+
+Config::BadPortException::~BadPortException() throw()
+{
+	//std::cout << "Error message destroyed" << std::endl;
+}
+
+const char *Config::BadPortException::what() const throw()
 {
 	return (this->_msg.c_str());
 }

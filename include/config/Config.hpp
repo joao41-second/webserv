@@ -58,6 +58,16 @@ public:
 	private:
 		std::string _msg;
 	};
+
+	class BadPortException: public std::exception
+	{
+	public:
+		BadPortException(std::string msg, uint16_t port);
+		virtual ~BadPortException() throw();
+		virtual const char *what() const throw();
+	private:
+		std::string _msg;
+	};
 private:
 	std::vector<ServerConfig>	_servers;
 	std::vector<Socket*>		_sockets;
@@ -65,11 +75,14 @@ private:
 	char	**_env;
 
 	ServerConfig const	&getServerConfig(unsigned int num) const;
+	void				removeServerConfig(unsigned int num);
+	bool				hasServerConfigPort(uint16_t port);
 };
 
 bool	isDelim(char c);
 const std::string	trim_whitespace(const std::string& str);
-std::string capitalize(std::string str);
+std::string		formatPath(const std::string& str);
+std::string 	capitalize(std::string str);
 
 class InputException: public std::exception
 {

@@ -12,6 +12,7 @@
 
 #include "cgi/cgi.hpp"
 #include "config/Config.hpp"
+#include "config/LocationConfig.hpp"
 #include "config/ServerConfig.hpp"
 #include "config/color.hpp"
 #include <cstddef>
@@ -56,7 +57,7 @@ void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
         _types[".py"]   = "text/html;charset=UTF-8";
         _types[".php"]  = "text/html;charset=UTF-8";
 
-
+	//TODO add the get cgi and create type of cgi 
 }
 
 std::string HttpResponse::open_static_file(std::string file)
@@ -82,12 +83,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		status = true;
 		index = false;
 		throw Not_found_404();
-	}
-
-	
-	// TODO not correct use de .css and .js
-	
-
+	}	
 	if(!_types[type_file].empty())
 	{
 
@@ -95,8 +91,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		
 	}else
 	{
-		//TODO do not check is wor
-
+		//TODO this vereficasion no finic
 		request += "Content-Disposition: attachment; filename= " +   file+ '\n' ;
 		request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
 	}
@@ -109,7 +104,6 @@ std::string HttpResponse::open_static_file(std::string file)
 	std::stringstream ss;
 	ss << (int)data.size();
 	request += "Content-Length: " + ss.str() + "\r\n";
-	// request += "Connection: close\r\n";
 	request += "Connection: keep-alive\r\n\n";
 	if (index == true)
 		request = "";
@@ -154,16 +148,9 @@ std::string HttpResponse::rediect_path(std::string file_path)
 	{
 		HTTP_MSG( " loc-> " << it->first)
 	}
-
-	if(file_path == "")	
-		return "index.html"; // todo cireate find index
-	
-	size = file_path.rfind('/'); // TODO  if not 1 not good parsing
+	size = file_path.rfind('/'); 
 	file = file_path.substr(size, file_path.size());
 	path = file_path.substr(0,size+1);
-
-
-
 	return (search_folder_file(file, path, _locations));
 }
 
@@ -171,18 +158,12 @@ std::string HttpResponse::rediect_path(std::string file_path)
 
 std::string HttpResponse::search_folder_file(std::string file ,std::string path , std::map<std::string, LocationConfig> loc)
 {
-	std::string real_path;
-	int size;
+	std::string real_path = "";
+	int size = 0;
 
-
-	HTTP_MSG("start shearch folder " << path <<" "<<file);
 	if( loc[path+file].getRoot() != "")
-			return loc[path+file].getRoot();
-	
+			return loc[path+file].getRoot();	
 	while (path.rfind('/') != std::string::npos) {
-	
-
-
 		if( loc[path+file].getRoot() != "")
 			return loc[path+file].getRoot() ;
 	
@@ -220,20 +201,54 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 {
 
 	int size = file.find('.');
+	if( file.rfind('.') == std::string::npos)
+		throw Not_found_404();
 	std::string type =  file.substr(size,file.size()); 
-	size = file.find('/');
-	std::string path = file.substr(0,size);
-	
+	size = file.rfind('/');
+	if(  file.rfind('/') == std::string::npos)	
+		throw Not_found_404();
+	std::string path = file.substr(0,size);	
+	if(path.rfind('/') != std::string::npos )
+		path +=	"/";
 	path += "*"+type;
-	T_MSG( server.getLocMap()[path]._cgi_pass << "->" << path, YELLOW);
-	if(server.getLocMap()[path]._cgi_pass != "")
+	T_MSG(file << ":" <<  path, YELLOW);
+	if(server.getLocMap()[path]._cgi_pass != "" )
 	{
 		_pg =  server.getLocMap()[path]._cgi_pass;
 		return true;	
 	}
-
-	// TODO  implemtn the check string execute cig or no
 	return (false);
+}
+
+std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
+{
+
+	std::map<std::string, LocationConfig>	_locations = conf.getLocMap();
+	std::map<std::string , LocationConfig>::iterator it = _locations.begin();
+	std::string file = "";
+	while (it != _locations.end()) 
+	{	
+		try
+		{
+
+			if(it->second._cgi_pass != "")
+			{
+			   file = "HTTP/1.1 200 OK\r\n";
+			   return (file  += cgi.execute( HttpParser::get_request_msg(), it->second._cgi_pass));
+			}
+			else if(  it->second.getRoot().find('.') == std::string::npos || it->second.getRoot().rfind('.') < it->second.getRoot().rfind('/'))
+			{		
+			   return (file = HttpResponse::open_static_file(it->second.getRoot() + "/index.html"));	
+			}
+		}
+		catch(std::exception &e)
+		{
+		  	
+		}
+		++it;
+	}
+	throw  Not_found_404();
+	return "";	
 }
 
 std::string HttpResponse::request_and_response(std::string request)
@@ -254,17 +269,20 @@ std::string HttpResponse::request_and_response(std::string request)
 		HttpParser::new_request(request);
 		cgi.create_env(_env, HttpParser::get_request_env());
 
-		//check of the index
-		if (chek_cig_or_static(HttpParser::_pach_info, config))
+		T_MSG(  "_pach is = "<< HttpParser::_pach_info, YELLOW);
+		if( HttpParser::_pach_info == "/")
+		{
+			response = get_folder_index(config,cgi);
+		}
+		else if (chek_cig_or_static(HttpParser::_pach_info, config))
 		{
 			// execute in exeve		
 			response = "HTTP/1.1 200 OK\r\n";
 			response += cgi.execute( HttpParser::get_request_msg(), _pg);
-			T_MSG(response, YELLOW);
 		}
 		else
 		{
-			// open and send file 
+			// open static file
 			path = rediect_path(HttpParser::_pach_info);
 			response = HttpResponse::open_static_file(path);
 		}
@@ -272,14 +290,11 @@ std::string HttpResponse::request_and_response(std::string request)
 	catch (std::exception &e)
 	{
 		error = std::atoi(e.what());
-		(void)error;
 
 		T_MSG("Finich request - error:"  << e.what()  , RED);
 
-
 		try
 		{
-
 			if(!config.getErrorPage(error).empty())
 				return  response = HttpResponse::open_static_file(config.getErrorPage(error));
 		}
@@ -287,13 +302,10 @@ std::string HttpResponse::request_and_response(std::string request)
 		{
 
 			return (gener_erro_page(HttpParser::_http_page_error, d.what()));
-		}
-
-		
+		}		
 	}
 
-
-	T_MSG("Finich request \n\n" << response , GREEN)
+	T_MSG("Finich request \n\n", GREEN)
 	return (response);
 }
 

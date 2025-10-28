@@ -15,6 +15,7 @@
 //works with HttpStatus
 
 
+#include "config/LocationConfig.hpp"
 #include "config/ServerConfig.hpp"
 #include <fcntl.h>
 #ifndef HTTPRESPONSE_HPP
@@ -23,6 +24,7 @@
 #include <config/Config.hpp>
 #include <string>
 #include <config/debug.hpp>
+#include <cgi/cgi.hpp>
 #include "HttpParser.hpp"
 
 
@@ -38,6 +40,7 @@ class HttpResponse
 	HttpResponse();
 	~HttpResponse();
 	static std::string  search_folder_file(std::string file ,std::string path , std::map<std::string, LocationConfig> loc);
+	static std::string  get_folder_index(ServerConfig,Cgi &cgi);
 		 
 	public:
 		static bool _request_status;

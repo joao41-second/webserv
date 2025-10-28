@@ -73,11 +73,13 @@ public:
 
 	void	parse_location(std::istream& location_file, std::string line);
 
+	std::string		_cgi_pass;	// ex: test_linux/ubuntu_cgi_tester
+
 private:
 	std::string		_name;		// ex: /directory
 	std::string		_root;		// ex: joao-rib/
 	std::string		_index;		// ex: joao.bad_extension
-	std::string		_cgi_pass;	// ex: test_linux/ubuntu_cgi_tester
+	bool			_alias;		// TODO should accept string?
 	unsigned long	_client_body_buffer_size; // ex: 100
 	//bool			_alias;		// Should be a string, if implemented
 

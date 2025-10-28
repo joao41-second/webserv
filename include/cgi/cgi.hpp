@@ -35,7 +35,7 @@ class Cgi
 		Cgi &operator=(const Cgi &copy);		
 		bool chek_program(std::string porgram);
 		void create_env(char **env,std::vector<char *> env_request);
-		std::string execute(std::string _request);
+		std::string execute(std::string _request,std::string porgram);
 };
 
 #endif

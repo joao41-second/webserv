@@ -19,14 +19,14 @@ std::string	formatPath(const std::string& str)
 	{
 		tmp.erase(str.size() - 1);
 	}
-	if (str.compare(0, 2, "./") == 0)
-	{
-		tmp.erase(0, 1);
-	}
-	else if (str[0] != '/')
-	{
-		tmp = "/" + tmp;
-	}
+	//if (str.compare(0, 2, "./") == 0)
+	//{
+	//	tmp.erase(0, 1);
+	//}
+	//else if (str[0] != '/')
+	//{
+	//	tmp = "/" + tmp;
+	//}
 
 	return (tmp);
 }

@@ -45,10 +45,11 @@ class HttpParser
 	      static std::string _type;
 	      static std::string _pach_info; 
 	      static	int _http_page_error;
+		static std::string _host;
 
 	      static void new_request(std::string buffer); 
 	      static std::string get_request_msg();
-	      static std::vector<std::string> get_request_env();		
+	      static std::vector<char *> get_request_env();		
 };
 
 

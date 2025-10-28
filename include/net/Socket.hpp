@@ -22,12 +22,12 @@ public:
 	virtual ~Socket();
 
 	int							getFd() const;
-	struct sockaddr_in const	&getAddr() const; // TODO Should the return be const sockaddr_in?
+	struct sockaddr_in const	&getAddr() const;
 	uint16_t					getAddrPort() const;
 
 private:
-	struct sockaddr_in	_addr; // TODO testar?
-	int					_fd; // TODO testar
+	struct sockaddr_in	_addr;
+	int					_fd;
 };
 
 #endif

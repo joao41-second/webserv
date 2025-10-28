@@ -65,10 +65,9 @@ private:
 	uint16_t		_port;		// ex: 8000
 	std::string		_root;		// ex: ./joao-rib
 	std::string		_index;		// ex: index.html
-	unsigned long	_client_max_body_size; // ex: 10M // TODO should this be size_t?
+	unsigned long	_client_max_body_size; // ex: 10M
 
 	std::vector<t_methods>		_methods;	// ex: GET
-
 	std::map<int, std::string>	_error_pages; // ex: 404 , ./www/errors/404.html
 
 	std::map<std::string, LocationConfig>	_locations;

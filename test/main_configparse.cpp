@@ -100,7 +100,7 @@ try
 			std::cout << "\t\tIndex: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getIndex() << "$" << std::endl;
 			std::cout << "\t\tCGI Pass: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getPass() << "$" << std::endl;
 			std::cout << "\t\tClient body buffer size: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getClientBuffSize() << "$" << std::endl;
-			std::cout << "\t\tAlias: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getAlias() << "$" << std::endl;
+			//std::cout << "\t\tAlias: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getAlias() << "$" << std::endl;
 			std::cout << "\t\tMethods: ";
 			print_methods_loc(test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j));
 
@@ -112,7 +112,7 @@ try
 				std::cout << "\t\t\tIndex: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getIndex() << "$" << std::endl;
 				std::cout << "\t\t\tCGI Pass: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getPass() << "$" << std::endl;
 				std::cout << "\t\t\tClient body buffer size: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getClientBuffSize() << "$" << std::endl;
-				std::cout << "\t\t\tAlias: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getAlias() << "$" << std::endl;
+				//std::cout << "\t\t\tAlias: " << test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k).getAlias() << "$" << std::endl;
 				std::cout << "\t\t\tMethods: ";
 				print_methods_loc(test.getServerConfig(static_cast<uint16_t>(i)).getLocationConfig(j).getSubLocation(k));
 			}

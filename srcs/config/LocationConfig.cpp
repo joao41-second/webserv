@@ -18,11 +18,19 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 	{
 		range--;
 	}
-	this->setName(trim_whitespace(line.substr(8, range - 8)));
+	this->setName(formatPath(trim_whitespace(line.substr(8, range - 8))));
 
 	if (this->getName() == "")
 	{
-		throw InputException("Empty field (server_name)");
+		throw Config::BadConfigException("Empty field (location name): ", line);
+	}
+	else if (this->getName().find("//") != std::string::npos)
+	{
+		throw Config::BadConfigException("Bad syntax (location name): ", line);
+	}
+	else if (this->getName().find(".(") != std::string::npos && this->getName().find("|") != std::string::npos)
+	{
+		throw Config::BadConfigException("Syntax not supported by this project: ", line);
 	}
 
 	// Printing loop, once per line in Configuration file
@@ -40,15 +48,19 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setSubLocation(new LocationConfig(location_file, line));
 			if (!this->checkSubLocation())
 			{
-				throw InputException("Input error (sub-location)"); // TODO be more specific!
+				throw Config::BadConfigException("Input error (sub-location): ", line);
 			}
 		}
 		else if (line.compare(0, 4, "root") == 0)
 		{
-			this->setRoot(trim_whitespace(line.substr(4)));
+			this->setRoot(formatPath(trim_whitespace(line.substr(4))));
 			if (this->getRoot() == "")
 			{
-				throw InputException("Empty field (root)"); // TODO be more specific!
+				throw Config::BadConfigException("Empty field (root): ", line);
+			}
+			else if (this->getRoot().find("//") != std::string::npos)
+			{
+				throw Config::BadConfigException("Bad syntax (root): ", line);
 			}
 		}
 		else if (line.compare(0, 5, "index") == 0)
@@ -56,15 +68,19 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setIndex(trim_whitespace(line.substr(5)));
 			if (this->getIndex() == "")
 			{
-				throw InputException("Empty field (index)"); // TODO be more specific!
+				throw Config::BadConfigException("Empty field (index): ", line);
 			}
 		}
 		else if (line.compare(0, 8, "cgi_pass") == 0)
 		{
-			this->setPass(trim_whitespace(line.substr(9)));
+			this->setPass(formatPath(trim_whitespace(line.substr(9))));
 			if (this->getPass() == "")
 			{
-				throw InputException("Empty field (cgi_pass)"); // TODO be more specific!
+				throw Config::BadConfigException("Empty field (cgi_pass): ", line);
+			}
+			else if (this->getPass().find("//") != std::string::npos)
+			{
+				throw Config::BadConfigException("Bad syntax (cgi_pass): ", line);
 			}
 		}
 		else if (line.compare(0, 13, "allow_methods") == 0)
@@ -72,7 +88,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 			this->setMethods(trim_whitespace(line.substr(13)));
 			if (this->_methods.empty())
 			{
-				throw InputException("Empty field (allow_methods)"); // TODO be more specific!
+				throw Config::BadConfigException("Empty field (allow_methods): ", line);
 			}
 		}
 		else if (line.compare(0, 23, "client_body_buffer_size") == 0)
@@ -81,7 +97,9 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 		}
 		else if (line.compare(0, 5, "alias") == 0)
 		{
-			this->setAlias(true); // TODO Alterar se se converter em string
+			std::cout << "Warning: Alias is not supported by this project." << std::endl;
+			//throw Config::BadConfigException("Alias is not supported by this project", "");
+			//this->setAlias(true);
 		}
 	}
 
@@ -162,7 +180,7 @@ void	LocationConfig::setOneMethod(std::string word)
 			return ;
 		}
 	}
-	throw InputException("Invalid method");
+	throw Config::BadConfigException("Invalid method: ", capitalize(word));
 }
 
 void	LocationConfig::setIndex(std::string index)
@@ -191,20 +209,23 @@ void	LocationConfig::setClientBuffSize(std::string buff_size)
 	this->_client_body_buffer_size = std::strtoul(buff_size.c_str(), &safeguard, 10);
 	if (*safeguard != '\0')
 	{
-		throw InputException("Invalid client_body_buffer_size");
+		throw Config::BadConfigException("Invalid client_body_buffer_size", "");
 	}
 }
 
-void	LocationConfig::setAlias(bool alias)
+/*void	LocationConfig::setAlias(bool alias)
 {
 	this->_alias = alias;
-}
+}*/
 
 void	LocationConfig::setSubLocation(LocationConfig* loc) 
 {
 	if (loc)
 	{
-		loc->setName(this->getName() + "/" + loc->getName());
+		if (loc->getName()[0] == '/')
+			loc->setName(this->getName() + loc->getName());
+		else
+			loc->setName(this->getName() + "/" + loc->getName());
 		this->_sub_locations[loc->getName()] = *loc;
 		delete (loc);
 	}
@@ -235,10 +256,10 @@ unsigned long	LocationConfig::getClientBuffSize(void) const
 	return(this->_client_body_buffer_size);
 }
 
-bool const	&LocationConfig::getAlias(void) const
+/*bool const	&LocationConfig::getAlias(void) const
 {
 	return(this->_alias);
-}
+}*/
 
 std::vector<t_methods> const	&LocationConfig::getMethods() const
 {
@@ -267,7 +288,11 @@ std::map<std::string, LocationConfig> const	&LocationConfig::getSubLocationMap(v
 LocationConfig	&LocationConfig::getSubLocation(unsigned int num)
 {
 	if (num >= this->_sub_locations.size())
-		throw InputException("Out of bounds (Sub-Locations)"); // TODO Write a proper exception
+	{
+		std::ostringstream oss;
+		oss << (_sub_locations.size() - 1);
+		throw Config::BadConfigException("Out of bounds: Sub-Locations only go to ", oss.str());
+	}
 
 	std::map<std::string, LocationConfig>::iterator it = this->_sub_locations.begin();
 	unsigned int i = 0;
@@ -283,7 +308,11 @@ LocationConfig	&LocationConfig::getSubLocation(unsigned int num)
 LocationConfig const	&LocationConfig::getSubLocation(unsigned int num) const
 {
 	if (num >= this->_sub_locations.size())
-		throw InputException("Out of bounds (Sub-Locations)"); // TODO Write a proper exception
+	{
+		std::ostringstream oss;
+		oss << (_sub_locations.size() - 1);
+		throw Config::BadConfigException("Out of bounds: Sub-Locations only go to ", oss.str());
+	}
 
 	std::map<std::string, LocationConfig>::const_iterator it = this->_sub_locations.begin();
 	unsigned int i = 0;
@@ -318,7 +347,7 @@ LocationConfig &LocationConfig::operator = (const LocationConfig &orig)
 		this->_cgi_pass = orig._cgi_pass;
 		this->_methods = orig._methods;
 		this->_client_body_buffer_size = orig._client_body_buffer_size;
-		this->_alias = orig._alias;
+		//this->_alias = orig._alias;
 	}
 	//std::cout << "LocationConfig assignment copy-constructed." << std::endl;
 	return (*this);
@@ -332,8 +361,8 @@ LocationConfig::LocationConfig(const LocationConfig &orig)
 
 LocationConfig::LocationConfig(std::istream& location_file, std::string line)
 {
-	this->_client_body_buffer_size = 0;
-	this->setAlias(false);
+	this->_client_body_buffer_size = 100000;
+	//this->setAlias(false);
 	this->parse_location(location_file, line);
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
@@ -345,8 +374,8 @@ LocationConfig::LocationConfig(void)
 	this->setRoot("");
 	this->setIndex("");
 	this->setPass("");
-	this->_client_body_buffer_size = 0;
-	this->setAlias(false);
+	this->_client_body_buffer_size = 100000;
+	//this->setAlias(false);
 	//std::cout << "LocationConfig constructed." << std::endl;
 }
 

@@ -1,98 +1,142 @@
-<!-- index.html -->
+
+<!-- public/index.html -->
 <!doctype html>
 <html lang="pt">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Site Exemplo — Minha Página</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>File Manager</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container">
-      <a class="logo" href="#">MinhaMarca</a>
-      <nav class="nav">
-        <a href="#features">Serviços</a>
-        <a href="#about">Sobre</a>
-        <a href="#contact">Contacto</a>
-      </nav>
-      <button class="menu-btn" aria-label="Abrir menu">☰</button>
-    </div>
-  </header>
+  <main class="container">
+    <h1>Gestor de Ficheiros</h1>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-inner">
-        <div class="hero-text">
-          <h1>Bem-vindo à Minha Página</h1>
-          <p>Um site simples, responsivo e bonito — pronto para personalizar. Feito com HTML e CSS em ficheiros separados.</p>
-          <p><a class="cta" href="#contact">Contacte-nos</a></p>
-        </div>
-        <div class="hero-image" aria-hidden="true">
-          <div class="device-mock"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="features container">
-      <article class="card">
-        <h3>Design Responsivo</h3>
-        <p>Funciona bem em telemóveis, tablets e desktops.</p>
-      </article>
-      <article class="card">
-        <h3>Performance</h3>
-        <p>Estrutura leve e otimizada para carregamento rápido.</p>
-      </article>
-      <article class="card">
-        <h3>Fácil de Personalizar</h3>
-        <p>Classes simples e comentários para facilitar alterações.</p>
-      </article>
-    </section>
-
-    <section id="about" class="about">
-      <div class="container about-inner">
-        <h2>Sobre Nós</h2>
-        <p>Somos uma equipa dedicada a construir experiências web claras, rápidas e acessíveis. Este modelo é um ponto de partida para o seu projecto.</p>
-      </div>
-    </section>
-
-    <section id="contact" class="contact container">
-      <h2>Contacto</h2>
-      <form class="contact-form" action="#" method="post">
-        <label>
-          Nome
-          <input type="text" name="name" required>
-        </label>
-        <label>
-          Email
-          <input type="email" name="email" required>
-        </label>
-        <label>
-          Mensagem
-          <textarea name="message" rows="5" required></textarea>
-        </label>
-        <button type="submit" class="btn">Enviar</button>
+    <section class="upload">
+      <h2>Enviar ficheiro</h2>
+      <form id="uploadForm">
+        <input type="file" id="fileInput" name="file" />
+        <button type="submit">Enviar (POST)</button>
       </form>
+
+      <h3>Substituir ficheiro existente</h3>
+      <form id="replaceForm">
+        <input type="text" id="targetName" placeholder="Nome do ficheiro a substituir (ex: doc.txt)" />
+        <input type="file" id="replaceFile" name="file" />
+        <button type="submit">Substituir (PUT)</button>
+      </form>
+    </section>
+
+    <section class="list">
+      <h2>Ficheiros</h2>
+      <button id="refreshBtn">Atualizar lista</button>
+      <ul id="fileList"></ul>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>© <span id="year"></span> MinhaMarca — Todos os direitos reservados</p>
-    </div>
-  </footer>
-
   <script>
-    // pequeno script para ano atual e menu móvel
-    document.getElementById('year').textContent = new Date().getFullYear();
-    const menuBtn = document.querySelector('.menu-btn');
-    const nav = document.querySelector('.nav');
-    menuBtn.addEventListener('click', () => nav.classList.toggle('open'));
+    const fileList = document.getElementById('fileList');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    async function fetchFiles() {
+      fileList.innerHTML = '<li>Carregando...</li>';
+      const res = await fetch('/files');
+      const files = await res.json();
+      if (!Array.isArray(files)) {
+        fileList.innerHTML = '<li>Erro ao obter lista</li>';
+        return;
+      }
+      if (files.length === 0) {
+        fileList.innerHTML = '<li>Sem ficheiros</li>';
+        return;
+      }
+      fileList.innerHTML = '';
+      files.forEach(f => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <strong>${escapeHtml(f.name)}</strong>
+          <span class="meta">(${formatBytes(f.size)} - ${new Date(f.mtime).toLocaleString()})</span>
+          <div class="actions">
+            <a class="btn" href="/files/${encodeURIComponent(f.name)}" download>Download</a>
+            <button class="btn del" data-name="${escapeHtml(f.name)}">Apagar</button>
+          </div>
+        `;
+        fileList.appendChild(li);
+      });
+
+      // attach delete handlers
+      document.querySelectorAll('button.del').forEach(btn =>
+        btn.addEventListener('click', async (e) => {
+          const name = e.currentTarget.dataset.name;
+          if (!confirm(`Apagar "${name}"?`)) return;
+          const resp = await fetch('/files/' + encodeURIComponent(name), { method: 'DELETE' });
+          const data = await resp.json();
+          if (resp.ok) {
+            alert(data.message || 'Apagado');
+            fetchFiles();
+          } else {
+            alert('Erro: ' + (data.error || resp.statusText));
+          }
+        })
+      );
+    }
+
+    // upload (POST)
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('fileInput');
+      if (!input.files.length) return alert('Escolha um ficheiro');
+      const fd = new FormData();
+      fd.append('file', input.files[0]);
+      const resp = await fetch('/files', { method: 'POST', body: fd });
+      const data = await resp.json();
+      if (resp.ok) {
+        alert('Enviado: ' + data.file.name);
+        input.value = '';
+        fetchFiles();
+      } else {
+        alert('Erro: ' + (data.error || resp.statusText));
+      }
+    });
+
+    // replace (PUT)
+    document.getElementById('replaceForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const target = document.getElementById('targetName').value.trim();
+      const fileInput = document.getElementById('replaceFile');
+      if (!target) return alert('Indique o nome que quer substituir');
+      if (!fileInput.files.length) return alert('Escolha o ficheiro que substituirá o existente');
+      const fd = new FormData();
+      fd.append('file', fileInput.files[0]);
+      const resp = await fetch('/files/' + encodeURIComponent(target), { method: 'PUT', body: fd });
+      const data = await resp.json();
+      if (resp.ok) {
+        alert(data.message);
+        document.getElementById('targetName').value = '';
+        fileInput.value = '';
+        fetchFiles();
+      } else {
+        alert('Erro: ' + (data.error || resp.statusText));
+      }
+    });
+
+    refreshBtn.addEventListener('click', fetchFiles);
+
+    // util
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B','KB','MB','GB','TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // fetch at start
+    fetchFiles();
   </script>
 </body>
 </html>
-
-/* styles.css */
-/* Guarda este bloco no ficheiro separado styles.css */
-
 

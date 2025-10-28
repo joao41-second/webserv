@@ -296,12 +296,32 @@ std::string HttpResponse::request_and_response(std::string request)
 		try
 		{
 			if(!config.getErrorPage(error).empty())
-				return  response = HttpResponse::open_static_file(config.getErrorPage(error));
+			{
+
+			   response = HttpResponse::open_static_file(config.getErrorPage(error));
+
+			}
+
 		}
 		catch(std::exception &d)
 		{
+			try
+			{
+				if(!config.getErrorPage(error).empty())
+				{
+					response = "HTTP/1.1 200 OK\r\n";
+					response += cgi.execute( HttpParser::get_request_msg(), _pg);
+				}
 
-			return (gener_erro_page(HttpParser::_http_page_error, d.what()));
+			}
+			catch(std::exception &e)
+			{
+
+				return (gener_erro_page(HttpParser::_http_page_error, d.what()));
+			}
+
+
+			return (response);
 		}		
 	}
 

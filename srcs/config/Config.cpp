@@ -6,7 +6,15 @@
 // | HELPER FUNCTIONS
 // |----------------------
 
-std::string	formatPath(const std::string& str)
+void validatePath()
+{
+	// TODO check if syntax valid
+	// TODO check if folder exists
+	// TODO check read and write permissions
+	// TODO cgi_pass should be checked also for execution
+}
+
+std::string	formatFakePath(const std::string& str)
 {
 	if (str.empty() || str == "/")
 	{

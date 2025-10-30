@@ -18,7 +18,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 	{
 		range--;
 	}
-	this->setName(formatPath(trim_whitespace(line.substr(8, range - 8))));
+	this->setName(formatFakePath(trim_whitespace(line.substr(8, range - 8))));
 
 	if (this->getName() == "")
 	{
@@ -53,7 +53,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 		}
 		else if (line.compare(0, 4, "root") == 0)
 		{
-			this->setRoot(formatPath(trim_whitespace(line.substr(4))));
+			this->setRoot(trim_whitespace(line.substr(4)));
 			if (this->getRoot() == "")
 			{
 				throw Config::BadConfigException("Empty field (root): ", line);
@@ -73,7 +73,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 		}
 		else if (line.compare(0, 8, "cgi_pass") == 0)
 		{
-			this->setPass(formatPath(trim_whitespace(line.substr(9))));
+			this->setPass(trim_whitespace(line.substr(9)));
 			if (this->getPass() == "")
 			{
 				throw Config::BadConfigException("Empty field (cgi_pass): ", line);

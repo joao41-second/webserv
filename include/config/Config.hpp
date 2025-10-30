@@ -81,7 +81,7 @@ private:
 
 bool	isDelim(char c);
 const std::string	trim_whitespace(const std::string& str);
-std::string		formatPath(const std::string& str);
+std::string		formatFakePath(const std::string& str);
 std::string 	capitalize(std::string str);
 
 class InputException: public std::exception

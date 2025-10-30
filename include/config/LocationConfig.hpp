@@ -73,6 +73,8 @@ public:
 
 	void	parse_location(std::istream& location_file, std::string line);
 
+	std::string		_cgi_pass;	// ex: test_linux/ubuntu_cgi_tester
+
 private:
 	std::string		_name;		// ex: /directory
 	std::string		_root;		// ex: ./joao-rib/

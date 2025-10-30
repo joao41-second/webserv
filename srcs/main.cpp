@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "http/HttpResponse.hpp"
 #include <core/Server.hpp>
 #include <config/ServerConfig.hpp>
 #include <config/Config.hpp>
@@ -26,10 +27,13 @@ int	main(int argc, char **argv, char **envp)
 
 		Config conf_info(argv[1], envp);
 
-		std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-		std::vector<Socket*>		sockets = conf_info.getSocketVector();
+	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+	std::vector<Socket*>		sockets = conf_info.getSocketVector();
+	HttpResponse::set_config(configs,envp);
 
-		Server server(configs, sockets);
+	Server server(configs, sockets);
+	server.launch();
+
 		server.launch();
 	} catch (const std::exception &e) {
 		std::cerr << "Error: " << e.what() << std::endl;

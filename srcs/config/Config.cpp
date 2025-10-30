@@ -197,7 +197,7 @@ size_t	Config::getServNum() const
 	return(this->_servers.size());
 }
 
-char**	Config::getEnv() const // maybe TODO considerar "const char *const *Config::getEnv() const"
+char**	Config::getEnv() const // consider "const char *const *Config::getEnv() const"
 {
 	return(this->_env);
 }

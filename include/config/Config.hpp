@@ -37,7 +37,7 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	char**							getEnv() const; // maybe TODO considerar "const char *const *getEnv() const
+	char**							getEnv() const; // consider "const char *const *getEnv() const
 	size_t							getServNum() const;
 	ServerConfig const				&getServerConfig(uint16_t port) const;
 	std::vector<ServerConfig> const	&getServerConfigVector() const;

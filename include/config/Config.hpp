@@ -18,8 +18,9 @@
 #include <typeinfo>
 
 #include <fcntl.h>		// TODO Ver se ha melhor
-#include <sys/socket.h> // TODO Ver se ha melhor
-#include <netinet/in.h> // TODO Ver se ha melhor
+#include <sys/socket.h>	// TODO Ver se ha melhor
+#include <netinet/in.h>	// TODO Ver se ha melhor
+#include <sys/stat.h>	// TODO Ver se ha melhor
 
 #include <arpa/inet.h>
 #include <cstring>
@@ -79,10 +80,11 @@ private:
 	bool				hasServerConfigPort(uint16_t port);
 };
 
-bool	isDelim(char c);
-const std::string	trim_whitespace(const std::string& str);
-std::string		formatFakePath(const std::string& str);
 std::string 	capitalize(std::string str);
+bool			isDelim(char c);
+const std::string	trim_whitespace(const std::string& str);
+void			validatePath(const std::string &path, bool cgi_pass);
+std::string		formatFakePath(const std::string& str);
 
 class InputException: public std::exception
 {

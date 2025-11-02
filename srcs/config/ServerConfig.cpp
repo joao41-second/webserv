@@ -206,6 +206,7 @@ void	ServerConfig::setOneErrorPage(std::string error_page_str)
 	}
 
 	this->_error_pages[error_num] = trim_whitespace(error_page_str.substr(3));
+	validatePath(this->_error_pages[error_num], false);
 }
 
 void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
@@ -273,6 +274,7 @@ void	ServerConfig::setIndex(std::string index)
 
 void	ServerConfig::setRoot(std::string root)
 {
+	validatePath(root, false);
 	this->_root = root;
 }
 

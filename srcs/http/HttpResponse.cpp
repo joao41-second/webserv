@@ -233,8 +233,7 @@ std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 
 			if(it->second._cgi_pass != "")
 			{
-			   file = "HTTP/1.1 200 OK\r\n";
-			   return (file  += cgi.execute( HttpParser::get_request_msg(), it->second._cgi_pass));
+			   return ( HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), it->second._cgi_pass),""));
 			}
 			else if(  it->second.getRoot().find('.') == std::string::npos || it->second.getRoot().rfind('.') < it->second.getRoot().rfind('/'))
 			{		
@@ -277,8 +276,8 @@ std::string HttpResponse::request_and_response(std::string request)
 		else if (chek_cig_or_static(HttpParser::_pach_info, config))
 		{
 			// execute in exeve		
-			response = "HTTP/1.1 200 OK\r\n";
-			response += cgi.execute( HttpParser::get_request_msg(), _pg);
+			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");
+
 		}
 		else
 		{
@@ -309,8 +308,7 @@ std::string HttpResponse::request_and_response(std::string request)
 			{
 				if(!config.getErrorPage(error).empty())
 				{
-					response = "HTTP/1.1 200 OK\r\n";
-					response += cgi.execute( HttpParser::get_request_msg(), _pg);
+					response = HttpParser::chek_and_add_header( cgi.execute( HttpParser::get_request_msg(), _pg),  e.what());
 				}
 
 			}

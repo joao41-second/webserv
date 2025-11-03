@@ -196,3 +196,55 @@ std::vector <char *> HttpParser::get_request_env()
       return (envp);
 }
 
+
+std::string HttpParser::chek_and_add_header(std::string response,std::string error)
+{
+	(void )error;
+	size_t size = response.find("\n\n");
+
+	std::string  body;
+	std::string  header;
+	if(size == std::string::npos)
+	{
+		HTTP_MSG("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+	}
+	else 
+	{
+		header = trim (response.substr(0, size-1)) ;
+		body = response.substr(size+2,response.size());
+		body = trim(body);	
+		header = trim(header);
+		header += "\r\n";
+		if(header.find("Content-Length:") == std::string::npos)
+		{
+
+			std::stringstream len;
+
+			len <<  body.size();
+			
+			 header += "Content-Length: " + len.str() + "\r\n" ;
+		}		
+		if(header.find("Connection:") == std::string::npos)
+		{
+			
+			header += "Connection: close\r\n" ; 
+		}
+		if(header.find("HTTP/1.1") == std::string::npos)
+		{
+			//if(HttpParser::_http_page_error != 200)
+		//	{
+		//		std::stringstream ok;
+		//		ok << HttpParser::_http_page_error;
+		//		header = "HTTP/1.1 " +  ok.str( )+ " " + error+ "\n" + header; 
+		//	}else 
+			header = "HTTP/1.1 200 OK\r\n"+ header;
+		}
+	}
+
+	
+	std::string end = header += "\r\n" + body +"\r\n";
+
+	T_MSG(end, GREEN);
+	return(end);	
+}
+

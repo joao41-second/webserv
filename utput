@@ -1,0 +1,146 @@
+make[1]: *** Deleting file 'obj/config/LocationConfig.o'
+make[1]: *** [Makefile:35: obj/config/LocationConfig.o] Interrupt
+make: *** [Makefile:55: run] Interrupt
+[33mStart request[0m
+[34mParse the new request
+
+GET / HTTP/1.1
+Host: 127.0.0.1:8022
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br, zstd
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+Priority: u=0, i
+
+[0m
+22/[0m
+HTTP: HTTP/1.1
+HTTP: HTTP/
+[32mok[0m
+HTTP: REQUEST_METHOD='GET'
+HTTP: PATH_INFO='/'
+HTTP: SERVER_PROTOCOL='HTTP/1.1'
+HTTP: HTTP_HOST='127.0.0.1:8022'
+HTTP: HTTP_USER_AGENT='Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0'
+HTTP: HTTP_ACCEPT='text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+HTTP: HTTP_ACCEPT_LANGUAGE='en-US,en;q=0.5'
+HTTP: HTTP_ACCEPT_ENCODING='gzip, deflate, br, zstd'
+HTTP: HTTP_CONNECTION='keep-alive'
+HTTP: HTTP_UPGRADE_INSECURE_REQUESTS='1'
+HTTP: HTTP_SEC_FETCH_DEST='document'
+HTTP: HTTP_SEC_FETCH_MODE='navigate'
+HTTP: HTTP_SEC_FETCH_SITE='none'
+HTTP: HTTP_SEC_FETCH_USER='?1'
+HTTP: HTTP_PRIORITY='u=0, i'
+[33m_pach is = /[0m
+HTTP: ./ola/cgi_in_py/main.py
+[31m./ola/cgi_in_py/main.py[0m
+[32mHTTP/1.1 200 OK
+Content-Type: text/html;charset=UTF-8
+Content-Length: 576
+Connection: close
+
+<html>
+        <head>
+            <title>Página com Botões</title>
+        </head>
+        <body>
+            <h1>Escolha uma das opções:</h1>
+            <form method="get">
+                <input type="submit" name="pagina" value="Página 1">
+                <input type="submit" name="pagina" value="Página 2">
+                <input type="submit" name="pagina" value="Página 3">
+                <input type="submit" name="pagina" value="Página 4">
+                <input type="submit" name="pagina" value="Página 5">
+            </form>
+        </body>
+    </html>
+[0m
+HTTP: eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+[32m
+
+[0m
+[32mFinich request 
+
+
+
+[0m
+make: *** [Makefile:55: run] Interrupt
+[33mStart request[0m
+[34mParse the new request
+
+GET / HTTP/1.1
+Host: 127.0.0.1:8022
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br, zstd
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+Priority: u=0, i
+
+[0m
+22/[0m
+HTTP: HTTP/1.1
+HTTP: HTTP/
+[32mok[0m
+HTTP: REQUEST_METHOD='GET'
+HTTP: PATH_INFO='/'
+HTTP: SERVER_PROTOCOL='HTTP/1.1'
+HTTP: HTTP_HOST='127.0.0.1:8022'
+HTTP: HTTP_USER_AGENT='Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0'
+HTTP: HTTP_ACCEPT='text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+HTTP: HTTP_ACCEPT_LANGUAGE='en-US,en;q=0.5'
+HTTP: HTTP_ACCEPT_ENCODING='gzip, deflate, br, zstd'
+HTTP: HTTP_CONNECTION='keep-alive'
+HTTP: HTTP_UPGRADE_INSECURE_REQUESTS='1'
+HTTP: HTTP_SEC_FETCH_DEST='document'
+HTTP: HTTP_SEC_FETCH_MODE='navigate'
+HTTP: HTTP_SEC_FETCH_SITE='none'
+HTTP: HTTP_SEC_FETCH_USER='?1'
+HTTP: HTTP_PRIORITY='u=0, i'
+[33m_pach is = /[0m
+HTTP: ./ola/cgi_in_py/main.py
+[31m./ola/cgi_in_py/main.py[0m
+[32mHTTP/1.1 200 OK
+Content-Type: text/html;charset=UTF-8
+Content-Length: 596
+Connection: close
+
+<!DOCTYPE html>
+    <html>
+        <head>
+            <title>Página com Botões</title>
+        </head>
+        <body>
+            <h1>Escolha uma das opções:</h1>
+            <form method="get">
+                <input type="submit" name="pagina" value="Página 1">
+                <input type="submit" name="pagina" value="Página 2">
+                <input type="submit" name="pagina" value="Página 3">
+                <input type="submit" name="pagina" value="Página 4">
+                <input type="submit" name="pagina" value="Página 5">
+            </form>
+        </body>
+    </html>
+[0m
+HTTP: eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+[32m
+
+[0m
+[32mFinich request 
+
+
+
+[0m
+make: *** [Makefile:55: run] Interrupt

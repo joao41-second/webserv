@@ -21,7 +21,7 @@
 
 
 #if  DEBUG_HTTP
-    #define HTTP_MSG(x) std::cerr << "HTTP: " << x << std::endl;
+    #define HTTP_MSG(x) std::cerr << "HTTP:" << x << std::endl;
 #else
     #define HTTP_MSG(x) /* nada */
 #endif

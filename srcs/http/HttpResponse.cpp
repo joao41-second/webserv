@@ -84,6 +84,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		index = false;
 		throw Not_found_404();
 	}	
+
 	if(!_types[type_file].empty())
 	{
 
@@ -139,15 +140,9 @@ std::string HttpResponse::rediect_path(std::string file_path)
 		throw Not_found_404();
 	int i = -1;
 	while (++i < (int)_configs.size())
-
 		if( port == (int) _configs[i].getPort())
 			break;
 	std::map<std::string, LocationConfig>	_locations = _configs[i].getLocMap();
-
-	for( std::map<std::string, LocationConfig>::iterator  it = _locations.begin();  it != _locations.end();++it)
-	{
-		HTTP_MSG( " loc-> " << it->first)
-	}
 	size = file_path.rfind('/'); 
 	file = file_path.substr(size, file_path.size());
 	path = file_path.substr(0,size+1);
@@ -204,6 +199,7 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 	if( file.rfind('.') == std::string::npos)
 		throw Not_found_404();
 	std::string type =  file.substr(size,file.size()); 
+	HttpParser::_type = type;
 	size = file.rfind('/');
 	if(  file.rfind('/') == std::string::npos)	
 		throw Not_found_404();
@@ -211,7 +207,6 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 	if(path.rfind('/') != std::string::npos )
 		path +=	"/";
 	path += "*"+type;
-	T_MSG(file << ":" <<  path, YELLOW);
 	if(server.getLocMap()[path]._cgi_pass != "" )
 	{
 		_pg =  server.getLocMap()[path]._cgi_pass;
@@ -262,23 +257,20 @@ std::string HttpResponse::request_and_response(std::string request)
 	
 
 	T_MSG("Start request", YELLOW)
+
 	try
 	{
-		config = get_config(8022);
-		HttpParser::new_request(request);
-		cgi.create_env(_env, HttpParser::get_request_env());
 
+	HttpParser::new_request(request);
+	cgi.create_env(_env, HttpParser::get_request_env());
+		config = get_config(8022);		
 		T_MSG(  "_pach is = "<< HttpParser::_pach_info, YELLOW);
+
 		if( HttpParser::_pach_info == "/")
-		{
 			response = get_folder_index(config,cgi);
-		}
 		else if (chek_cig_or_static(HttpParser::_pach_info, config))
-		{
 			// execute in exeve		
 			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");
-
-		}
 		else
 		{
 			// open static file
@@ -295,11 +287,7 @@ std::string HttpResponse::request_and_response(std::string request)
 		try
 		{
 			if(!config.getErrorPage(error).empty())
-			{
-
 			   response = HttpResponse::open_static_file(config.getErrorPage(error));
-
-			}
 
 		}
 		catch(std::exception &d)
@@ -307,18 +295,13 @@ std::string HttpResponse::request_and_response(std::string request)
 			try
 			{
 				if(!config.getErrorPage(error).empty())
-				{
 					response = HttpParser::chek_and_add_header( cgi.execute( HttpParser::get_request_msg(), _pg),  e.what());
-				}
-
 			}
 			catch(std::exception &e)
 			{
 
 				return (gener_erro_page(HttpParser::_http_page_error, d.what()));
 			}
-
-
 			return (response);
 		}		
 	}

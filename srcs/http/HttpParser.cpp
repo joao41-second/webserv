@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "http/HttpResponse.hpp"
 #include <cctype>
 #include <config/color.hpp>
 #include <core/Server.hpp>
@@ -17,6 +18,7 @@
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>
 #include <http/Http_throw.hpp>
+#include <iostream>
 #include <string>
 #include <sys/ucontext.h>
 
@@ -66,6 +68,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 {
 	bool query_string = true;
 	//set request method
+	//env.push_back("SERVER_PROTOCOL='HTTP/1.1'");
 	size_t size = buffer.find(' ');
 	std::string method = buffer.substr(0,size);
 	if (size == std::string::npos || size == 0)
@@ -86,9 +89,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 	method = buffer.substr(0,size);
 	buffer = buffer.substr(size+1,buffer.size());
 	HttpParser::_pach_info = method;
-	T_MSG(_pach_info, REG_CR2);
-
-	env.push_back("PATH_INFO='" + method + "'");
+	//env.push_back("PATH_INFO='" + method + "'");
 	// set query_string if true
 	if(query_string == true)
 	{
@@ -100,10 +101,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 		buffer = buffer.substr(size+1,buffer.size());
 	}
 	//set protocl
-	HTTP_MSG(buffer);
 	method = buffer.substr(0,5);
-
-	HTTP_MSG(method);
 	if(method != "HTTP/")
 	   throw Version_Not_Supported_505();
 
@@ -113,11 +111,11 @@ void HttpParser::parsing_request_line(std::string buffer)
 	if(std::atof(buffer.c_str()) == 1.1)
 	{
 
-		env.push_back("SERVER_PROTOCOL='HTTP/"+trim (buffer)+ "'\r");}
+	env.push_back((char*)"SERVER_PROTOCOL=HTTP/1.1");
+
+	}
 	else
-	   throw Version_Not_Supported_505();
-	
-	
+	   throw Version_Not_Supported_505();		
 }
 
 
@@ -174,7 +172,6 @@ void HttpParser::new_request(std::string buffer)
 	_request = false;
 	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
 	parsing_env(buffer);
-	T_MSG("ok",GREEN);
 
 }
 
@@ -204,13 +201,8 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 
 	std::string  body;
 	std::string  header;
-	if(size == std::string::npos)
-	{
-		HTTP_MSG("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-	}
-	else 
-	{
-		header = trim (response.substr(0, size-1)) ;
+
+		header = trim (response.substr(0, size)) ;
 		body = response.substr(size+2,response.size());
 		body = trim(body);	
 		header = trim(header);
@@ -231,20 +223,32 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 		}
 		if(header.find("HTTP/1.1") == std::string::npos)
 		{
-			//if(HttpParser::_http_page_error != 200)
-		//	{
-		//		std::stringstream ok;
-		//		ok << HttpParser::_http_page_error;
-		//		header = "HTTP/1.1 " +  ok.str( )+ " " + error+ "\n" + header; 
-		//	}else 
-			header = "HTTP/1.1 200 OK\r\n"+ header;
+			if(HttpParser::_http_page_error != 0)
+			{
+				std::stringstream ok;
+				ok << HttpParser::_http_page_error;
+				header = "HTTP/1.1 " +  ok.str( )+ " " + error+ "\n" + header; 
+			}
+			else 
+				header = "HTTP/1.1 200 OK\r\n"+ header;
 		}
-	}
+		if(header.find("Content-Type:") == std::string::npos)
+		{
 
-	
+			if(!HttpResponse::_types[_type].empty())
+			{
+
+				header += "Content-Type: " + HttpResponse::_types[_type] +"\n";
+		
+			}
+			else
+			{
+				//TODO this vereficasion no finic
+			//request += "Content-Disposition: attachment; filename= " +   file+ '\n' ;
+			//request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
+			}
+		}	
 	std::string end = header += "\r\n" + body +"\r\n";
-
-	T_MSG(end, GREEN);
 	return(end);	
 }
 

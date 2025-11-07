@@ -1,20 +1,54 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
+import os
 import cgi
 import cgitb
+import html
+
 cgitb.enable()  # Mostra erros CGI no navegador
 
 # Cabeçalho HTTP comum
 def cabecalho_http():
     print("Content-Type: text/html;charset=UTF-8\n")
 
-# Função que gera a página inicial com botões
+# Gera tabela HTML com variáveis de ambiente ou mensagem de erro se não houver
+def construir_tabela_envs():
+    env_items = sorted(os.environ.items())
+    if not env_items:
+        return (
+            "<h2 style='color:#b00020'>Erro: Nenhuma variável de ambiente encontrada!</h2>"
+            "<p>O processo CGI não recebeu variáveis de ambiente. Verifique a configuração do servidor ou como o script foi invocado.</p>"
+        )
+
+    rows = []
+    for k, v in env_items:
+        rows.append(
+            "<tr>"
+            f"<td style='vertical-align:top;padding:4px;border:1px solid #ccc'><strong>{html.escape(k)}</strong></td>"
+            f"<td style='vertical-align:top;padding:4px;border:1px solid #ccc'>{html.escape(v)}</td>"
+            "</tr>"
+        )
+
+    tabela = (
+        "<h2>Variáveis de Ambiente (envs) recebidas pelo CGI</h2>"
+        f"<p>Total: {len(env_items)}</p>"
+        "<table style='border-collapse:collapse'>"
+        "<thead><tr><th style='padding:6px;border:1px solid #ccc'>Nome</th><th style='padding:6px;border:1px solid #ccc'>Valor</th></tr></thead>"
+        "<tbody>"
+        + "".join(rows) +
+        "</tbody></table>"
+    )
+    return tabela
+
+# Função que gera a página inicial com botões e agora a tabela de envs
 def pagina_principal():
     cabecalho_http()
-    print("""
+    tabela_envs_html = construir_tabela_envs()
+    print(f"""
     <html>
         <head>
             <title>Página com Botões</title>
+            <meta charset="utf-8" />
         </head>
         <body>
             <h1>Escolha uma das opções:</h1>
@@ -25,6 +59,8 @@ def pagina_principal():
                 <input type="submit" name="pagina" value="Página 4">
                 <input type="submit" name="pagina" value="Página 5">
             </form>
+            <hr>
+            {tabela_envs_html}
         </body>
     </html>
     """)
@@ -38,9 +74,14 @@ def pagina_dinamica(pagina):
         "Página 4": "Você está na Página 4",
         "Página 5": "Você está na Página 5"
     }
+
     conteudo = paginas.get(pagina)
     if conteudo:
-        return f"<h1>{conteudo}</h1><p>Conteúdo da {pagina.lower()}.</p>"
+        return (
+            f"<h1>{html.escape(conteudo)}</h1>"
+            f"<p>Conteúdo da {html.escape(pagina.lower())}.</p>"
+            '<p><a href="/cgi-bin/pagina_principal.py">Voltar para a página inicial</a></p>'
+        )
     else:
         return "<h1>Erro: Página não encontrada!</h1>"
 
@@ -48,7 +89,7 @@ def pagina_dinamica(pagina):
 def erro_http(codigo, mensagem):
     print(f"Status: {codigo}")
     cabecalho_http()
-    print(f"<html><body><h1>Erro {codigo}: {mensagem}</h1></body></html>")
+    print(f"<html><body><h1>Erro {html.escape(codigo)}: {html.escape(mensagem)}</h1></body></html>")
 
 # Obter parâmetros de forma segura
 try:
@@ -69,15 +110,12 @@ if pagina:
     cabecalho_http()
     print(f"""
     <html>
-        <head><title>{pagina}</title></head>
+        <head><title>{html.escape(pagina)}</title><meta charset="utf-8" /></head>
         <body>
             {pagina_dinamica(pagina)}
-            <br>
-            <a href="/cgi-bin/pagina_principal.py">Voltar para a página inicial</a>
         </body>
     </html>
     """)
 else:
-    # Nenhum parâmetro recebido -> mostrar página inicial
+    # Mostrar página inicial (agora com a tabela de envs)
     pagina_principal()
-

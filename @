@@ -13,7 +13,6 @@
 #include "config/color.hpp"
 #include <iostream>
 #include <stdlib.h>
-#include <string>
 #include <unistd.h>
 #include "config/LocationConfig.hpp"
 #include "core/Server.hpp"
@@ -102,16 +101,16 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 	int i = 0;
 	_envs = env_request;
 
+	for (int e = 0; e < (int)env_request.size();e++) 
+	{
+	//	HTTP_MSG(env_request[e]);
+	}
 	while (env[i] != NULL)
 	{
 		_envs.push_back(env[i]);
 
 		i++;
 	} 
-	for (int e = 0; e < (int)env_request.size();e++) 
-	{
-		HTTP_MSG(env_request[e]);
-	}
 
 }
 
@@ -135,21 +134,20 @@ v.push_back(NULL);
 	if(pipe(fd_out) == -1)
 		exit(1);
 	
- 	std::cout.flush();
+	HTTP_MSG(porgram);
 	pid = fork();
 	if(pid == -1)
 		exit(1);	
 
 	if(pid == 0)
-	{	
-
+	{
+	
 		dup2(fd_in[0],0);
 		dup2(fd_out[1],1);	
 		close(fd_in[1]);
 		close(fd_out[0]);
 
 //		T_MSG(porgram.c_str(), RED);
-	
 		int i  = execve(porgram.c_str(),v.data(),_envs.data());
 		HTTP_MSG("merda = " << i)
 		exit(1);

@@ -89,8 +89,9 @@ void HttpParser::parsing_request_line(std::string buffer)
 	method = buffer.substr(0,size);
 	buffer = buffer.substr(size+1,buffer.size());
 	HttpParser::_pach_info = method;
-	//env.push_back("PATH_INFO='" + method + "'");
-	// set query_string if true
+	env.push_back("REQUEST_URI=" + method );
+	env.push_back("PATH_INFO=" + method );
+//	 set query_string if true
 	if(query_string == true)
 	{
 		size = buffer.find(' ');
@@ -155,7 +156,7 @@ void HttpParser::parsing_env(std::string buffer)
 			int char_ = var[i];
 			var[i] = std::toupper(char_);
 		}
-		env.push_back("HTTP_"+trim(var)+"='"+trim( content)+"'");
+		env.push_back("HTTP_"+trim(var)+"="+trim( content));
 		parsing_env(buffer_new);
 	}
 

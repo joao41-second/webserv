@@ -224,6 +224,12 @@ void	LocationConfig::setSubLocation(LocationConfig* loc)
 {
 	if (loc)
 	{
+		// TODO Esclarecer se este troço é necessário
+		/*if (this->getName() == "/" && loc->getName()[0] == '/')
+			;
+		else if (this->getName() == "/" && loc->getName()[0] != '/')
+			loc->setName(this->getName() + loc->getName());
+		else if*/
 		if (loc->getName()[0] == '/')
 			loc->setName(this->getName() + loc->getName());
 		else

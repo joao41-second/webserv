@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/19 18:53:36 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/28 20:39:37 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 Connection::Connection(int fd) : _fd(fd) {
 	_writeBuffer = "";
+	_readBuffer = "";
 }
 
 Connection::~Connection() {
@@ -33,7 +34,6 @@ bool	Connection::readRequest() {
 	char	buffer[1024];
 	ssize_t	bytesRead;
 
-	_readBuffer = "";
 	while ((bytesRead = read(_fd, buffer, sizeof(buffer))) > 0) {
 		_readBuffer.append(buffer, bytesRead);
 	}
@@ -102,4 +102,9 @@ std::string	Connection::getWriteBuffer() const {
 void	Connection::setWriteBuffer(std::string buffer) {
 
 	_writeBuffer = buffer;
+}
+
+void	Connection::setReadBuffer(std::string buffer) {
+
+	_readBuffer = buffer;
 }

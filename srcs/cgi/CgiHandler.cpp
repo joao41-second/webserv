@@ -124,16 +124,28 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 	char buffer[1024];
 	std::vector<char *> v;
 
-v.push_back(const_cast<char*>(porgram.c_str()));          // script
-v.push_back(NULL);
+        v.push_back(const_cast<char*>(porgram.c_str()));          // script
+        v.push_back(NULL);
 
-
+	HTTP_MSG("------------------------------\n" << std::endl)
 	std::string response = "";
 	
 	if(pipe(fd_in) == -1)
 		exit(1);
 	if(pipe(fd_out) == -1)
 		exit(1);
+
+	for(int i = 0; i < (int)v.size(); ++i)
+	{
+	 	HTTP_MSG(v[i] << std::endl);
+	}
+
+	for(int i = 0; i < (int)v.size(); ++i)
+	{
+	//  HTTP_MSG(v[i]);
+	}
+			
+
 	
  	std::cout.flush();
 	pid = fork();
@@ -148,7 +160,7 @@ v.push_back(NULL);
 		close(fd_in[1]);
 		close(fd_out[0]);
 
-//		T_MSG(porgram.c_str(), RED);
+		T_MSG(porgram.c_str(), RED);
 	
 		int i  = execve(porgram.c_str(),v.data(),_envs.data());
 		HTTP_MSG("merda = " << i)
@@ -164,6 +176,7 @@ v.push_back(NULL);
 		{
 			response.append(buffer,read_bits);
 		}
+		response.append("\r\n\r\n");
 		close(fd_out[0]);
 		waitpid(pid, &status, 0);
 
@@ -172,7 +185,6 @@ v.push_back(NULL);
     		std::cout << "CGI exited with code: " << exit_code << std::endl;
 		if(exit_code != 0) // TODO change this value for 0 
 			throw Not_found_404();
-
 		} 
 	}	
 	return response;

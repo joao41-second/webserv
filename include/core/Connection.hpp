@@ -28,6 +28,8 @@ public:
 	std::string		getReadBuffer() const;
 	std::string		getWriteBuffer() const;
 	void			setWriteBuffer(std::string buffer);
+
+	void set_readBuffer();
 private:
 	int				_fd;
 	std::string		_readBuffer;

@@ -28,12 +28,21 @@ Connection::Connection(const Connection &copy) {
 	this->_writeBuffer = copy._writeBuffer;
 }
 
+void Connection::set_readBuffer()
+{
+	_readBuffer = "";
+}
+
 bool	Connection::readRequest() {
 
 	char	buffer[1024];
 	ssize_t	bytesRead;
 
 	_readBuffer = "";
+	for(int i = 0 ; i < 1024 ;i++ )
+	{
+		buffer[i] = '0';
+	}
 	while ((bytesRead = read(_fd, buffer, sizeof(buffer))) > 0) {
 		_readBuffer.append(buffer, bytesRead);
 	}

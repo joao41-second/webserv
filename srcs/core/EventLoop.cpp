@@ -135,7 +135,6 @@ void EventLoop::run() {
 					else if (entry.conn->isRequestComplete()) {
 						std::cout << entry.conn->getReadBuffer() << std::endl;
 						entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer()));
-						
 						entry.pfd.events = POLLOUT;
 					}
 				}

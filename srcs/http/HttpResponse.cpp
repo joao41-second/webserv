@@ -29,13 +29,13 @@
 #include <vector>
 
 
-bool   HttpResponse::_request_status = false;
-int HttpResponse::size_max = 50000;
-char ** HttpResponse::_env;
-std::string HttpResponse::_pg = "";
-
-std::vector<ServerConfig> HttpResponse::_configs;
-std::map<std::string,std::string> HttpResponse::_types;
+bool   		HttpResponse::_request_status = false;
+int 		HttpResponse::size_max 		= 50000;
+std::string 	HttpResponse::_pg 		= "";
+bool 		HttpResponse::_chunks 		= false;
+char ** 	HttpResponse::_env;
+std::vector<ServerConfig> 		HttpResponse::_configs;
+std::map<std::string,std::string> 	HttpResponse::_types;
 
 void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 {
@@ -62,17 +62,14 @@ void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 
 std::string HttpResponse::open_static_file(std::string file)
 {
-	std::string request = "HTTP/1.1 200 OK\r\n";
-	size_t size  = file.rfind('.');
-	std::string type_file = file.substr(size,file.size());
-	
-	std::vector<char> temp(size_max);
-	
+	std::string 		request = "HTTP/1.1 200 OK\r\n";
+	size_t 			size  = file.rfind('.');
+	std::string 		type_file = file.substr(size,file.size());	
+	std::vector<char> 	temp(size_max);	
+	static std::ifstream 	file_fd(file.c_str());
+	static bool 		status = false;
+	static bool 		index = false;
 
-	// adicionar data  info do server
-	static std::ifstream file_fd(file.c_str());
-	static bool status = false;
-	static bool index = false;
 	if (status == true)
 	{
 		index = false;
@@ -130,16 +127,16 @@ std::string HttpResponse::open_static_file(std::string file)
 	return (request);
 }
 
-std::string HttpResponse::rediect_path(std::string file_path)
+std::string HttpResponse::rediect_path(std::string file_path,int port)
 {
-	std::string file;
-	std::string path;
-	int size;	
+	std::string 	file;
+	std::string 	path;
+	int 		size;	
+	int 		i = -1;
+
 	HttpParser::_host.find(':');
-	int port = std::atoi(HttpParser::_host.substr(HttpParser::_host.find(':')+1,HttpParser::_host.size()).c_str());
 	if(port == 0)
 		throw Not_found_404();
-	int i = -1;
 	while (++i < (int)_configs.size())
 		if( port == (int) _configs[i].getPort())
 			break;
@@ -154,8 +151,8 @@ std::string HttpResponse::rediect_path(std::string file_path)
 
 std::string HttpResponse::search_folder_file(std::string file ,std::string path , std::map<std::string, LocationConfig> loc)
 {
-	std::string real_path = "";
-	int size = 0;
+	std::string 	real_path = "";
+	int 		size = 0;
 
 	if( loc[path+file].getRoot() != "")
 			return loc[path+file].getRoot();	
@@ -165,7 +162,19 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 	
 		if(loc[path].getRoot() != "" )
 		{
-			return( loc[path].getRoot() + file);
+			if(HttpParser::_methods ==  "GET")
+				size = 0; 
+			else  if(HttpParser::_methods ==  "POST")
+				size = 2; 
+			else  if(HttpParser::_methods ==  "DELETE")
+				size = 4; 
+			for(int i =0 ; i < (int)loc[path].getMethods().size();i++)
+			{
+				HTTP_MSG( "_methods" << loc[path].getMethods()[i] )
+				if(loc[path].getMethods()[i] ==  size) 
+					return( loc[path].getRoot() + file);
+			}
+			throw Not_Implemented_501();
 		}
 		size =path.rfind('/');
 		file = path.substr(size,path.size()-1) + file;
@@ -173,6 +182,7 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 
 		//TODO duble alias not work
 	}
+
 
 	return("./index.html");
 }
@@ -196,18 +206,25 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 {
 
+	// TODO impemente check the path
 	int size = file.find('.');
+
 	if( file.rfind('.') == std::string::npos)
 		throw Not_found_404();
+
 	std::string type =  file.substr(size,file.size()); 
 	HttpParser::_type = type;
+
 	size = file.rfind('/');
 	if(  file.rfind('/') == std::string::npos)	
 		throw Not_found_404();
+
 	std::string path = file.substr(0,size);	
+
 	if(path.rfind('/') != std::string::npos )
 		path +=	"/";
 	path += "*"+type;
+
 	if(server.getLocMap()[path]._cgi_pass != "" )
 	{
 		_pg =  server.getLocMap()[path]._cgi_pass;
@@ -231,7 +248,8 @@ std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 			{
 			   return ( HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), it->second._cgi_pass),""));
 			}
-			else if(  it->second.getRoot().find('.') == std::string::npos || it->second.getRoot().rfind('.') < it->second.getRoot().rfind('/'))
+			else if(it->second.getRoot().find('.') == std::string::npos
+					|| it->second.getRoot().rfind('.') < it->second.getRoot().rfind('/'))
 			{		
 			   return (file = HttpResponse::open_static_file(it->second.getRoot() + "/index.html"));	
 			}
@@ -246,37 +264,61 @@ std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 	return "";	
 }
 
+#include <unistd.h>
+
+std::string HttpResponse::Delete(std::string file)
+{
+	HTTP_MSG("dlete llllllllllll")
+    if (access(file.c_str(), F_OK) != 0) {
+	    throw Not_found_404(); 
+    }
+    if (access(file.c_str(), W_OK) != 0) {
+		throw Forbidden_403();
+    }
+    if (std::remove(file.c_str()) == 0) {
+	return ("HTTP/1.1 204 No Content\r\n\r\n");
+    } else {
+	    throw Not_found_404();
+    }
+}
+
 std::string HttpResponse::request_and_response(std::string request, int port)
 {
-	int error;
-	std::string response;
-	std::string path = "";
+	int 		error;
+	std::string 	response;
+	std::string 	path = "";
+	ServerConfig 	config;
+	Cgi 		cgi;
+
 	HttpParser::_http_page_error = 0;
-	ServerConfig config;
-	Cgi cgi;
 	_pg = "";
 	
-	T_MSG("Start request", YELLOW)
-	std::cout << "raiva\n" << std::endl;
-
+	T_MSG("Start request\n", YELLOW)
 	try
-	{
-
-	HttpParser::new_request(request);
-	cgi.create_env(_env, HttpParser::get_request_env());
+	{	
+		int port_ = std::atoi(HttpParser::_host.substr(HttpParser::_host.find(':')+1,HttpParser::_host.size()).c_str());
+		if(port != port_)
+		{
+		//	throw Badd_Request_400();
+		}
+		HttpParser::new_request(request);
+		cgi.create_env(_env, HttpParser::get_request_env());
 		config = get_config(port);		
-		T_MSG(  "_pach is = "<< HttpParser::_pach_info, YELLOW);
+
+		T_MSG(  "_pach is = " << HttpParser::_pach_info << " type is =" << HttpParser::_type  , YELLOW);
 
 		if( HttpParser::_pach_info == "/")
 			response = get_folder_index(config,cgi);
 		else if (chek_cig_or_static(HttpParser::_pach_info, config))
-			// execute in exeve		
 			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");
 		else
 		{
 			// open static file
-			path = rediect_path(HttpParser::_pach_info);
-			response = HttpResponse::open_static_file(path);
+			path = rediect_path(HttpParser::_pach_info,port);
+			if(HttpParser::_methods == "DELETE")
+				response = Delete(path);
+			else
+				response = HttpResponse::open_static_file(path);
 		}
 	}
 	catch (std::exception &e)

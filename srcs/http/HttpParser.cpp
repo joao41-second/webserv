@@ -22,13 +22,15 @@
 #include <string>
 #include <sys/ucontext.h>
 
-std::vector<std::string> HttpParser::env;
-bool HttpParser::_request = false;
-std::string HttpParser::mensage = "";
-std::string HttpParser::_pach_info = "";
-std::string HttpParser::_type = "";
-int HttpParser::_http_page_error = 0;
-std::string HttpParser::_host = "";
+std::vector <std::string> HttpParser::env;
+bool 		HttpParser::_request 		= false;
+std::string 	HttpParser::mensage 		= "";
+std::string 	HttpParser::_pach_info 		= "";
+std::string 	HttpParser::_type 		= "";
+int 		HttpParser::_http_page_error 	= 0;
+std::string 	HttpParser::_host 		= "";
+std::string 	HttpParser::_methods 		= "";
+
 
 HttpParser::HttpParser(void)
 {
@@ -66,15 +68,15 @@ static std::string trim(const std::string &s)
 
 void HttpParser::parsing_request_line(std::string buffer)
 {
-	bool query_string = true;
-	//set request method
-	//env.push_back("SERVER_PROTOCOL='HTTP/1.1'");
-	size_t size = buffer.find(' ');
-	std::string method = buffer.substr(0,size);
+	bool 		query_string 	= true;
+	size_t 		size 		= buffer.find(' ');
+	std::string 	method 		= buffer.substr(0,size);
+
 	if (size == std::string::npos || size == 0)
 		throw  Badd_Request_400();
 	if(method != "GET" && method != "POST" && method != "DELETE")
 		throw Not_Implemented_501();
+	_methods = method;
 	env.push_back("REQUEST_METHOD=" + method );	
 	buffer = buffer.substr(size+1,buffer.size());
 	// set paht info
@@ -110,11 +112,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 	buffer = method; 
 
 	if(std::atof(buffer.c_str()) == 1.1)
-	{
-
-	env.push_back((char*)"SERVER_PROTOCOL=HTTP/1.1");
-
-	}
+		env.push_back((char*)"SERVER_PROTOCOL=HTTP/1.1");
 	else
 	   throw Version_Not_Supported_505();		
 }
@@ -166,11 +164,12 @@ void HttpParser::new_request(std::string buffer)
 {
 
 	env.clear();
-	mensage = "";
-	_pach_info = "";
-	_type = "";
-	_host = "";
-	_request = false;
+	mensage 	= "";
+	_pach_info 	= "";
+	_type 		= "";
+	_host 		= "";
+	_methods 	= "";
+	_request 	= false;
 	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
 	parsing_env(buffer);
 

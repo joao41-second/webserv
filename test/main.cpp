@@ -11,10 +11,7 @@
 /* ************************************************************************** */
 
 #include "config/Config.hpp"
-<<<<<<< HEAD
 #include <exception>
-=======
->>>>>>> main
 #include <http/HttpResponse.hpp>
 #include "config/color.hpp"
 #include "test.hpp"
@@ -73,9 +70,8 @@ void HTTP_test_request()
 
         file.close();
 	try{
-		HttpResponse ok;
 
-		HTTP_MSG("what" <<   ok.request_and_response(conteudo));
+		//HTTP_MSG("what" <<  HttpResponse::request_and_response(conteudo));
 	}
 	catch(std::exception &e)
 	{
@@ -83,6 +79,24 @@ void HTTP_test_request()
 	}
     }
     closedir(dir);
+}
+
+
+void CGI_request_test(char **envp)
+{
+
+	try {
+
+	Config conf_info("./test/youpi.conf", envp);
+	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+	std::vector<Socket*>		sockets = conf_info.getSocketVector();
+	HttpResponse::set_config(configs,envp);
+
+
+	} 
+	catch (const std::exception &e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+	}
 }
 
 
@@ -94,8 +108,9 @@ int main(int argc ,char ** argv,char**env)
 	(void)argc;
 	(void)env;
 	//execute(env);
-	config_and_http_implemente(argc,argv,env);
-	HTTP_test_request();
+	//config_and_http_implemente(argc,argv,env);
+	//HTTP_test_request();
+	CGI_request_test(env);
         return 0;
 }
 

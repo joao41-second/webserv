@@ -126,26 +126,13 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 
         v.push_back(const_cast<char*>(porgram.c_str()));          // script
 
-	HTTP_MSG("------------------------------" << std::endl)
 	std::string response = "";
 	
 	if(pipe(fd_in) == -1)
 		exit(1);
 	if(pipe(fd_out) == -1)
-		exit(1);
-
-	for(int i = 0; i < (int)v.size(); ++i)
-	{
-	 	HTTP_MSG(v[i] << std::endl);
-	}
-
-	for(int i = 0; i < (int)v.size(); ++i)
-	{
-	//  HTTP_MSG(v[i]);
-	}
-	_envs.push_back(NULL);
-
-	
+		exit(1);	
+	_envs.push_back(NULL);	
  	std::cout.flush();
 	pid = fork();
 	if(pid == -1)
@@ -159,15 +146,6 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 		close(fd_in[1]);
 		close(fd_out[0]);
 
-		T_MSG(porgram.c_str(), RED);
-		for(int i=0 ; i < (int )v.size() ; i++)
-		{
-		//	HTTP_MSG(v[i] << "\n");
-		}	
-		for(int i=0 ; i < (int )_envs.size() ; i++)
-		{
-		//	HTTP_MSG(_envs[i] << "\n");
-		}	
 		int i  = execve("./ola/cgi_in_py/main.py",_envs.data(),_envs.data());
 		HTTP_MSG("merda = " << i)
 		perror("execve");
@@ -189,7 +167,7 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
-    		std::cout << "CGI exited with code: " << exit_code << "response :" << response << std::endl;
+    		std::cout << "CGI exited with code: " << exit_code << std::endl;
 		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
 		} 

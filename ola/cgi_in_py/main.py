@@ -5,14 +5,13 @@ import os
 import cgi
 import cgitb
 import html
-from re import S
 import sys
 
-# Mostrar erros no navegador (útil em desenvolvimento)
 cgitb.enable()
 
+UPLOAD_DIR = "/tmp"  # diretório onde os arquivos serão salvos
+
 def cabecalho_http():
-    # Imprime o cabeçalho HTTP e uma linha em branco
     print("Content-Type: text/html; charset=UTF-8")
     print("Cache-Control: no-store, no-cache, must-revalidate")
     print("Pragma: no-cache")
@@ -27,28 +26,64 @@ def pagina_principal_body():
   </head>
   <body>
     <h1>Escolha uma das opcoes:</h1>
-    <form method="get" action="/pagina_principal.py">
+    <form method="get" action="/cgi-bin/pagina_principal.py">
       <input type="submit" name="pagina" value="Pagina 1">
       <input type="submit" name="pagina" value="Pagina 2">
       <input type="submit" name="pagina" value="Pagina 3">
       <input type="submit" name="pagina" value="Pagina 4">
       <input type="submit" name="pagina" value="Pagina 5">
     </form>
-    <p>nao estou a atualizar</p>
+    <p>Escolha uma opção para continuar.</p>
   </body>
 </html>
 """
 
-def pagina_dinamica(pagina):
+def pagina_dinamica(pagina, form=None):
     paginas = {
         "Pagina 1": "Voce esta na Pagina 1",
         "Pagina 2": "Voce esta na Pagina 2",
-        "Pagina 3": "Voce esta na Pagina 3",
-        "Pagina 4": "Voce esta na Pagina 4",
+        "Pagina 3": "Envio de ficheiro",
+        "Pagina 4": "Variaveis de ambiente",
         "Pagina 5": "Voce esta na Pagina 5"
     }
 
-    if pagina == "Pagina 4":
+    if pagina == "Pagina 3":
+        resultado_upload = ""
+        # Se já enviaram um ficheiro, processa
+        if form is not None:
+            ficheiro_item = form["ficheiro"] if "ficheiro" in form else None
+            if ficheiro_item and ficheiro_item.filename:
+                filename = os.path.basename(ficheiro_item.filename)
+                save_path = os.path.join(UPLOAD_DIR, filename)
+                try:
+                    with open(save_path, "wb") as f:
+                        f.write(ficheiro_item.file.read())
+                    resultado_upload = f"<p>Ficheiro '{html.escape(filename)}' enviado com sucesso para {html.escape(UPLOAD_DIR)}</p>"
+                except Exception as e:
+                    resultado_upload = f"<p>Erro ao guardar ficheiro: {html.escape(str(e))}</p>"
+            else:
+                # Nenhum ficheiro enviado → cria um arquivo vazio
+                erro_file_path = os.path.join(UPLOAD_DIR, "erro_arquivo_nao_enviado.txt")
+                try:
+                    with open(erro_file_path, "w") as f:
+                        f.write("Erro: Nenhum ficheiro foi enviado.\n")
+                    resultado_upload = f"<p>Nenhum ficheiro enviado. Foi criado o arquivo vazio: '{html.escape(erro_file_path)}'</p>"
+                except Exception as e:
+                    resultado_upload = f"<p>Erro ao criar arquivo vazio: {html.escape(str(e))}</p>"
+
+        # Formulario de upload
+        return f"""
+        <h1>Enviar um ficheiro</h1>
+        {resultado_upload}
+        <form method="post" action="/cgi-bin/pagina_principal.py" enctype="multipart/form-data">
+            <input type="hidden" name="pagina" value="Pagina 3">
+            <input type="file" name="ficheiro">
+            <input type="submit" value="Enviar">
+        </form>
+        <p><a href="/cgi-bin/pagina_principal.py">Voltar para a pagina inicial</a></p>
+        """
+
+    elif pagina == "Pagina 4":
         env_items = sorted(os.environ.items())
         rows = []
         for k, v in env_items:
@@ -70,11 +105,9 @@ def pagina_dinamica(pagina):
         )
         return tabela
 
-    conteudo = paginas.get(pagina)
-    if conteudo:
-        return f"<h1>{html.escape(conteudo)}</h1><p>Conteudo da {html.escape(pagina.lower())}.</p>"
     else:
-        return "<h1>Erro: Pagina nao encontrada!</h1>"
+        conteudo = paginas.get(pagina, "Pagina nao encontrada!")
+        return f"<h1>{html.escape(conteudo)}</h1><p>Conteudo da {html.escape(pagina.lower())}.</p>"
 
 def erro_http(codigo, mensagem):
     print(f"Status: {codigo}")
@@ -82,39 +115,25 @@ def erro_http(codigo, mensagem):
     print(f"<html><body><h1>Erro {html.escape(codigo)}: {html.escape(mensagem)}</h1></body></html>")
 
 def main():
-    # Garante que variaveis basicas existam
     os.environ.setdefault("PATH_INFO", "/")
     os.environ.setdefault("QUERY_STRING", "")
     os.environ.setdefault("REQUEST_METHOD", "GET")
     os.environ.setdefault("SCRIPT_NAME", sys.argv[0])
 
-    # Obter parametros com seguranca
     try:
         form = cgi.FieldStorage()
     except Exception as e:
         erro_http("400 Bad Request", f"Erro ao processar dados do formulario: {e}")
         sys.exit(0)
 
-    pagina = None
-    if form is not None:
-        try:
-            pagina = form.getvalue("pagina")
-        except TypeError:
-            pagina = None
+    pagina = form.getvalue("pagina") if form else None
 
     cabecalho_http()
 
     if pagina:
-
-        print(pagina_principal_body())
-        print("<html><head><meta charset='utf-8'>")
-        print(f"<title>{html.escape(pagina)}</title></head><body>")
-        print(pagina_dinamica(pagina))
-        print("</body></html>")
+        print(pagina_dinamica(pagina, form))
     else:
         print(pagina_principal_body())
-        print(pagina)
-        
 
 if __name__ == "__main__":
     main()

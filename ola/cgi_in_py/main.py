@@ -5,13 +5,17 @@ import os
 import cgi
 import cgitb
 import html
+from re import S
 import sys
 
-cgitb.enable()  # Mostra erros CGI no navegador (útil em desenvolvimento)
+# Mostrar erros no navegador (útil em desenvolvimento)
+cgitb.enable()
 
 def cabecalho_http():
     # Imprime o cabeçalho HTTP e uma linha em branco
     print("Content-Type: text/html; charset=UTF-8")
+    print("Cache-Control: no-store, no-cache, must-revalidate")
+    print("Pragma: no-cache")
     print()
 
 def pagina_principal_body():
@@ -19,31 +23,32 @@ def pagina_principal_body():
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Página com Botões</title>
+    <title>Pagina com Botoes</title>
   </head>
   <body>
-    <h1>Escolha uma das opções:</h1>
-    <form method="get">
-      <input type="submit" name="pagina" value="Página 1">
-      <input type="submit" name="pagina" value="Página 2">
-      <input type="submit" name="pagina" value="Página 3">
-      <input type="submit" name="pagina" value="Página 4">
-      <input type="submit" name="pagina" value="Página 5">
+    <h1>Escolha uma das opcoes:</h1>
+    <form method="get" action="/pagina_principal.py">
+      <input type="submit" name="pagina" value="Pagina 1">
+      <input type="submit" name="pagina" value="Pagina 2">
+      <input type="submit" name="pagina" value="Pagina 3">
+      <input type="submit" name="pagina" value="Pagina 4">
+      <input type="submit" name="pagina" value="Pagina 5">
     </form>
+    <p>nao estou a atualizar</p>
   </body>
 </html>
 """
 
 def pagina_dinamica(pagina):
     paginas = {
-        "Página 1": "Você está na Página 1",
-        "Página 2": "Você está na Página 2",
-        "Página 3": "Você está na Página 3",
-        "Página 4": "Você está na Página 4",
-        "Página 5": "Você está na Página 5"
+        "Pagina 1": "Voce esta na Pagina 1",
+        "Pagina 2": "Voce esta na Pagina 2",
+        "Pagina 3": "Voce esta na Pagina 3",
+        "Pagina 4": "Voce esta na Pagina 4",
+        "Pagina 5": "Voce esta na Pagina 5"
     }
 
-    if pagina == "Página 4":
+    if pagina == "Pagina 4":
         env_items = sorted(os.environ.items())
         rows = []
         for k, v in env_items:
@@ -54,46 +59,41 @@ def pagina_dinamica(pagina):
                 "</tr>"
             )
         tabela = (
-            "<h1>Variáveis de Ambiente (envs) recebidas pelo CGI</h1>"
+            "<h1>Variaveis de ambiente recebidas pelo CGI</h1>"
             f"<p>Total: {len(env_items)}</p>"
             "<table style='border-collapse:collapse'>"
             "<thead><tr><th style='padding:6px;border:1px solid #ccc'>Nome</th><th style='padding:6px;border:1px solid #ccc'>Valor</th></tr></thead>"
             "<tbody>"
             + "".join(rows) +
             "</tbody></table>"
-            "<p><a href=\"/cgi-bin/pagina_principal.py\">Voltar para a página inicial</a></p>"
+            "<p><a href=\"/cgi-bin/pagina_principal.py\">Voltar para a pagina inicial</a></p>"
         )
         return tabela
 
     conteudo = paginas.get(pagina)
     if conteudo:
-        return f"<h1>{html.escape(conteudo)}</h1><p>Conteúdo da {html.escape(pagina.lower())}.</p>"
+        return f"<h1>{html.escape(conteudo)}</h1><p>Conteudo da {html.escape(pagina.lower())}.</p>"
     else:
-        return "<h1>Erro: Página não encontrada!</h1>"
+        return "<h1>Erro: Pagina nao encontrada!</h1>"
 
 def erro_http(codigo, mensagem):
-    # Envia status e página de erro
     print(f"Status: {codigo}")
     cabecalho_http()
     print(f"<html><body><h1>Erro {html.escape(codigo)}: {html.escape(mensagem)}</h1></body></html>")
 
 def main():
-    # --- CORREÇÃO IMPORTANTE ---
-    # Garante que PATH_INFO exista para evitar erro "PATH_INFO not found"
-    if "PATH_INFO" not in os.environ:
-        os.environ["PATH_INFO"] = "/"
-
-    # Também garante variáveis básicas, caso servidor não envie
+    # Garante que variaveis basicas existam
+    os.environ.setdefault("PATH_INFO", "/")
     os.environ.setdefault("QUERY_STRING", "")
     os.environ.setdefault("REQUEST_METHOD", "GET")
     os.environ.setdefault("SCRIPT_NAME", sys.argv[0])
 
-    # Obter parâmetros com segurança
+    # Obter parametros com seguranca
     try:
         form = cgi.FieldStorage()
     except Exception as e:
-        erro_http("400 Bad Request", f"Erro ao processar dados do formulário: {e}")
-        sys.exit(1)
+        erro_http("400 Bad Request", f"Erro ao processar dados do formulario: {e}")
+        sys.exit(0)
 
     pagina = None
     if form is not None:
@@ -102,15 +102,20 @@ def main():
         except TypeError:
             pagina = None
 
-    # Emitir cabeçalho e conteúdo
     cabecalho_http()
+
     if pagina:
+
+        print(pagina_principal_body())
         print("<html><head><meta charset='utf-8'>")
         print(f"<title>{html.escape(pagina)}</title></head><body>")
         print(pagina_dinamica(pagina))
         print("</body></html>")
     else:
         print(pagina_principal_body())
+        print(pagina)
+        
 
 if __name__ == "__main__":
     main()
+

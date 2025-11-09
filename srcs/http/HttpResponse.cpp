@@ -97,6 +97,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
 	}
 	file_fd.read(&temp[0], size_max);
+	file_fd.close();
 	std::string data;
 	for (int i = 0; i < (int)temp.size() && temp[i] != '\0'; i++)
 		data += temp[i];
@@ -245,7 +246,7 @@ std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 	return "";	
 }
 
-std::string HttpResponse::request_and_response(std::string request)
+std::string HttpResponse::request_and_response(std::string request, int port)
 {
 	int error;
 	std::string response;
@@ -255,15 +256,15 @@ std::string HttpResponse::request_and_response(std::string request)
 	Cgi cgi;
 	_pg = "";
 	
-
 	T_MSG("Start request", YELLOW)
+	std::cout << "raiva\n" << std::endl;
 
 	try
 	{
 
 	HttpParser::new_request(request);
 	cgi.create_env(_env, HttpParser::get_request_env());
-		config = get_config(8022);		
+		config = get_config(port);		
 		T_MSG(  "_pach is = "<< HttpParser::_pach_info, YELLOW);
 
 		if( HttpParser::_pach_info == "/")

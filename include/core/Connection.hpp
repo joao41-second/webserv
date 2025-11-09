@@ -6,7 +6,7 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 18:43:35 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/19 18:54:46 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/28 20:39:12 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ public:
 	std::string		getWriteBuffer() const;
 	void			setWriteBuffer(std::string buffer);
 
-	void set_readBuffer();
+	void			setReadBuffer(std::string buffer);
+
 private:
 	int				_fd;
 	std::string		_readBuffer;

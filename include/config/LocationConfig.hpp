@@ -79,7 +79,7 @@ private:
 	std::string		_name;		// ex: /directory
 	std::string		_root;		// ex: joao-rib/
 	std::string		_index;		// ex: joao.bad_extension
-	bool			_alias;		// TODO should accept string?
+//	bool			_alias;		// TODO should accept string?
 	unsigned long	_client_body_buffer_size; // ex: 100
 	//bool			_alias;		// Should be a string, if implemented
 

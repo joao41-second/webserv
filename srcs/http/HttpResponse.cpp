@@ -37,6 +37,13 @@ char ** 	HttpResponse::_env;
 std::vector<ServerConfig> 		HttpResponse::_configs;
 std::map<std::string,std::string> 	HttpResponse::_types;
 
+
+bool HttpResponse::get_chunks_status()
+{
+	HTTP_MSG("BODY REQUEST IS =" < _chunks);
+	return(_chunks);
+}
+
 void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 {
 	HttpResponse::_env = env;
@@ -292,6 +299,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 	HttpParser::_http_page_error = 0;
 	_pg = "";
+	_chunks = false;
 	
 	T_MSG("Start request\n", YELLOW)
 	try
@@ -310,7 +318,10 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		if( HttpParser::_pach_info == "/")
 			response = get_folder_index(config,cgi);
 		else if (chek_cig_or_static(HttpParser::_pach_info, config))
-			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");
+		{
+
+			_chunks = true;
+			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");		}
 		else
 		{
 			// open static file

@@ -23,12 +23,13 @@
 class Cgi
 {
 	private:
-		std::vector<char *> _envs;
 		std::string _request;
 		std::string chek_program_pach(std::string program);
 		std::vector<std::string> _path;
 		
 	public:
+
+		std::vector<char *> _envs;
 		Cgi();
 		Cgi(const Cgi &copy);
 		~Cgi();

@@ -21,7 +21,7 @@
 
 
 #if  DEBUG_HTTP
-    #define HTTP_MSG(x) std::cerr << "HTTP: " << x << std::endl;
+    #define HTTP_MSG(x) std::cerr << "HTTP:" << x << std::endl;
 #else
     #define HTTP_MSG(x) /* nada */
 #endif
@@ -32,7 +32,7 @@ class HttpParser
 {
 	protected: 
 	        static std::vector<std::string> env;
-		static std::string mensage;
+		static std::string  mensage;
 		static bool 	    _request;
 	private:
 		static void parsing_env(std::string buffer);
@@ -43,13 +43,15 @@ class HttpParser
 	      	HttpParser& operator=(const HttpParser &vuale);
 	public:   
 	      static std::string _type;
+	      static std::string _methods;
 	      static std::string _pach_info; 
-	      static	int _http_page_error;
-		static std::string _host;
-
-	      static void new_request(std::string buffer); 
-	      static std::string get_request_msg();
-	      static std::vector<char *> get_request_env();		
+	      static int 	 _http_page_error;
+	      static std::string _host;
+		
+	      static std::string 		chek_and_add_header(std::string response,std::string error);
+	      static void        		new_request(std::string buffer); 
+	      static std::string        	get_request_msg();
+	      static std::vector<char *>	get_request_env();		
 };
 
 

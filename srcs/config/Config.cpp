@@ -8,6 +8,8 @@
 
 void validatePath(const std::string &path, bool cgi_pass)
 {
+
+	return ;
 	if (path == "")
 	{
 		return ;

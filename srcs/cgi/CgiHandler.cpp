@@ -13,6 +13,7 @@
 #include "config/color.hpp"
 #include <iostream>
 #include <stdlib.h>
+#include <string>
 #include <unistd.h>
 #include "config/LocationConfig.hpp"
 #include "core/Server.hpp"
@@ -56,7 +57,6 @@ std::string Cgi::chek_program_pach(std::string porgram)
 			_path.push_back(path);	
 		}	
 	}
-	T_MSG("pache size " << _path.size(),BWHITE );
 	struct dirent *name_dir;
 	std::string name_program_dir;
 	for(int i=0;(int)_path.size() > i; i++)
@@ -77,7 +77,6 @@ std::string Cgi::chek_program_pach(std::string porgram)
 			if(name_program_dir == porgram)
 			{
 
-				HTTP_MSG("path for porgram use is" <<_path[i] <<" " <<name_program_dir);
 				 if (access((_path[i] +"/"+name_program_dir).c_str(), X_OK) == 0)
 				 {
 					closedir(dir);
@@ -103,16 +102,16 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 	int i = 0;
 	_envs = env_request;
 
-	for (int e = 0; e < (int)env_request.size();e++) 
-	{
-		HTTP_MSG(env_request[e]);
-	}
 	while (env[i] != NULL)
 	{
 		_envs.push_back(env[i]);
 
 		i++;
 	} 
+	for (int e = 0; e < (int)env_request.size();e++) 
+	{
+		HTTP_MSG(env_request[e]);
+	}
 
 }
 
@@ -125,34 +124,32 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 	char buffer[1024];
 	std::vector<char *> v;
 
-v.push_back(const_cast<char*>(porgram.c_str()));          // script
-v.push_back(NULL);
-
+        v.push_back(const_cast<char*>(porgram.c_str()));          // script
 
 	std::string response = "";
 	
 	if(pipe(fd_in) == -1)
 		exit(1);
 	if(pipe(fd_out) == -1)
-		exit(1);
-	
-	HTTP_MSG(porgram);
+		exit(1);	
+	_envs.push_back(NULL);	
+ 	std::cout.flush();
 	pid = fork();
 	if(pid == -1)
 		exit(1);	
 
 	if(pid == 0)
-	{
-	
+	{	
+
 		dup2(fd_in[0],0);
 		dup2(fd_out[1],1);	
 		close(fd_in[1]);
 		close(fd_out[0]);
 
-		T_MSG(porgram.c_str(), RED);
-		int i  = execve(porgram.c_str(),v.data(),_envs.data());
+		int i  = execve("./ola/cgi_in_py/main.py",_envs.data(),_envs.data());
 		HTTP_MSG("merda = " << i)
-		exit(1);
+		perror("execve");
+		exit(33);
 	}
 	else
 	{
@@ -164,18 +161,16 @@ v.push_back(NULL);
 		{
 			response.append(buffer,read_bits);
 		}
+		response.append("\r\n\r\n");
 		close(fd_out[0]);
 		waitpid(pid, &status, 0);
 
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
     		std::cout << "CGI exited with code: " << exit_code << std::endl;
-		if(exit_code != 0) // TODO change this value for 0 
+		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
-
-		}
-		std::cout << response << std::endl;
- 
+		} 
 	}	
 	return response;
 }

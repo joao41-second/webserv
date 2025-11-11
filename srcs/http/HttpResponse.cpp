@@ -40,7 +40,7 @@ std::map<std::string,std::string> 	HttpResponse::_types;
 
 bool HttpResponse::get_chunks_status()
 {
-	HTTP_MSG("BODY REQUEST IS =" < _chunks);
+	HTTP_MSG("BODY REQUEST IS =" << _chunks);
 	return(_chunks);
 }
 

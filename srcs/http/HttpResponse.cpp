@@ -228,13 +228,24 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 
 	std::string path = file.substr(0,size);	
 
-	if(path.rfind('/') != std::string::npos )
-		path +=	"/";
-	path += "*"+type;
+//	if(path.rfind('/') != std::string::npos )
+//		path +=	"/";
+	path += "/*"+type;
 
-	if(server.getLocMap()[path]._cgi_pass != "" )
+	HTTP_MSG("cgi " << path );
+
+	std::map<std::string, LocationConfig>::iterator it = server.getLocMap().find(path);
+	if(it != server.getLocMap().end())
 	{
 		_pg =  server.getLocMap()[path]._cgi_pass;
+		return true;	
+	}
+	it = server.getLocMap().find("*"+type);
+	if(server.getLocMap()["*"+type]._cgi_pass.empty())
+	{
+
+		HTTP_MSG("cgi ---------------" );
+		_pg =  server.getLocMap()[ "*"+type]._cgi_pass;
 		return true;	
 	}
 	return (false);

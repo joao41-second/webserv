@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "config/color.hpp"
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
@@ -30,6 +32,10 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <sys/wait.h>
+#include <stdio.h>
+#include <fcntl.h>
+
+
 
 Cgi::Cgi(){}
 Cgi::~Cgi(){}
@@ -112,10 +118,30 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 	{
 		HTTP_MSG(env_request[e]);
 	}
-
 }
 
-std::string Cgi::execute(std::string _request, std::string porgram )
+int Cgi::save_chunk_fd(std::string str)
+{
+	static int fd=  -1;
+	fd = open("/tmp/saida.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if(str == "0\r\n\r\n")
+		return (fd);
+	int size =  str.find('\r');
+	if(size == (int)std::string::npos)
+		throw Not_found_404(); //TODO nao e este o error  
+	int bits;
+	std::string nb = str.substr(0,size);
+	std::string al = str.substr(size,0);
+	std::stringstream ss(str);
+	ss >> bits;
+	if(ss.fail())
+		throw Not_found_404(); //TODO nao e este o error  
+	write(fd,al.c_str(),bits);
+	close(fd);
+	return -1;
+}
+
+std::string Cgi::execute(std::string _request, std::string porgram)
 {
 	int pid ;
 	int fd_in[2];
@@ -123,15 +149,25 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 	int status,read_bits;
 	char buffer[1024];
 	std::vector<char *> v;
-
-        v.push_back(const_cast<char*>(porgram.c_str()));          // script
-
-	std::string response = "";
+	bool chunk = false;
+	HTTP_MSG("ola o poor" << porgram);
 	
 	if(pipe(fd_in) == -1)
 		exit(1);
 	if(pipe(fd_out) == -1)
 		exit(1);	
+	if(chunk == true)
+	{
+		int fd;
+		if((fd = Cgi::save_chunk_fd(_request)) == -1)
+			return "";
+		close(fd_in[1]);
+		fd_in[1] = fd;
+	}
+        v.push_back(const_cast<char*>(porgram.c_str()));          // script
+
+	std::string response = "";
+	
 	_envs.push_back(NULL);	
  	std::cout.flush();
 	pid = fork();
@@ -146,7 +182,7 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 		close(fd_in[1]);
 		close(fd_out[0]);
 
-		int i  = execve("./ola/cgi_in_py/main.py",_envs.data(),_envs.data());
+		int i  = execve(porgram.c_str(),_envs.data(),_envs.data());
 		HTTP_MSG("merda = " << i)
 		perror("execve");
 		exit(33);
@@ -155,7 +191,7 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 	{
 		close(fd_in[0]);
 		close(fd_out[1]);
-		write(fd_in[1],_request.c_str(),_request.size());
+		//write(fd_in[1],_request.c_str(),_request.size());
 		close(fd_in[1]);
 		while ((read_bits = read(fd_out[0],buffer,1024)) > 0)
 		{
@@ -164,13 +200,13 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 		response.append("\r\n\r\n");
 		close(fd_out[0]);
 		waitpid(pid, &status, 0);
-
+		std::remove("/tmp/saida.txt");
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
     		std::cout << "CGI exited with code: " << exit_code << std::endl;
 		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
 		} 
-	}	
+	}
 	return response;
 }

@@ -11,14 +11,12 @@
 /* ************************************************************************** */
 
 #include "config/color.hpp"
-#include <fstream>
+#include "http/HttpParser.hpp"
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
-#include "config/LocationConfig.hpp"
-#include "core/Server.hpp"
 #include <http/Http_throw.hpp>
 #include "http/HttpParser.hpp"
 #include <config/color.hpp>
@@ -149,18 +147,23 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	int status,read_bits;
 	char buffer[1024];
 	std::vector<char *> v;
-	bool chunk = false;
-	HTTP_MSG("ola o poor" << porgram);
+	
 	
 	if(pipe(fd_in) == -1)
 		exit(1);
 	if(pipe(fd_out) == -1)
 		exit(1);	
-	if(chunk == true)
+	HTTP_MSG( HttpParser::_is_chunk);
+
+	if(HttpParser::_is_chunk == HTTP_CHUNKS)
 	{
 		int fd;
+		HTTP_MSG(_request << "\n")
 		if((fd = Cgi::save_chunk_fd(_request)) == -1)
+		{
 			return "";
+		}
+		HTTP_MSG("ola o poor" << porgram);
 		close(fd_in[1]);
 		fd_in[1] = fd;
 	}

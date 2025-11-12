@@ -26,6 +26,11 @@
     #define HTTP_MSG(x) /* nada */
 #endif
 
+#define HTTP_CHUNKS 2
+#define HTTP_CONTENT 1
+#define HTTP_EMPTY 0
+
+
 
 
 class HttpParser
@@ -42,6 +47,8 @@ class HttpParser
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
 	public:   
+
+	      static int 	 _is_chunk;
 	      static std::string _type;
 	      static std::string _methods;
 	      static std::string _pach_info; 

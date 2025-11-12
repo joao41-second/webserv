@@ -24,6 +24,7 @@
 
 std::vector <std::string> HttpParser::env;
 bool 		HttpParser::_request 		= false;
+int 		HttpParser::_is_chunk 		= 0;
 std::string 	HttpParser::mensage 		= "";
 std::string 	HttpParser::_pach_info 		= "";
 std::string 	HttpParser::_type 		= "";
@@ -150,6 +151,14 @@ void HttpParser::parsing_env(std::string buffer)
 		std::replace(var.begin(), var.end(), '-', '_');
 		if(var == "Host")
 			_host = content;
+		if(var == "Content_Length")
+		{
+			_is_chunk = 1;
+		}
+		if(var == "Transfer_Encoding" && trim(content) == "chunked") 
+		{		
+			_is_chunk = 2;
+		}
 		for (int i =0; i < (int)var.size(); ++i) {
 			int char_ = var[i];
 			var[i] = std::toupper(char_);

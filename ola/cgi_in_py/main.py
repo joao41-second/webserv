@@ -11,12 +11,16 @@ cgitb.enable()
 
 UPLOAD_DIR = "/tmp"  # diretório onde os arquivos serão salvos
 
+
+# ---------------- Cabeçalho HTTP ----------------
 def cabecalho_http():
     print("Content-Type: text/html; charset=UTF-8")
     print("Cache-Control: no-store, no-cache, must-revalidate")
     print("Pragma: no-cache")
     print()
 
+
+# ---------------- Página inicial ----------------
 def pagina_principal_body():
     return """\
 <html>
@@ -38,6 +42,8 @@ def pagina_principal_body():
 </html>
 """
 
+
+# ---------------- Páginas dinâmicas ----------------
 def pagina_dinamica(pagina, form=None):
     paginas = {
         "Pagina 1": "Voce esta na Pagina 1",
@@ -49,7 +55,6 @@ def pagina_dinamica(pagina, form=None):
 
     if pagina == "Pagina 3":
         resultado_upload = ""
-        # Se já enviaram um ficheiro, processa
         if form is not None:
             ficheiro_item = form["ficheiro"] if "ficheiro" in form else None
             if ficheiro_item and ficheiro_item.filename:
@@ -62,7 +67,6 @@ def pagina_dinamica(pagina, form=None):
                 except Exception as e:
                     resultado_upload = f"<p>Erro ao guardar ficheiro: {html.escape(str(e))}</p>"
             else:
-                # Nenhum ficheiro enviado → cria um arquivo vazio
                 erro_file_path = os.path.join(UPLOAD_DIR, "erro_arquivo_nao_enviado.txt")
                 try:
                     with open(erro_file_path, "w") as f:
@@ -71,7 +75,6 @@ def pagina_dinamica(pagina, form=None):
                 except Exception as e:
                     resultado_upload = f"<p>Erro ao criar arquivo vazio: {html.escape(str(e))}</p>"
 
-        # Formulario de upload
         return f"""
         <h1>Enviar um ficheiro</h1>
         {resultado_upload}
@@ -109,31 +112,57 @@ def pagina_dinamica(pagina, form=None):
         conteudo = paginas.get(pagina, "Pagina nao encontrada!")
         return f"<h1>{html.escape(conteudo)}</h1><p>Conteudo da {html.escape(pagina.lower())}.</p>"
 
-def erro_http(codigo, mensagem):
-    print(f"Status: {codigo}")
-    cabecalho_http()
-    print(f"<html><body><h1>Erro {html.escape(codigo)}: {html.escape(mensagem)}</h1></body></html>")
 
+# ---------------- Função principal ----------------
 def main():
     os.environ.setdefault("PATH_INFO", "/")
     os.environ.setdefault("QUERY_STRING", "")
     os.environ.setdefault("REQUEST_METHOD", "GET")
     os.environ.setdefault("SCRIPT_NAME", sys.argv[0])
 
+    # Detectar se temos CONTENT_LENGTH (modo CGI clássico)
+    has_content_length = "CONTENT_LENGTH" in os.environ and os.environ["CONTENT_LENGTH"].isdigit()
+
+    form = None
+    pagina = None
+
+    if has_content_length:
+        try:
+            form = cgi.FieldStorage()
+            pagina = form.getvalue("pagina") if form else None
+        except Exception as e:
+            print("Status: 400 Bad Request")
+            cabecalho_http()
+            print(f"<h1>Erro ao processar dados do formulario:</h1><pre>{html.escape(str(e))}</pre>")
+            return
+    else:
+        # Se não há CONTENT_LENGTH, lemos o stdin diretamente (modo chunked / stdin cru)
+        pagina = None
+
+    # --- Ler o corpo da requisição cru (sempre até EOF) ---
     try:
-        form = cgi.FieldStorage()
+        body_raw = sys.stdin.buffer.read()
+        body_content = body_raw.decode("utf-8", errors="replace")
     except Exception as e:
-        erro_http("400 Bad Request", f"Erro ao processar dados do formulario: {e}")
-        sys.exit(0)
+        body_content = f"(Erro ao ler corpo da mensagem: {e})"
 
-    pagina = form.getvalue("pagina") if form else None
-
+    # Cabeçalhos HTTP
     cabecalho_http()
 
+    # Conteúdo principal
     if pagina:
         print(pagina_dinamica(pagina, form))
     else:
         print(pagina_principal_body())
+
+    # Mostrar corpo recebido
+    print("<hr>")
+    print("<h3>Corpo recebido na requisição:</h3>")
+    if body_content.strip():
+        print(f"<pre style='background:#f8f8f8;padding:8px;border:1px solid #ccc'>{html.escape(body_content)}</pre>")
+    else:
+        print("<p><em>Nenhum conteúdo foi enviado no corpo da requisição.</em></p>")
+
 
 if __name__ == "__main__":
     main()

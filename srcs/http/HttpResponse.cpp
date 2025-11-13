@@ -27,12 +27,13 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <unistd.h>
 
 
 bool   		HttpResponse::_request_status = false;
 int 		HttpResponse::size_max 		= 50000;
 std::string 	HttpResponse::_pg 		= "";
-bool 		HttpResponse::_chunks 		= false;
+bool 		HttpResponse::_new_request 	= false;
 char ** 	HttpResponse::_env;
 std::vector<ServerConfig> 		HttpResponse::_configs;
 std::map<std::string,std::string> 	HttpResponse::_types;
@@ -40,8 +41,8 @@ std::map<std::string,std::string> 	HttpResponse::_types;
 
 bool HttpResponse::get_chunks_status()
 {
-	HTTP_MSG("BODY REQUEST IS =" << _chunks);
-	return(_chunks);
+	HTTP_MSG("BODY REQUEST IS =" << _new_request);
+	return(_new_request);
 }
 
 void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
@@ -90,11 +91,9 @@ std::string HttpResponse::open_static_file(std::string file)
 	}	
 
 	if(!_types[type_file].empty())
-	{
 
 		request += "Content-Type: " + _types[type_file] +"\n";
-		
-	}else
+	else
 	{
 		//TODO this vereficasion no finic
 		request += "Content-Disposition: attachment; filename= " +   file+ '\n' ;
@@ -228,13 +227,24 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 
 	std::string path = file.substr(0,size);	
 
-	if(path.rfind('/') != std::string::npos )
-		path +=	"/";
-	path += "*"+type;
+//	if(path.rfind('/') != std::string::npos )
+//		path +=	"/";
+	path += "/*"+type;
 
-	if(server.getLocMap()[path]._cgi_pass != "" )
+	HTTP_MSG("cgi " << path );
+
+	std::map<std::string, LocationConfig>::iterator it = server.getLocMap().find(path);
+	if(it != server.getLocMap().end())
 	{
 		_pg =  server.getLocMap()[path]._cgi_pass;
+		return true;	
+	}
+	it = server.getLocMap().find("*"+type);
+	if(server.getLocMap()["*"+type]._cgi_pass.empty())
+	{
+
+		HTTP_MSG("cgi ---------------" );
+		_pg =  server.getLocMap()[ "*"+type]._cgi_pass;
 		return true;	
 	}
 	return (false);
@@ -271,7 +281,6 @@ std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 	return "";	
 }
 
-#include <unistd.h>
 
 std::string HttpResponse::Delete(std::string file)
 {
@@ -289,6 +298,7 @@ std::string HttpResponse::Delete(std::string file)
     }
 }
 
+
 std::string HttpResponse::request_and_response(std::string request, int port)
 {
 	int 		error;
@@ -299,17 +309,22 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 	HttpParser::_http_page_error = 0;
 	_pg = "";
-	_chunks = false;
-	
+	HttpParser::_port = port;
 	T_MSG("Start request\n", YELLOW)
 	try
 	{	
 		int port_ = std::atoi(HttpParser::_host.substr(HttpParser::_host.find(':')+1,HttpParser::_host.size()).c_str());
+
 		if(port != port_)
 		{
-		//	throw Badd_Request_400();
+		//TODO	throw Badd_Request_400();
 		}
-		HttpParser::new_request(request);
+
+		if(_new_request != true)
+			HttpParser::new_request(request);
+		else 
+			HttpParser::set_request_msg(request);
+
 		cgi.create_env(_env, HttpParser::get_request_env());
 		config = get_config(port);		
 
@@ -317,11 +332,11 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 		if( HttpParser::_pach_info == "/")
 			response = get_folder_index(config,cgi);
-		else if (chek_cig_or_static(HttpParser::_pach_info, config))
+		else if (chek_cig_or_static(HttpParser::_pach_info, config) || HttpParser::_methods == "POST")
 		{
-
-			_chunks = true;
-			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");		}
+			_new_request = true;
+			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");
+		}
 		else
 		{
 			// open static file

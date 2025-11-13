@@ -58,6 +58,11 @@ HttpParser::~HttpParser()
 }
 
 
+void 	HttpParser::set_request_msg(std::string _boody)
+{
+	mensage = _boody;
+}
+
 static std::string trim(const std::string &s)
 {
     std::string::size_type start = s.find_first_not_of(" \t\r\n");
@@ -206,6 +211,11 @@ std::vector <char *> HttpParser::get_request_env()
 std::string HttpParser::chek_and_add_header(std::string response,std::string error)
 {
 	(void )error;
+	if(HttpResponse::get_chunks_status() == true)
+	{
+		HTTP_MSG("sairi")
+		return response;
+	}
 	size_t size = response.find("\n\n");
 
 	std::string  body;
@@ -246,7 +256,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 
 			if(!HttpResponse::_types[_type].empty())
 			{
-
+				//TODO implement chunkes 
 				header += "Content-Type: " + HttpResponse::_types[_type] +"\n";
 		
 			}

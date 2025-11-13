@@ -130,8 +130,8 @@ void CGI_request_test(char **envp)
 	if(HttpResponse::get_chunks_status() == true)
 	{
 
-		HttpResponse::request_and_response( final_chunk , 8022);
-	//	HTTP_MSG(  HttpResponse::request_and_response( final_chunk , 8022));
+		//HttpResponse::request_and_response( final_chunk , 8022);
+		HTTP_MSG(  HttpResponse::request_and_response( final_chunk , 8022));
 	}
 
 

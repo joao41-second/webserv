@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <http/Http_throw.hpp>
 #include "http/HttpParser.hpp"
+#include "http/HttpResponse.hpp"
 #include <config/color.hpp>
 #include <config/LocationConfig.hpp>
 #include <core/Server.hpp>
@@ -114,13 +115,18 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 	} 
 	for (int e = 0; e < (int)env_request.size();e++) 
 	{
-		HTTP_MSG(env_request[e]);
+		//HTTP_MSG(env_request[e]);
 	}
 }
 
 int Cgi::save_chunk_fd(std::string str)
 {
 	static int fd=  -1;
+	if(str.empty())
+	{
+		return (-1);
+	}
+
 	fd = open("/tmp/saida.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if(str == "0\r\n\r\n")
 		return (fd);
@@ -151,22 +157,26 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	
 	if(pipe(fd_in) == -1)
 		exit(1);
-	if(pipe(fd_out) == -1)
-		exit(1);	
-	HTTP_MSG( HttpParser::_is_chunk);
+
+	HTTP_MSG(HttpParser::_is_chunk << "ok --" << porgram << "\n");
 
 	if(HttpParser::_is_chunk == HTTP_CHUNKS)
 	{
 		int fd;
-		HTTP_MSG(_request << "\n")
 		if((fd = Cgi::save_chunk_fd(_request)) == -1)
 		{
+
+			close(fd_in[0]);
+			close(fd_in[1]);
 			return "";
 		}
-		HTTP_MSG("ola o poor" << porgram);
 		close(fd_in[1]);
 		fd_in[1] = fd;
 	}
+	HttpResponse::_new_request = false;
+	if(pipe(fd_out) == -1)
+		exit(1);	
+
         v.push_back(const_cast<char*>(porgram.c_str()));          // script
 
 	std::string response = "";

@@ -322,6 +322,8 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 		if(_new_request != true)
 			HttpParser::new_request(request);
+		else 
+			HttpParser::set_request_msg(request);
 
 		cgi.create_env(_env, HttpParser::get_request_env());
 		config = get_config(port);		
@@ -332,7 +334,6 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 			response = get_folder_index(config,cgi);
 		else if (chek_cig_or_static(HttpParser::_pach_info, config) || HttpParser::_methods == "POST")
 		{
-
 			_new_request = true;
 			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");
 		}

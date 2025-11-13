@@ -127,7 +127,7 @@ int Cgi::save_chunk_fd(std::string str)
 		return (-1);
 	}
 
-	fd = open("/tmp/saida.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open("/tmp/saida.txt",O_RDWR | O_CREAT , 0644);
 	if(str == "0\r\n\r\n")
 		return (fd);
 	int size =  str.find('\r');
@@ -170,8 +170,7 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 			close(fd_in[1]);
 			return "";
 		}
-		close(fd_in[1]);
-		fd_in[1] = fd;
+		//dup2(fd,fd_out[1]);
 	}
 	HttpResponse::_new_request = false;
 	if(pipe(fd_out) == -1)
@@ -192,8 +191,11 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 
 		dup2(fd_in[0],0);
 		dup2(fd_out[1],1);	
+
 		close(fd_in[1]);
 		close(fd_out[0]);
+		close(fd_in[0]);
+		close(fd_out[1]);
 
 		int i  = execve(porgram.c_str(),_envs.data(),_envs.data());
 		HTTP_MSG("merda = " << i)
@@ -204,19 +206,24 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	{
 		close(fd_in[0]);
 		close(fd_out[1]);
-		//write(fd_in[1],_request.c_str(),_request.size());
+
+		write(fd_in[1],"ola\n ola",8);
+		
+		sleep(1);
 		close(fd_in[1]);
 		while ((read_bits = read(fd_out[0],buffer,1024)) > 0)
 		{
 			response.append(buffer,read_bits);
 		}
 		response.append("\r\n\r\n");
+
 		close(fd_out[0]);
 		waitpid(pid, &status, 0);
-		std::remove("/tmp/saida.txt");
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
     		std::cout << "CGI exited with code: " << exit_code << std::endl;
+
+//		std::remove("/tmp/saida.txt");
 		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
 		} 

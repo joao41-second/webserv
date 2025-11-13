@@ -309,7 +309,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 	HttpParser::_http_page_error = 0;
 	_pg = "";
-	
+	HttpParser::_port = port;
 	T_MSG("Start request\n", YELLOW)
 	try
 	{	

@@ -31,6 +31,7 @@ std::string 	HttpParser::_type 		= "";
 int 		HttpParser::_http_page_error 	= 0;
 std::string 	HttpParser::_host 		= "";
 std::string 	HttpParser::_methods 		= "";
+int 		HttpParser::_port = 0;
 
 
 HttpParser::HttpParser(void)

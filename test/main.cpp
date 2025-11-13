@@ -146,7 +146,7 @@ void CGI_request_test(char **envp)
 void CGI_request_test_not_chunked(char **envp)
 {
 
-std::string body = "Hello this is achunkedmessage.";
+std::string body = "Hello this is achunkedmessage.\r\n\r\n";
 
 // Calcula o tamanho do corpo
 
@@ -158,17 +158,16 @@ std::string headers =
     "\r\n"; // separa cabeçalho do corpo
 
 // Request completo
-
-
+(void) envp;
     // Chunk final indicando fim
 
 	try {
 
-	Config conf_info("./test/youpi.conf", envp);
-	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-	std::vector<Socket*>		sockets = conf_info.getSocketVector();
-	HttpResponse::set_config(configs,envp);
-	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
+//	Config conf_info("./test/youpi.conf", envp);
+//	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+//	std::vector<Socket*>		sockets = conf_info.getSocketVector();
+//	HttpResponse::set_config(configs,envp);
+//	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
 	
 	if(HttpResponse::get_chunks_status() == true)
 	{
@@ -193,7 +192,7 @@ int main(int argc ,char ** argv,char**env)
 	//config_and_http_implemente(argc,argv,env);
 	//HTTP_test_request();
 	CGI_request_test(env);
-	//CGI_request_test_not_chunked(env);
+	CGI_request_test_not_chunked(env);
 
 
         return 0;

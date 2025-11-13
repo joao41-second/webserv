@@ -13,6 +13,7 @@
 #include "config/color.hpp"
 #include "http/HttpParser.hpp"
 #include <cerrno>
+#include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
@@ -123,29 +124,55 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 int Cgi::save_chunk_fd(std::string str)
 {
 	static int fd=  -1;
-	if(str.empty())
+	static int body = 0;
+
+
+	
+	std::stringstream port;
+	port << HttpParser::_port;
+	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
+	if( HttpParser::_is_chunk == HTTP_CONTENT)
 	{
-		return (-1);
+		if(body == 1)
+		{
+			body = 0;
+			fd = open(_file_name.c_str(),O_RDWR | O_CREAT , 0644);
+			write(fd,str.c_str(),str.size()-4);
+			close(fd);
+			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
+		}
+		if(body == 0)
+		{ 
+			body = 1;
+			return(-1);
+		}
 	}
 
-	if(str == "0\r\n\r\n")
-		return (open("/tmp/saida.txt",O_RDWR | O_CREAT , 0644));
-	fd = open("/tmp/saida.txt", O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if(fd == -1)
-		throw Not_found_404(); //TODO nao e este o error  
+	if(HttpParser::_is_chunk == HTTP_CHUNKS)
+	{
+		if(str.empty())
+		{
+			return (-1);
+		}
+		if(str == "0\r\n\r\n")
+			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
+		fd = open(_file_name.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if(fd == -1)
+			throw Not_found_404(); //TODO nao e este o error  
 
-	int size =  str.find('\r');
-	if(size == (int)std::string::npos)
-		throw Not_found_404(); //TODO nao e este o error  
-	int bits;
-	std::string nb = str.substr(0,size);
-	std::string al = str.substr(size+2,str.rfind('\r'));
-	std::stringstream ss(str);
-	ss >> bits;
-	if(ss.fail())
-		throw Not_found_404(); //TODO nao e este o error  
-	write(fd,al.c_str(),bits);
-	close(fd);
+		int size =  str.find('\r');
+		if(size == (int)std::string::npos)
+			throw Not_found_404(); //TODO nao e este o error  
+		int bits;
+		std::string nb = str.substr(0,size);
+		std::string al = str.substr(size+2,str.rfind('\r'));
+		std::stringstream ss(str);
+		ss >> bits;
+		if(ss.fail())
+			throw Not_found_404(); //TODO nao e este o error  
+		write(fd,al.c_str(),bits);
+		close(fd);
+	}
 	return -1;
 }
 
@@ -161,14 +188,11 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	
 	int fd =-1;
 	
-	if(HttpParser::_is_chunk == HTTP_CHUNKS)
+	if((fd = Cgi::save_chunk_fd(_request)) == -1)
 	{
-		if((fd = Cgi::save_chunk_fd(_request)) == -1)
-		{
-			return "";
-		}
-		fd_in = fd;
+		return "";
 	}
+	fd_in = fd;	
 	HttpResponse::_new_request = false;
 	if(pipe(fd_out) == -1)
 		exit(1);	
@@ -203,7 +227,7 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
     		std::cout << "CGI exited with code: " << exit_code << response << std::endl;
-		std::remove("/tmp/saida.txt");
+		std::remove(_file_name.c_str());
 		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
 		} 

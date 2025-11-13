@@ -24,6 +24,7 @@ class Cgi
 {
 	private:
 		std::string _request;
+		std::string _file_name;
 		std::string chek_program_pach(std::string program);
 		std::vector<std::string> _path;
 		int 	    save_chunk_fd(std::string);

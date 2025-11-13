@@ -11,6 +11,7 @@ cgitb.enable()
 
 UPLOAD_DIR = "/tmp"  # diretório onde os arquivos serão salvos
 
+
 # ---------------- Cabeçalho HTTP ----------------
 def cabecalho_http():
     print("Content-Type: text/html; charset=UTF-8")
@@ -18,7 +19,8 @@ def cabecalho_http():
     print("Pragma: no-cache")
     print()
 
-# ---------------- Corpo da página inicial ----------------
+
+# ---------------- Página inicial ----------------
 def pagina_principal_body():
     return """\
 <html>
@@ -39,6 +41,7 @@ def pagina_principal_body():
   </body>
 </html>
 """
+
 
 # ---------------- Páginas dinâmicas ----------------
 def pagina_dinamica(pagina, form=None):
@@ -109,11 +112,6 @@ def pagina_dinamica(pagina, form=None):
         conteudo = paginas.get(pagina, "Pagina nao encontrada!")
         return f"<h1>{html.escape(conteudo)}</h1><p>Conteudo da {html.escape(pagina.lower())}.</p>"
 
-# ---------------- Mensagem de erro ----------------
-def erro_http(codigo, mensagem):
-    print(f"Status: {codigo}")
-    cabecalho_http()
-    print(f"<html><body><h1>Erro {html.escape(codigo)}: {html.escape(mensagem)}</h1></body></html>")
 
 # ---------------- Função principal ----------------
 def main():
@@ -122,21 +120,33 @@ def main():
     os.environ.setdefault("REQUEST_METHOD", "GET")
     os.environ.setdefault("SCRIPT_NAME", sys.argv[0])
 
-    try:
-        form = cgi.FieldStorage()
-    except Exception as e:
-        erro_http("400 Bad Request", f"Erro ao processar dados do formulario: {e}")
-        sys.exit(0)
+    # Detectar se temos CONTENT_LENGTH (modo CGI clássico)
+    has_content_length = "CONTENT_LENGTH" in os.environ and os.environ["CONTENT_LENGTH"].isdigit()
 
-    pagina = form.getvalue("pagina") if form else None
+    form = None
+    pagina = None
 
-    # --- Ler todo o corpo do stdin sem depender de CONTENT_LENGTH ---
+    if has_content_length:
+        try:
+            form = cgi.FieldStorage()
+            pagina = form.getvalue("pagina") if form else None
+        except Exception as e:
+            print("Status: 400 Bad Request")
+            cabecalho_http()
+            print(f"<h1>Erro ao processar dados do formulario:</h1><pre>{html.escape(str(e))}</pre>")
+            return
+    else:
+        # Se não há CONTENT_LENGTH, lemos o stdin diretamente (modo chunked / stdin cru)
+        pagina = None
+
+    # --- Ler o corpo da requisição cru (sempre até EOF) ---
     try:
-        body_raw = sys.stdin.buffer.read()  # lê até EOF
+        body_raw = sys.stdin.buffer.read()
         body_content = body_raw.decode("utf-8", errors="replace")
     except Exception as e:
         body_content = f"(Erro ao ler corpo da mensagem: {e})"
 
+    # Cabeçalhos HTTP
     cabecalho_http()
 
     # Conteúdo principal
@@ -145,14 +155,14 @@ def main():
     else:
         print(pagina_principal_body())
 
-    # --- Mostrar o corpo da requisição ---
+    # Mostrar corpo recebido
     print("<hr>")
     print("<h3>Corpo recebido na requisição:</h3>")
-
     if body_content.strip():
         print(f"<pre style='background:#f8f8f8;padding:8px;border:1px solid #ccc'>{html.escape(body_content)}</pre>")
     else:
         print("<p><em>Nenhum conteúdo foi enviado no corpo da requisição.</em></p>")
+
 
 if __name__ == "__main__":
     main()

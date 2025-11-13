@@ -12,6 +12,7 @@
 
 #include "config/color.hpp"
 #include "http/HttpParser.hpp"
+#include <cerrno>
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
@@ -148,29 +149,25 @@ int Cgi::save_chunk_fd(std::string str)
 std::string Cgi::execute(std::string _request, std::string porgram)
 {
 	int pid ;
-	int fd_in[2];
+	int fd_in;
 	int fd_out[2];
 	int status,read_bits;
 	char buffer[1024];
 	std::vector<char *> v;
 	
+	int fd =-1;
 	
-	if(pipe(fd_in) == -1)
-		exit(1);
-
+	
 	HTTP_MSG(HttpParser::_is_chunk << "ok --" << porgram << "\n");
 
 	if(HttpParser::_is_chunk == HTTP_CHUNKS)
 	{
-		int fd;
 		if((fd = Cgi::save_chunk_fd(_request)) == -1)
 		{
 
-			close(fd_in[0]);
-			close(fd_in[1]);
 			return "";
 		}
-		//dup2(fd,fd_out[1]);
+		fd_in = fd;
 	}
 	HttpResponse::_new_request = false;
 	if(pipe(fd_out) == -1)
@@ -181,6 +178,7 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	std::string response = "";
 	
 	_envs.push_back(NULL);	
+	char **end = NULL;
  	std::cout.flush();
 	pid = fork();
 	if(pid == -1)
@@ -189,28 +187,22 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	if(pid == 0)
 	{	
 
-		dup2(fd_in[0],0);
+		dup2(fd_in,0);
 		dup2(fd_out[1],1);	
-
-		close(fd_in[1]);
-		close(fd_out[0]);
-		close(fd_in[0]);
-		close(fd_out[1]);
-
-		int i  = execve(porgram.c_str(),_envs.data(),_envs.data());
+		close(fd_in);
+		int i  = execve( porgram.c_str(),end,_envs.data());
 		HTTP_MSG("merda = " << i)
 		perror("execve");
 		exit(33);
 	}
 	else
 	{
-		close(fd_in[0]);
 		close(fd_out[1]);
 
-		write(fd_in[1],"ola\n ola",8);
-		
+		dup2(fd,fd_out[1]);
 		sleep(1);
-		close(fd_in[1]);
+
+		close(fd_in);
 		while ((read_bits = read(fd_out[0],buffer,1024)) > 0)
 		{
 			response.append(buffer,read_bits);
@@ -221,9 +213,9 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
-    		std::cout << "CGI exited with code: " << exit_code << std::endl;
+    		std::cout << "CGI exited with code: " << exit_code << response << std::endl;
 
-//		std::remove("/tmp/saida.txt");
+		std::remove("/tmp/saida.txt");
 		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
 		} 

@@ -8,8 +8,6 @@
 
 void validatePath(const std::string &path, bool cgi_pass)
 {
-
-	return ;
 	if (path == "")
 	{
 		return ;
@@ -48,6 +46,52 @@ void validatePath(const std::string &path, bool cgi_pass)
 		throw Config::BadConfigException("File for cgi_pass lacks execution permission: ", path);
 	}
 	// PARA TESTAR, COMENTAR ATÉ AQUI
+}
+
+bool wildcardCompare(const std::string &str, const std::string &wld)
+{
+	unsigned int i = 0;
+	unsigned int j = 0;
+
+	while (str[i] != '\0')
+	{
+		if (str[i] == wld[j])
+		{
+			i++;
+			j++;
+			continue ;
+		}
+
+		if (wld[j] != '*')
+		{
+			return (false);
+		}
+
+		while (wld[j] == '*')
+		{
+			j++;
+		}
+
+		if (wld[j] == '\0')
+		{
+			return (true);
+		}
+
+		while (wld[j] != str[i])
+		{
+			if (str[i] == '/' || str[i] == '\0')
+			{
+				return (false);
+			}
+			i++;
+		}
+	}
+
+	if (wld[j] == '\0')
+	{
+		return (true);
+	}
+	return (false);
 }
 
 std::string	formatFakePath(const std::string& str)
@@ -139,8 +183,8 @@ void	Config::parse_file(std::string filename)
 		else
 		{
 			// Invalid server, do not add
-			std::cout << "Warning: Configuration file contains servers with repeated ports!" << std::endl;
-			std::cout << "Warning: Considering only the first server of Port " << curr_server.getPort() << std::endl;
+			std::cerr << "Warning: Configuration file contains servers with repeated ports!" << std::endl;
+			std::cerr << "Warning: Considering only the first server of Port " << curr_server.getPort() << std::endl;
 		}
 	}
 

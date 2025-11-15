@@ -1,6 +1,7 @@
 #include "../../include/config/Config.hpp"
 #include "../../include/config/ServerConfig.hpp"
 #include "../../include/config/LocationConfig.hpp"
+#include <unistd.h>
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -116,6 +117,12 @@ void	ServerConfig::parse_server(std::istream& server_file)
 		def_loc->copyMethods(this->getMethods());
 		this->setOneLocationConfig(def_loc);
 	}
+
+	for (std::map<int, std::string>::const_iterator it = this->_error_pages.begin();
+			it != this->_error_pages.end(); it++)
+	{
+		this->validateErrorPage(it->second);
+	}
 }
 
 uint16_t ServerConfig::stringToUint16(const std::string &str)
@@ -206,7 +213,6 @@ void	ServerConfig::setOneErrorPage(std::string error_page_str)
 	}
 
 	this->_error_pages[error_num] = trim_whitespace(error_page_str.substr(3));
-	validatePath(this->_error_pages[error_num], false);
 }
 
 void	ServerConfig::setOneLocationConfig(LocationConfig* loc)
@@ -322,6 +328,52 @@ std::string const		&ServerConfig::getErrorPage(int error_num) const
 	}
 
 	return(this->_error_pages.find(404)->second); // Default error page
+}
+
+void	ServerConfig::validateErrorPage(const std::string &path)
+{
+try
+{
+	if (path == "")
+	{
+		throw Config::BadConfigException("Bad syntax: error_page", "");
+	}
+
+	if (path.find("//") != std::string::npos)
+	{
+		throw Config::BadConfigException("Invalid path name for error_page: ", path);
+	}
+
+	if (path == "./www/errors/404.html")
+	{
+		return ;
+	}
+
+	for (std::map<std::string, LocationConfig>::const_iterator it = this->_locations.begin();
+			it != this->_locations.end(); it++)
+	{
+		if (wildcardCompare(path, it->second.getName())) // TODO Deveria ser it->second.getPass() ?
+		{
+			return ;
+		}
+	}
+
+	struct stat info;
+
+	if (stat(path.c_str(), &info) != 0)
+	{
+		throw Config::BadConfigException("Path for error_page does not exist: ", path);
+	}
+
+	if (access(path.c_str(), R_OK) != 0 || access(path.c_str(), W_OK) != 0)
+	{
+		throw Config::BadConfigException("Existing error_page in config file lacks adequate permissions: ", path);
+	}
+}
+catch (std::exception &e)
+{
+	std::cerr << "Warning: " << e.what() << std::endl;
+}
 }
 
 std::string const	&ServerConfig::getName(void) const

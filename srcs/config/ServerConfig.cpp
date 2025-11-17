@@ -352,7 +352,7 @@ try
 	for (std::map<std::string, LocationConfig>::const_iterator it = this->_locations.begin();
 			it != this->_locations.end(); it++)
 	{
-		if (wildcardCompare(path, it->second.getName())) // TODO Deveria ser it->second.getPass() ?
+		if (wildcardCompare(path, it->second.getName()))
 		{
 			return ;
 		}

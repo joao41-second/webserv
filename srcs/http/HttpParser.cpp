@@ -24,12 +24,14 @@
 
 std::vector <std::string> HttpParser::env;
 bool 		HttpParser::_request 		= false;
+int 		HttpParser::_is_chunk 		= 0;
 std::string 	HttpParser::mensage 		= "";
 std::string 	HttpParser::_pach_info 		= "";
 std::string 	HttpParser::_type 		= "";
 int 		HttpParser::_http_page_error 	= 0;
 std::string 	HttpParser::_host 		= "";
 std::string 	HttpParser::_methods 		= "";
+int 		HttpParser::_port = 0;
 
 
 HttpParser::HttpParser(void)
@@ -56,6 +58,11 @@ HttpParser::~HttpParser()
 	HTTP_MSG("end parser");
 }
 
+
+void 	HttpParser::set_request_msg(std::string _boody)
+{
+	mensage = _boody;
+}
 
 static std::string trim(const std::string &s)
 {
@@ -150,6 +157,14 @@ void HttpParser::parsing_env(std::string buffer)
 		std::replace(var.begin(), var.end(), '-', '_');
 		if(var == "Host")
 			_host = content;
+		if(var == "Content_Length")
+		{
+			_is_chunk = 1;
+		}
+		if(var == "Transfer_Encoding" && trim(content) == "chunked") 
+		{		
+			_is_chunk = 2;
+		}
 		for (int i =0; i < (int)var.size(); ++i) {
 			int char_ = var[i];
 			var[i] = std::toupper(char_);
@@ -197,6 +212,11 @@ std::vector <char *> HttpParser::get_request_env()
 std::string HttpParser::chek_and_add_header(std::string response,std::string error)
 {
 	(void )error;
+	if(HttpResponse::get_chunks_status() == true)
+	{
+		HTTP_MSG("sairi")
+		return response;
+	}
 	size_t size = response.find("\n\n");
 
 	std::string  body;
@@ -237,7 +257,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 
 			if(!HttpResponse::_types[_type].empty())
 			{
-
+				//TODO implement chunkes 
 				header += "Content-Type: " + HttpResponse::_types[_type] +"\n";
 		
 			}

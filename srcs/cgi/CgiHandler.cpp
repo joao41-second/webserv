@@ -11,14 +11,17 @@
 /* ************************************************************************** */
 
 #include "config/color.hpp"
+#include "http/HttpParser.hpp"
+#include <cerrno>
+#include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
-#include "config/LocationConfig.hpp"
-#include "core/Server.hpp"
 #include <http/Http_throw.hpp>
 #include "http/HttpParser.hpp"
+#include "http/HttpResponse.hpp"
 #include <config/color.hpp>
 #include <config/LocationConfig.hpp>
 #include <core/Server.hpp>
@@ -30,6 +33,10 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <sys/wait.h>
+#include <stdio.h>
+#include <fcntl.h>
+
+
 
 Cgi::Cgi(){}
 Cgi::~Cgi(){}
@@ -110,26 +117,83 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 	} 
 	for (int e = 0; e < (int)env_request.size();e++) 
 	{
-		HTTP_MSG(env_request[e]);
+		//HTTP_MSG(env_request[e]);
 	}
-
 }
 
-std::string Cgi::execute(std::string _request, std::string porgram )
+int Cgi::save_chunk_fd(std::string str)
+{
+	static int fd=  -1;
+	static int body = 0;
+
+
+	
+	std::stringstream port;
+	port << HttpParser::_port;
+	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
+	if( HttpParser::_is_chunk == HTTP_CONTENT)
+	{
+		if(body == 1)
+		{
+			body = 0;
+			fd = open(_file_name.c_str(),O_RDWR | O_CREAT , 0644);
+			write(fd,str.c_str(),str.size()-4);
+			close(fd);
+			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
+		}
+		if(body == 0)
+		{ 
+			body = 1;
+			return(-1);
+		}
+	}
+
+	if(HttpParser::_is_chunk == HTTP_CHUNKS)
+	{
+		if(str.empty())
+		{
+			return (-1);
+		}
+		if(str == "0\r\n\r\n")
+			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
+		fd = open(_file_name.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if(fd == -1)
+			throw Not_found_404(); //TODO nao e este o error  
+
+		int size =  str.find('\r');
+		if(size == (int)std::string::npos)
+			throw Not_found_404(); //TODO nao e este o error  
+		int bits;
+		std::string nb = str.substr(0,size);
+		std::string al = str.substr(size+2,str.rfind('\r'));
+		std::stringstream ss(str);
+		ss >> bits;
+		if(ss.fail())
+			throw Not_found_404(); //TODO nao e este o error  
+		write(fd,al.c_str(),bits);
+		close(fd);
+	}
+	return -1;
+}
+
+std::string Cgi::execute(std::string _request, std::string porgram)
 {
 	int pid ;
-	int fd_in[2];
+	int fd_in;
 	int fd_out[2];
 	int status,read_bits;
 	char buffer[1024];
-	std::vector<char *> v;
-
-        v.push_back(const_cast<char*>(porgram.c_str()));          // script
-
-	std::string response = "";
+	std::string  response = "";
+	char **end = NULL;
 	
-	if(pipe(fd_in) == -1)
-		exit(1);
+	int fd =-1;
+	
+	if((fd = Cgi::save_chunk_fd(_request)) == -1)
+	{
+		return "";
+	}
+	fd_in = fd;	
+	HttpResponse::_new_request = false;
 	if(pipe(fd_out) == -1)
 		exit(1);	
 	_envs.push_back(NULL);	
@@ -141,22 +205,18 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 	if(pid == 0)
 	{	
 
-		dup2(fd_in[0],0);
+		dup2(fd_in,0);
 		dup2(fd_out[1],1);	
-		close(fd_in[1]);
-		close(fd_out[0]);
-
-		int i  = execve("./ola/cgi_in_py/main.py",_envs.data(),_envs.data());
+		close(fd_in);
+		int i  = execve( porgram.c_str(),end,_envs.data());
 		HTTP_MSG("merda = " << i)
 		perror("execve");
 		exit(33);
 	}
 	else
 	{
-		close(fd_in[0]);
 		close(fd_out[1]);
-		write(fd_in[1],_request.c_str(),_request.size());
-		close(fd_in[1]);
+		close(fd_in);
 		while ((read_bits = read(fd_out[0],buffer,1024)) > 0)
 		{
 			response.append(buffer,read_bits);
@@ -164,13 +224,13 @@ std::string Cgi::execute(std::string _request, std::string porgram )
 		response.append("\r\n\r\n");
 		close(fd_out[0]);
 		waitpid(pid, &status, 0);
-
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
-    		std::cout << "CGI exited with code: " << exit_code << std::endl;
+    		std::cout << "CGI exited with code: " << exit_code << response << std::endl;
+		std::remove(_file_name.c_str());
 		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
 		} 
-	}	
+	}
 	return response;
 }

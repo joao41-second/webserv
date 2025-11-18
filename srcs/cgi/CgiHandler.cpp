@@ -175,7 +175,7 @@ int Cgi::save_chunk_fd(std::string str)
 	}
 	return -1;
 }
-
+#include <http/HttpResponse.hpp>
 
 std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 {
@@ -187,7 +187,12 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 	static std::string 	save;
 	std::stringstream 	value;
 	static int 		status = 0;
-	
+
+
+	if(HttpResponse::_request_status == true)
+	{
+		return (HttpResponse::open_static_file("NULL"));
+	}
 	if(file_name != "NULL")
 		fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
 	response = save;

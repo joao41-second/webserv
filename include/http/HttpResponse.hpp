@@ -55,6 +55,7 @@ public:
 	static std::string request_and_response(std::string request, int port);
 	static bool get_chunks_status();
 	static bool get_chunks_in_response();
+	static bool get_chunks_status_response();
 };
 
 #endif

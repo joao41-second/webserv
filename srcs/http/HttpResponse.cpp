@@ -46,6 +46,13 @@ bool HttpResponse::get_chunks_status()
 	return(_new_request);
 }
 
+
+bool HttpResponse::get_chunks_status_response()
+{
+	HTTP_MSG("BODY REQUEST IS =" << _new_request);
+	return(_new_response);
+}
+
 void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 {
 	HttpResponse::_env = env;

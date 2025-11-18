@@ -44,15 +44,17 @@ private:
 	static std::string gener_erro_page(int error, std::string status);
 	static std::string rediect_path(std::string,int);
 	static std::string return_path_use();
-	static bool chek_cig_or_static(std::string, ServerConfig);
+	static bool	   chek_cig_or_static(std::string, ServerConfig);
 
 public:
 	static bool _new_request;
+	static bool _new_response;
 	static bool _request_status;
 	static std::map<std::string, std::string> _types;
 	static void set_config(std::vector<ServerConfig> &conf, char **env);
 	static std::string request_and_response(std::string request, int port);
 	static bool get_chunks_status();
+	static bool get_chunks_in_response();
 };
 
 #endif

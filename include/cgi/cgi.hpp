@@ -29,6 +29,7 @@ class Cgi
 		std::string 	chek_program_pach(std::string program);
 		std::vector	<std::string> _path;
 		int 	    	save_chunk_fd(std::string);
+		std::string 	chek_and_return_chunks(std::string file_name);
 		
 	public:
 		std::vector<char *> _envs;

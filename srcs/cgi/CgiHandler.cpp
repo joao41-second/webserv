@@ -221,10 +221,8 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	{
 		close(fd_out);
 		close(fd_in);
-
 		waitpid(pid, &status, 0);
 		fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
-
 		while ((read_bits = read(fd_out,buffer,1024)) > 0)
 		{
 			response.append(buffer,read_bits);

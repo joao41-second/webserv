@@ -39,7 +39,7 @@ private:
 	~HttpResponse();
 	static std::string search_folder_file(std::string file, std::string path, std::map<std::string, LocationConfig> loc);
 	static std::string get_folder_index(ServerConfig, Cgi &cgi);
-	static std::string open_static_file(std::string feile);
+	static std::string open_static_file(std::string feile,Cgi & );
 	static std::string Delete(std::string file);
 	static std::string gener_erro_page(int error, std::string status);
 	static std::string rediect_path(std::string,int);

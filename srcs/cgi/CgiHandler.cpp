@@ -179,7 +179,7 @@ int Cgi::save_chunk_fd(std::string str)
 
 std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 {
-	int 			size= 100;
+	int 			size= 1000000;
 	static int 		fd_out;
 	int 			read_bits;
 	char			buffer[1024];

@@ -167,7 +167,7 @@ std::string headers =
 //	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
 //	std::vector<Socket*>		sockets = conf_info.getSocketVector();
 //	HttpResponse::set_config(configs,envp);
-//	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
+	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
 	
 	if(HttpResponse::get_chunks_status() == true)
 	{

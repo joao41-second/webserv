@@ -185,6 +185,7 @@ void HttpParser::new_request(std::string buffer)
 	_host 		= "";
 	_methods 	= "";
 	_request 	= false;
+	_is_chunk  	= 0;
 	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
 	parsing_env(buffer);
 

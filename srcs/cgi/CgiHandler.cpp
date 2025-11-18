@@ -178,26 +178,29 @@ int Cgi::save_chunk_fd(std::string str)
 
 std::string Cgi::execute(std::string _request, std::string porgram)
 {
-	int pid ;
-	int fd_in;
-	int fd_out[2];
-	int status,read_bits;
-	char buffer[1024];
-	std::string  response = "";
-	char **end = NULL;
+	int 		pid ;
+	int 		fd_in;
+	int 		fd_out;
+	int 		status,read_bits;
+	char		buffer[1024];
+	std::string  	response = "";
+	char 		**end = NULL;
+	int 		fd =-1;
 	
-	int fd =-1;
-	
+	_envs.push_back(NULL);	
 	if((fd = Cgi::save_chunk_fd(_request)) == -1)
 	{
 		return "";
 	}
+
 	fd_in = fd;	
 	HttpResponse::_new_request = false;
-	if(pipe(fd_out) == -1)
-		exit(1);	
-	_envs.push_back(NULL);	
- 	std::cout.flush();
+
+	std::stringstream port;
+	port << HttpParser::_port;
+	_file_name_out =  "/tmp/out_"+ port.str() + ".txt";
+	fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
+
 	pid = fork();
 	if(pid == -1)
 		exit(1);	
@@ -206,8 +209,9 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	{	
 
 		dup2(fd_in,0);
-		dup2(fd_out[1],1);	
+		dup2(fd_out,1);	
 		close(fd_in);
+		close(fd_out);
 		int i  = execve( porgram.c_str(),end,_envs.data());
 		HTTP_MSG("merda = " << i)
 		perror("execve");
@@ -215,19 +219,22 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	}
 	else
 	{
-		close(fd_out[1]);
+		close(fd_out);
 		close(fd_in);
-		while ((read_bits = read(fd_out[0],buffer,1024)) > 0)
+
+		waitpid(pid, &status, 0);
+		fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
+
+		while ((read_bits = read(fd_out,buffer,1024)) > 0)
 		{
 			response.append(buffer,read_bits);
 		}
 		response.append("\r\n\r\n");
-		close(fd_out[0]);
-		waitpid(pid, &status, 0);
+		close(fd_out);
 		if (WIFEXITED(status)) {
    		 int exit_code = WEXITSTATUS(status);
-    		std::cout << "CGI exited with code: " << exit_code << response << std::endl;
 		std::remove(_file_name.c_str());
+		std::remove(_file_name_out.c_str());
 		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
 		} 

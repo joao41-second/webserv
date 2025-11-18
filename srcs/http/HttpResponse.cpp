@@ -306,12 +306,20 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	std::string 	response;
 	std::string 	path = "";
 	ServerConfig 	config;
-	Cgi 		cgi;
+ 	static 	Cgi 		cgi;
 
 	HttpParser::_http_page_error = 0;
 	_pg = "";
 	HttpParser::_port = port;
+
+	
 	T_MSG("Start request\n", YELLOW)
+
+	if(HttpResponse::_new_response == true)
+	{
+		HTTP_MSG("raiva");
+		return (cgi.chek_and_return_chunks("NULL")	);
+	}
 	try
 	{	
 		int port_ = std::atoi(HttpParser::_host.substr(HttpParser::_host.find(':')+1,HttpParser::_host.size()).c_str());

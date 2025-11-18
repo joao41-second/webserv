@@ -29,7 +29,6 @@ class Cgi
 		std::string 	chek_program_pach(std::string program);
 		std::vector	<std::string> _path;
 		int 	    	save_chunk_fd(std::string);
-		std::string 	chek_and_return_chunks(std::string file_name);
 		
 	public:
 		std::vector<char *> _envs;
@@ -40,6 +39,7 @@ class Cgi
 		bool chek_program(std::string porgram);
 		void create_env(char **env,std::vector<char *> env_request);
 		std::string execute(std::string _request,std::string porgram);
+		std::string 	chek_and_return_chunks(std::string file_name);
 };
 
 #endif

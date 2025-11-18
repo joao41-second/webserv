@@ -93,7 +93,7 @@ void CGI_request_test(char **envp)
         "\r\n"; // separa cabeçalho do corpo
 
     // Chunks (tamanho + dados juntos)
-    std::string chunk1 = "6\r\nHello \r\n";
+    std::string chunk1 = "6\r\nHellokkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk\r\n";
     std::string chunk2 = "5\r\nthis \r\n";
     std::string chunk3 = "4\r\nis a\r\n";
     std::string chunk4 = "7\r\nchunked\r\n";
@@ -130,8 +130,16 @@ void CGI_request_test(char **envp)
 	if(HttpResponse::get_chunks_status() == true)
 	{
 
-		//HttpResponse::request_and_response( final_chunk , 8022);
+	//	HttpResponse::request_and_response( final_chunk , 8022);
+	//
+	//
 		HTTP_MSG(  HttpResponse::request_and_response( final_chunk , 8022));
+		while (HttpResponse::_new_response == true) {
+
+		HTTP_MSG(  HttpResponse::request_and_response( final_chunk , 8022));
+		
+		}
+
 	}
 
 
@@ -192,7 +200,7 @@ int main(int argc ,char ** argv,char**env)
 	//config_and_http_implemente(argc,argv,env);
 	//HTTP_test_request();
 	CGI_request_test(env);
-	CGI_request_test_not_chunked(env);
+//	CGI_request_test_not_chunked(env);
 
 
         return 0;

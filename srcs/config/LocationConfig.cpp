@@ -97,7 +97,7 @@ void	LocationConfig::parse_location(std::istream& location_file, std::string lin
 		}
 		else if (line.compare(0, 5, "alias") == 0)
 		{
-			std::cout << "Warning: Alias is not supported by this project." << std::endl;
+			std::cerr << "Warning: Alias is not supported by this project." << std::endl;
 			//throw Config::BadConfigException("Alias is not supported by this project", "");
 			//this->setAlias(true);
 		}
@@ -224,13 +224,11 @@ void	LocationConfig::setSubLocation(LocationConfig* loc)
 {
 	if (loc)
 	{
-		// TODO Esclarecer se este troço é necessário
-		/*if (this->getName() == "/" && loc->getName()[0] == '/')
+		if (this->getName() == "/" && loc->getName()[0] == '/')
 			;
 		else if (this->getName() == "/" && loc->getName()[0] != '/')
 			loc->setName(this->getName() + loc->getName());
-		else if*/
-		if (loc->getName()[0] == '/')
+		else if (loc->getName()[0] == '/')
 			loc->setName(this->getName() + loc->getName());
 		else
 			loc->setName(this->getName() + "/" + loc->getName());

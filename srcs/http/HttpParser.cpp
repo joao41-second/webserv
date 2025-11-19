@@ -185,6 +185,7 @@ void HttpParser::new_request(std::string buffer)
 	_host 		= "";
 	_methods 	= "";
 	_request 	= false;
+	_is_chunk  	= 0;
 	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
 	parsing_env(buffer);
 
@@ -218,6 +219,14 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 		return response;
 	}
 	size_t size = response.find("\n\n");
+	if(size == std::string::npos )
+		 size = response.find("\r\n\r\n");
+	if(size == std::string::npos )
+	{
+		//TODO return error page
+	}
+		
+
 
 	std::string  body;
 	std::string  header;

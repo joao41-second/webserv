@@ -34,6 +34,7 @@ bool   		HttpResponse::_request_status = false;
 int 		HttpResponse::size_max 		= 50000;
 std::string 	HttpResponse::_pg 		= "";
 bool 		HttpResponse::_new_request 	= false;
+bool 		HttpResponse::_new_response 	= false;
 char ** 	HttpResponse::_env;
 std::vector<ServerConfig> 		HttpResponse::_configs;
 std::map<std::string,std::string> 	HttpResponse::_types;
@@ -43,6 +44,13 @@ bool HttpResponse::get_chunks_status()
 {
 	HTTP_MSG("BODY REQUEST IS =" << _new_request);
 	return(_new_request);
+}
+
+
+bool HttpResponse::get_chunks_status_response()
+{
+	HTTP_MSG("BODY REQUEST IS =" << _new_request);
+	return(_new_response);
 }
 
 void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
@@ -68,7 +76,7 @@ void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 	//TODO add the get cgi and create type of cgi 
 }
 
-std::string HttpResponse::open_static_file(std::string file)
+std::string HttpResponse::open_static_file(std::string file,Cgi &cgi)
 {
 	std::string 		request = "HTTP/1.1 200 OK\r\n";
 	size_t 			size  = file.rfind('.');
@@ -77,6 +85,7 @@ std::string HttpResponse::open_static_file(std::string file)
 	static std::ifstream 	file_fd(file.c_str());
 	static bool 		status = false;
 	static bool 		index = false;
+	
 
 	if (status == true)
 	{
@@ -89,6 +98,7 @@ std::string HttpResponse::open_static_file(std::string file)
 		index = false;
 		throw Not_found_404();
 	}	
+	(void)cgi;
 
 	if(!_types[type_file].empty())
 
@@ -240,7 +250,7 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 		return true;	
 	}
 	it = server.getLocMap().find("*"+type);
-	if(server.getLocMap()["*"+type]._cgi_pass.empty())
+	if(!server.getLocMap()["*"+type]._cgi_pass.empty())
 	{
 
 		HTTP_MSG("cgi ---------------" );
@@ -268,7 +278,7 @@ std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 			else if(it->second.getRoot().find('.') == std::string::npos
 					|| it->second.getRoot().rfind('.') < it->second.getRoot().rfind('/'))
 			{		
-			   return (file = HttpResponse::open_static_file(it->second.getRoot() + "/index.html"));	
+			   return (file = HttpResponse::open_static_file(it->second.getRoot() + "/index.html",cgi));	
 			}
 		}
 		catch(std::exception &e)
@@ -305,12 +315,20 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	std::string 	response;
 	std::string 	path = "";
 	ServerConfig 	config;
-	Cgi 		cgi;
+ 	static 	Cgi 		cgi;
 
 	HttpParser::_http_page_error = 0;
 	_pg = "";
 	HttpParser::_port = port;
+
+	
 	T_MSG("Start request\n", YELLOW)
+
+	if(HttpResponse::_new_response == true)
+	{
+		HTTP_MSG("raiva");
+		return (cgi.chek_and_return_chunks("NULL")	);
+	}
 	try
 	{	
 		int port_ = std::atoi(HttpParser::_host.substr(HttpParser::_host.find(':')+1,HttpParser::_host.size()).c_str());
@@ -344,7 +362,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 			if(HttpParser::_methods == "DELETE")
 				response = Delete(path);
 			else
-				response = HttpResponse::open_static_file(path);
+				response = HttpResponse::open_static_file(path,cgi);
 		}
 	}
 	catch (std::exception &e)
@@ -356,7 +374,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		try
 		{
 			if(!config.getErrorPage(error).empty())
-			   response = HttpResponse::open_static_file(config.getErrorPage(error));
+			   response = HttpResponse::open_static_file(config.getErrorPage(error),cgi);
 
 		}
 		catch(std::exception &d)
@@ -375,7 +393,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		}		
 	}
 
-	T_MSG("Finich request \n\n", GREEN)
+	T_MSG("Finich request \n" <<  response, GREEN)
 	return (response);
 }
 

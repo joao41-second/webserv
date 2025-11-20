@@ -93,11 +93,12 @@ std::string HttpResponse::open_static_file(std::string file)
 	if(size_ != std::string::npos)
 	 		type_file = file.substr(size_,file.size());		 
 	_request_status = false;	
+
 	if(HttpResponse::_new_response == false)
 		if((fd = open(file.c_str(),O_RDWR | O_CREAT , 0644) )== -1)
 			throw Not_found_404();
-
 	body = temp;
+
 	while ((read_bits = read(fd,buffer,1024)) > 0)
 	{
 		body.append(buffer,read_bits);
@@ -408,7 +409,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		}		
 	}
 
-	T_MSG("Finich request \n" <<  response, GREEN)
+	T_MSG("Finich request \n", GREEN)
 	return (response);
 }
 

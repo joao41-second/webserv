@@ -13,6 +13,7 @@
 #include "config/Config.hpp"
 #include <exception>
 #include <http/HttpResponse.hpp>
+#include <string>
 #include "config/color.hpp"
 #include "http/HttpParser.hpp"
 #include "test.hpp"
@@ -118,7 +119,7 @@ void CGI_request_test()
     std::string final_chunk = "0\r\n\r\n";
 
 	try {
-	MSG_T(  HttpResponse::request_and_response( headers, 8022),WHITE);
+	MSG_T(  HttpResponse::request_and_response( headers, 8022),BLUE);
 	
 	if(HttpResponse::get_chunks_status() == true)
 	{
@@ -140,13 +141,18 @@ void CGI_request_test()
 	if(HttpResponse::get_chunks_status() == true)
 	{
 
-	//	HttpResponse::request_and_response( final_chunk , 8022);
+	
+	
+	std::string respnse = HttpResponse::request_and_response( final_chunk , 8022);
+
+	MSG_T (respnse,BLUE);
 	//
-	//
-		HTTP_MSG(  HttpResponse::request_and_response( final_chunk , 8022));
 		while (HttpResponse::_new_response == true) {
 
-		HTTP_MSG(  HttpResponse::request_and_response( final_chunk , 8022));
+		respnse =   HttpResponse::request_and_response( final_chunk , 8022);
+
+		MSG_T (respnse,BLUE);
+		
 		
 		}
 
@@ -244,9 +250,8 @@ int main(int argc ,char ** argv,char**env)
 	//execute(env);
 	init_config(env);
 	//config_and_http_implemente(argc,argv,env);
-	//HTTP_test_request();
-	
-	CGI_request_test_html();
+	CGI_request_test();
+	//CGI_request_test_html();
 //	CGI_request_test_not_chunked(env);
 
 

@@ -179,7 +179,8 @@ void HttpParser::new_request(std::string buffer)
 {
 
 	env.clear();
-	mensage 	= ""; _pach_info 	= "";
+	mensage 	= "";
+	_pach_info 	= "";
 	_type 		= "";
 	_host 		= "";
 	_methods 	= "";
@@ -219,9 +220,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 	}
 	size_t size = response.find("\n\n");
 	if(size == std::string::npos )
-	{
 		 size = response.find("\r\n\r\n");
-	}
 	if(size == std::string::npos )
 	{
 		//TODO return error page
@@ -244,9 +243,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 			{
 
 			 header += "Transfer-Encoding: chunked\r\n" ;
-			}
-			else 
-
+			}else 	
 			 header += "Content-Length: " + len.str() + "\r\n" ;
 		
 		}		
@@ -287,5 +284,4 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 	std::string end = header += "\r\n" + body +"\r\n";
 	return(end);	
 }
-
 

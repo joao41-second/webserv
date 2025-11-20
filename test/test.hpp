@@ -21,6 +21,6 @@ void test_httprespons();
 void execute(char **env);
 
 #if  TESTER 
-    #define MSG_T(x,color) std::cerr << color  << x << RESET <<  std::endl;
+    #define MSG_T(x,color) std::cout << color  << x << RESET <<  std::endl;
 #else
 #endif

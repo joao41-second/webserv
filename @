@@ -137,10 +137,6 @@ int Cgi::save_chunk_fd(std::string str)
 		{
 			body = 0;
 			fd = open(_file_name.c_str(),O_RDWR | O_CREAT , 0644);
-			if(fd == -1)
-			{
-				throw Not_found_404();
-			}
 			write(fd,str.c_str(),str.size()-4);
 			close(fd);
 			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
@@ -184,7 +180,7 @@ int Cgi::save_chunk_fd(std::string str)
 std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 {
 	int 			size= 100;
-	static int 		fd_out = -1;
+	static int 		fd_out;
 	int 			read_bits;
 	char			buffer[1024];
 	std::string 		response;
@@ -197,7 +193,6 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 	{
 		return (HttpResponse::open_static_file("NULL"));
 	}
-	HTTP_MSG("chunk_cgi")
 	if(file_name != "NULL")
 		fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
 	response = save;

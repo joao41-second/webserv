@@ -212,6 +212,7 @@ std::vector <char *> HttpParser::get_request_env()
 std::string HttpParser::chek_and_add_header(std::string response,std::string error)
 {
 	(void )error;
+
 	if(HttpResponse::get_chunks_status() == true)
 	{
 		HTTP_MSG("sairi")
@@ -240,7 +241,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 			std::stringstream len;
 
 			len <<  body.size();
-			if(HttpResponse::_new_response == true)
+			if(HttpResponse::_new_response == false)
 			{
 
 			 header += "Transfer-Encoding: chunked\r\n" ;

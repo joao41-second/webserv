@@ -83,20 +83,26 @@ std::string HttpResponse::open_static_file(std::string file)
 	std::string 		type_file = "";
 	char 			buffer[1024];
 	int 			read_bits;
-	int 			size = 100;
+	int 			size = 100000;
 	static int 		fd;
 	std::string 		body = "";
 	static std::string 	temp;
 	static bool 		loop = true;
 
+	T_MSG("start_open_file = " << file, YELLOW);
 
 	if(size_ != std::string::npos)
 	 		type_file = file.substr(size_,file.size());		 
 	_request_status = false;	
 
 	if(HttpResponse::_new_response == false)
-		if((fd = open(file.c_str(),O_RDWR | O_CREAT , 0644) )== -1)
+	{
+		if((fd = open(file.c_str(),O_RDWR , 0644) )== -1)
 			throw Not_found_404();
+
+		HTTP_MSG("id is " << fd);
+	}
+
 	body = temp;
 
 	while ((read_bits = read(fd,buffer,1024)) > 0)
@@ -125,13 +131,14 @@ std::string HttpResponse::open_static_file(std::string file)
 		request = "0/r/n/r/n";
 		if(body.size() == 0)
 		{
-			_request_status = false;	
+			_request_status = false;
+			close(fd);
+			fd = -1;
 			HttpResponse::_new_response = false;
 			return (request);
 		}
 		_request_status = true;	
 		HttpResponse::_new_response = true;
-		HTTP_MSG("this is value the body" << size);
 		request = body.substr(0,size);
 		if((int)body.size() > size)
 			temp = body.substr(size,body.size());
@@ -155,7 +162,12 @@ std::string HttpResponse::open_static_file(std::string file)
 	request += "Connection: keep-alive\r\n\n";
 
 	if(read_bits == 0)
+	{
 		request += body+ "\r\n\r\n";
+		close(fd);
+		fd = -1;
+	}
+	T_MSG("end_open_file", YELLOW);
 	return (request);
 }
 
@@ -239,7 +251,9 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 {
 
 	// TODO impemente check the path
+	HTTP_MSG(file) 
 	int size = file.find('.');
+
 
 	if( file.rfind('.') == std::string::npos)
 		throw Not_found_404();
@@ -383,26 +397,36 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	}
 	catch (std::exception &e)
 	{
-		error = std::atoi(e.what());
+		error = HttpParser::_http_page_error;
 
-		T_MSG("Finich request - error:"  << e.what()  , RED);
+		T_MSG("Finich request - error:"  << e.what() << "->" <<HttpParser::_http_page_error  , RED);
 
 		try
+
 		{
+
 			if(!config.getErrorPage(error).empty())
 			   response = HttpResponse::open_static_file(config.getErrorPage(error));
+
 
 		}
 		catch(std::exception &d)
 		{
-			try
-			{
+			try {
+
+
 				if(!config.getErrorPage(error).empty())
-					response = HttpParser::chek_and_add_header( cgi.execute( HttpParser::get_request_msg(), _pg),  e.what());
+				{
+				chek_cig_or_static( config.getErrorPage(error),config);
+				_new_request = true;
+				HttpParser::_is_chunk = 0;
+					response = HttpParser::chek_and_add_header( cgi.execute( config.getErrorPage(error), _pg),  e.what());
+					HTTP_MSG( "ok -> "<< response)
+				}
+
 			}
 			catch(std::exception &e)
 			{
-
 				return (gener_erro_page(HttpParser::_http_page_error, d.what()));
 			}
 			return (response);
@@ -432,6 +456,7 @@ std::string HttpResponse::gener_erro_page(int error, std::string status)
 							"<h1>" +
 		status + "</h1>\n"
 				 "<hr>\n"
+				 "<p> " + ok.str() +"</p>"
 				 "</body>\n"
 				 "</html>\n";
 	size << mens.size();

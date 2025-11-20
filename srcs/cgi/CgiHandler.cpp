@@ -131,6 +131,11 @@ int Cgi::save_chunk_fd(std::string str)
 	std::stringstream port;
 	port << HttpParser::_port;
 	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
+	if( HttpParser::_is_chunk == HTTP_EMPTY)
+	{
+			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
+	}
+
 	if( HttpParser::_is_chunk == HTTP_CONTENT)
 	{
 		if(body == 1)
@@ -183,7 +188,7 @@ int Cgi::save_chunk_fd(std::string str)
 
 std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 {
-	int 			size= 100;
+	int 			size= 10000;
 	static int 		fd_out = -1;
 	int 			read_bits;
 	char			buffer[1024];

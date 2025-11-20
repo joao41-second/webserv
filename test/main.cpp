@@ -99,7 +99,7 @@ void init_config( char **envp)
 }
 
 
-void CGI_request_test()
+void CGI_request_in_chunk_and_response_in_chun()
 {
 	std::string headers =
         "POST /main.py HTTP/1.1\r\n"
@@ -166,7 +166,7 @@ void CGI_request_test()
 }
 
 
-void CGI_request_test_html()
+void CGI_request_and_response_in_chunks()
 {
 	std::string headers =
         "GET /index.html HTTP/1.1\r\n"
@@ -202,7 +202,7 @@ void CGI_request_test_html()
 
 
 
-void CGI_request_test_not_chunked(char **envp)
+void CGI_request_fo_the_cgi_not_chunkd(char **envp)
 {
 
 std::string body = "Hello this is achunkedmessage.\r\n\r\n";
@@ -216,21 +216,14 @@ std::string headers =
     "Content-Length: 1000 \r\n"
     "\r\n"; // separa cabeçalho do corpo
 
-// Request completo
 (void) envp;
-    // Chunk final indicando fim
 
 	try {
 
-//	Config conf_info("./test/youpi.conf", envp);
-//	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-//	std::vector<Socket*>		sockets = conf_info.getSocketVector();
-//	HttpResponse::set_config(configs,envp);
 	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
 	
 	if(HttpResponse::get_chunks_status() == true)
 	{
-  //		HttpResponse::request_and_response(body , 8022);
 		HTTP_MSG(  HttpResponse::request_and_response( body , 8022));
 	}
 	
@@ -250,7 +243,7 @@ int main(int argc ,char ** argv,char**env)
 	//execute(env);
 	init_config(env);
 	//config_and_http_implemente(argc,argv,env);
-	CGI_request_test();
+	CGI_request_and_response_in_chunks();
 	//CGI_request_test_html();
 //	CGI_request_test_not_chunked(env);
 

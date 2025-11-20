@@ -81,8 +81,6 @@ std::string HttpResponse::open_static_file(std::string file)
 	std::string 		request = "HTTP/1.1 200 OK\r\n";
 	size_t 			size_  = file.rfind('.');
 	std::string 		type_file = "";
-	if(size_ != std::string::npos)
-	 		type_file = file.substr(size_,file.size());		
 	char 			buffer[1024];
 	int 			read_bits;
 	int 			size = 100;
@@ -90,7 +88,10 @@ std::string HttpResponse::open_static_file(std::string file)
 	std::string 		body = "";
 	static std::string 	temp;
 	static bool 		loop = true;
- 
+
+
+	if(size_ != std::string::npos)
+	 		type_file = file.substr(size_,file.size());		 
 	_request_status = false;	
 	if(HttpResponse::_new_response == false)
 		if((fd = open(file.c_str(),O_RDWR | O_CREAT , 0644) )== -1)
@@ -129,13 +130,14 @@ std::string HttpResponse::open_static_file(std::string file)
 		}
 		_request_status = true;	
 		HttpResponse::_new_response = true;
+		HTTP_MSG("this is value the body" << size);
 		request = body.substr(0,size);
 		if((int)body.size() > size)
 			temp = body.substr(size,body.size());
 		else
 			temp = "";
 		std::stringstream ss;
-		ss << body.size();
+		ss << request.size();
 		request = ss.str() + "\r\n" +request + "\r\n";
 		return (request);
 	}

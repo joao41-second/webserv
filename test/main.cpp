@@ -82,8 +82,23 @@ void HTTP_test_request()
     closedir(dir);
 }
 
+void init_config( char **envp)
+{
 
-void CGI_request_test(char **envp)
+	try {
+	Config conf_info("./test/youpi.conf", envp);
+	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+	std::vector<Socket*>		sockets = conf_info.getSocketVector();
+	HttpResponse::set_config(configs,envp);
+	} 
+	catch (const std::exception &e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+	}
+
+}
+
+
+void CGI_request_test()
 {
 	std::string headers =
         "POST /main.py HTTP/1.1\r\n"
@@ -103,12 +118,7 @@ void CGI_request_test(char **envp)
     std::string final_chunk = "0\r\n\r\n";
 
 	try {
-
-	Config conf_info("./test/youpi.conf", envp);
-	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-	std::vector<Socket*>		sockets = conf_info.getSocketVector();
-	HttpResponse::set_config(configs,envp);
-	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
+	MSG_T(  HttpResponse::request_and_response( headers, 8022),WHITE);
 	
 	if(HttpResponse::get_chunks_status() == true)
 	{
@@ -150,7 +160,7 @@ void CGI_request_test(char **envp)
 }
 
 
-void CGI_request_test_html(char **envp)
+void CGI_request_test_html()
 {
 	std::string headers =
         "GET /index.html HTTP/1.1\r\n"
@@ -158,28 +168,18 @@ void CGI_request_test_html(char **envp)
         "Content-Type: text/plain\r\n"
         "\r\n"; // separa cabeçalho do corpo
 
-    // Chunks (tamanho + dados juntos)
-    std::string chunk1 = "6\r\nHellokkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk\r\n";
-    std::string chunk2 = "5\r\nthis \r\n";
-    std::string chunk3 = "4\r\nis a\r\n";
-    std::string chunk4 = "7\r\nchunked\r\n";
-    std::string chunk5 = "8\r\nmessage.\r\n";
 
     // Chunk final indicando fim
     std::string final_chunk = "0\r\n\r\n";
 
 	try {
 
-	Config conf_info("./test/youpi.conf", envp);
-	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-	std::vector<Socket*>		sockets = conf_info.getSocketVector();
-	HttpResponse::set_config(configs,envp);
 	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));	
 
 
 	//	HttpResponse::request_and_response( final_chunk , 8022);
-	//
-	//
+	
+	
 		while (HttpResponse::_new_response == true) {
 
 			HTTP_MSG(  HttpResponse::request_and_response( "NULL" , 8022));
@@ -242,9 +242,11 @@ int main(int argc ,char ** argv,char**env)
 	(void)argc;
 	(void)env;
 	//execute(env);
+	init_config(env);
 	//config_and_http_implemente(argc,argv,env);
 	//HTTP_test_request();
-	CGI_request_test_html(env);
+	
+	CGI_request_test_html();
 //	CGI_request_test_not_chunked(env);
 
 

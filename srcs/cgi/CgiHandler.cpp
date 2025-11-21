@@ -225,7 +225,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 		{
 			continue;
 		}
-		else if(status != -1 && status != 0)
+		else if(status != -1 && status != 0 && HttpParser::_is_chunk != HTTP_EMPTY)
 		{
 			save = response.substr(status,response.size());
 			response = response.substr(0,status);

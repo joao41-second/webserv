@@ -1,6 +1,7 @@
 #include "../../include/config/Config.hpp"
 #include "../../include/config/ServerConfig.hpp"
 #include "../../include/config/LocationConfig.hpp"
+#include <string>
 
 // |----------------------
 // | HELPER FUNCTIONS
@@ -321,7 +322,7 @@ std::string const		&ServerConfig::getErrorPage(int error_num) const
 		return (it->second);
 	}
 
-	return(this->_error_pages.find(404)->second); // Default error page
+	return( this->_error_pages.end()->second); // Default error page
 }
 
 std::string const	&ServerConfig::getName(void) const

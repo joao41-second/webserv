@@ -256,7 +256,7 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 
 
 	if( file.rfind('.') == std::string::npos)
-		throw Not_found_404();
+		throw Badd_Request_400();
 
 	std::string type =  file.substr(size,file.size()); 
 	HttpParser::_type = type;
@@ -324,7 +324,6 @@ std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 
 std::string HttpResponse::Delete(std::string file)
 {
-	HTTP_MSG("dlete llllllllllll")
     if (access(file.c_str(), F_OK) != 0) {
 	    throw Not_found_404(); 
     }
@@ -353,14 +352,22 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 	
 	T_MSG("Start request\n", YELLOW)
+	try
+	{	
 
 	if(HttpResponse::_new_response == true)
 	{
 		HTTP_MSG("raiva");
-		return (cgi.chek_and_return_chunks("NULL")	);
+		response =  cgi.chek_and_return_chunks("NULL");
+		if(_new_response == false && _new_response == false)
+		{
+			HttpParser::_http_page_error = 0;
+		}
+			
+
+		return (response);
 	}
-	try
-	{	
+	
 		int port_ = std::atoi(HttpParser::_host.substr(HttpParser::_host.find(':')+1,HttpParser::_host.size()).c_str());
 
 		if(port != port_)
@@ -380,7 +387,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 		if( HttpParser::_pach_info == "/")
 			response = get_folder_index(config,cgi);
-		else if (chek_cig_or_static(HttpParser::_pach_info, config) || HttpParser::_methods == "POST")
+		else if (chek_cig_or_static(HttpParser::_pach_info, config))
 		{
 			_new_request = true;
 			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");
@@ -407,12 +414,12 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 			if(!config.getErrorPage(error).empty())
 			   response = HttpResponse::open_static_file(config.getErrorPage(error));
-
+			else 
+				return (gener_erro_page(error, e.what()));
 
 		}
 		catch(std::exception &d)
 		{
-			try {
 
 
 				if(!config.getErrorPage(error).empty())
@@ -420,20 +427,16 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 				chek_cig_or_static( config.getErrorPage(error),config);
 				_new_request = true;
 				HttpParser::_is_chunk = 0;
-					response = HttpParser::chek_and_add_header( cgi.execute( config.getErrorPage(error), _pg),  e.what());
-					HTTP_MSG( "ok -> "<< response)
-				}
+					return (response = HttpParser::chek_and_add_header(
+								cgi.execute( config.getErrorPage(error), _pg),  e.what()));
+				}	
+				return (gener_erro_page(error, e.what()));
 
-			}
-			catch(std::exception &e)
-			{
-				return (gener_erro_page(HttpParser::_http_page_error, d.what()));
-			}
-			return (response);
 		}		
 	}
 
 	T_MSG("Finich request \n", GREEN)
+	HttpParser::_http_page_error = 0;
 	return (response);
 }
 

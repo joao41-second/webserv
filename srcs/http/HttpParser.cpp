@@ -241,7 +241,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 			std::stringstream len;
 
 			len <<  body.size();
-			if(HttpResponse::_new_response == false)
+			if(HttpResponse::_new_response == true)
 			{
 
 			 header += "Transfer-Encoding: chunked\r\n" ;

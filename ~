@@ -179,7 +179,7 @@ int Cgi::save_chunk_fd(std::string str)
 
 std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 {
-	int 			size= 1000000;
+	int 			size= 100;
 	static int 		fd_out;
 	int 			read_bits;
 	char			buffer[1024];
@@ -206,6 +206,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 		{
 			//TODO errorr;
 		}
+		HTTP_MSG("ola  status is " << status << " "<<save)
 		if(status == 0)
 		{
 			continue;
@@ -226,7 +227,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 				save = response.substr(size,response.size());
 				response = response.substr(0,size);
 			}
-			else if( (int)save.size() > size) 
+			else if( save.size() > size) 
 			{
 
 				response = save.substr(0,size);
@@ -239,7 +240,8 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 			}
 
 			HttpResponse::_new_response = true;
-			value << response.size();	
+			value << response.size();
+	
 			response = value.str() + "\r\n"+response+"\r\n";
 			return (response);
 		}

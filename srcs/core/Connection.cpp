@@ -6,29 +6,29 @@
 /*   By: cereais <cereais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 20:10:16 by cereais           #+#    #+#             */
-/*   Updated: 2025/10/08 17:12:13 by cereais          ###   ########.fr       */
+/*   Updated: 2025/10/28 20:39:37 by cereais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/core/Connection.hpp"
+#include <core/Connection.hpp>
+#include <core/Server.hpp>
+#include <config/color.hpp>
 
-Connection::Connection(int fd, Server &server) : _fd(fd), _server(server) {
-	_readBuffer = "";
+Connection::Connection(int fd) : _fd(fd) {
 	_writeBuffer = "";
+	_readBuffer = "";
 }
 
 Connection::~Connection() {
-
-	//probably deletes server?
 }
 
-Connection::Connection(const Connection &copy) : 
-	_server(copy._server) {
+Connection::Connection(const Connection &copy) {
 	
 	this->_fd = copy._fd;
 	this->_readBuffer = copy._readBuffer;
 	this->_writeBuffer = copy._writeBuffer;
 }
+
 
 bool	Connection::readRequest() {
 
@@ -39,15 +39,33 @@ bool	Connection::readRequest() {
 		_readBuffer.append(buffer, bytesRead);
 	}
 
-	if (bytesRead > 0) {
+	if (bytesRead < 0) { 
+		if (errno == EAGAIN || errno == EWOULDBLOCK) 
+			return true;
 		perror("read");
-		return false;
+    	return (false);
 	}
+
+	if (bytesRead == 0)
+    	return (false); //client closed connection
 	return (true);
 }
 
 bool	Connection::writeResponse() {
+	
+	ssize_t	bytesWritten;
 
+	if (_writeBuffer.empty())
+		return (true);
+	bytesWritten = write(_fd, _writeBuffer.c_str(), _writeBuffer.size()); 
+	if (bytesWritten < 0) {
+		perror("write");
+		return (false);
+	} else if (bytesWritten == 0)
+		return (false);
+
+	_writeBuffer.erase(0, static_cast<size_t>(bytesWritten));
+	return (_writeBuffer.empty());
 }
 
 bool	Connection::isRequestComplete() {
@@ -75,4 +93,19 @@ bool	Connection::isRequestComplete() {
 std::string	Connection::getReadBuffer() const {
 	
 	return (_readBuffer);
+}
+
+std::string	Connection::getWriteBuffer() const {
+	
+	return (_writeBuffer);
+}
+
+void	Connection::setWriteBuffer(std::string buffer) {
+
+	_writeBuffer = buffer;
+}
+
+void	Connection::setReadBuffer(std::string buffer) {
+
+	_readBuffer = buffer;
 }

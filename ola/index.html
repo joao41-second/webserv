@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Site com Download do Próprio Index</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 2rem; max-width: 720px; margin: auto; }
+    header { margin-bottom: 1.5rem; }
+    .card { background:#f8f9fa; border:1px solid #e9ecef; padding:1rem; border-radius:8px; }
+    .actions { margin-top: 1rem; display:flex; gap:.5rem; flex-wrap:wrap; }
+    .btn {
+      display:inline-block; padding:.6rem .9rem; background:#007bff; color:white; text-decoration:none;
+      border-radius:6px; font-weight:600;
+    }
+    .btn.secondary { background:#6c757d; }
+    pre { background:#fff; padding:.75rem; border-radius:6px; overflow:auto; border:1px solid #e9ecef; }
+    footer { margin-top:2rem; color:#666; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Site estático — Descarregar o próprio index</h1>
+    <p>Este exemplo mostra como permitir que o utilizador faça download do ficheiro <code>index.html</code> da própria página.</p>
+  </header>
+
+  <main class="card">
+    <p>Opções:</p>
+    <div class="actions">
+      <!-- Link com atributo download: sugere ao browser que faça download em vez de abrir -->
+      <a class="btn" href="index.html" download="index.html">Descarregar este index</a>
+
+      <!-- Link normal (abre no browser) -->
+      <a class="btn secondary" href="index.html">Abrir index (mesma página)</a>
+    </div>
+
+    <hr>
+
+    <h2>Nota sobre compatibilidade</h2>
+    <ul>
+      <li>O atributo <code>download</code> é suportado pela maioria dos browsers modernos para URLs do mesmo domínio.</li>
+      <li>Se o servidor enviar <code>Content-Disposition: attachment; filename="index.html"</code>, o browser irá forçar o download mesmo sem o atributo <code>download</code>.</li>
+      <li>Se estiver a testar localmente, use um servidor estático (por exemplo <code>python3 -m http.server</code>) em vez de abrir o ficheiro diretamente via <code>file://</code>.</li>
+    </ul>
+
+    <h2>Exemplo de comando para servir</h2>
+    <pre><code>python3 -m http.server 8000</code></pre>
+    <p>Abra <a href="./">http://localhost:8000/</a> no seu browser e clique em "Descarregar este index".</p>
+  </main>
+
+  <footer>
+    <small>Gerado em exemplo — se quiser, posso mostrar também como configurar um servidor que envia o header <code>Content-Disposition</code> (por exemplo, em Python ou Node.js).</small>
+  </footer>
+</body>
+</html>

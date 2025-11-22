@@ -18,12 +18,16 @@
 #include <typeinfo>
 
 #include <fcntl.h>		// TODO Ver se ha melhor
-#include <sys/socket.h> // TODO Ver se ha melhor
-#include <netinet/in.h> // TODO Ver se ha melhor
-#include <arpa/inet.h>	// TODO Ver se ha melhor
+#include <sys/socket.h>	// TODO Ver se ha melhor
+#include <netinet/in.h>	// TODO Ver se ha melhor
+#include <sys/stat.h>	// TODO Ver se ha melhor
+
+#include <arpa/inet.h>
+#include <cstring>
+
+class ServerConfig;
 
 class Socket;
-class ServerConfig;
 
 class Config
 {
@@ -34,7 +38,7 @@ public:
 	Config &operator = (const Config &orig);
 	virtual ~Config();
 
-	char**							getEnv() const; // maybe TODO considerar "const char *const *getEnv() const
+	char**							getEnv() const; // consider "const char *const *getEnv() const
 	size_t							getServNum() const;
 	ServerConfig const				&getServerConfig(uint16_t port) const;
 	std::vector<ServerConfig> const	&getServerConfigVector() const;
@@ -55,6 +59,16 @@ public:
 	private:
 		std::string _msg;
 	};
+
+	class BadPortException: public std::exception
+	{
+	public:
+		BadPortException(std::string msg, uint16_t port);
+		virtual ~BadPortException() throw();
+		virtual const char *what() const throw();
+	private:
+		std::string _msg;
+	};
 private:
 	std::vector<ServerConfig>	_servers;
 	std::vector<Socket*>		_sockets;
@@ -62,11 +76,16 @@ private:
 	char	**_env;
 
 	ServerConfig const	&getServerConfig(unsigned int num) const;
+	void				removeServerConfig(unsigned int num);
+	bool				hasServerConfigPort(uint16_t port);
 };
 
-bool	isDelim(char c);
+std::string 	capitalize(std::string str);
+bool			isDelim(char c);
 const std::string	trim_whitespace(const std::string& str);
-std::string capitalize(std::string str);
+void			validatePath(const std::string &path, bool cgi_pass);
+std::string		formatFakePath(const std::string& str);
+bool			wildcardCompare(const std::string &str, const std::string &wld);
 
 class InputException: public std::exception
 {

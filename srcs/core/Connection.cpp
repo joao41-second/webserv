@@ -72,7 +72,7 @@ bool	Connection::isRequestComplete() {
 
 	size_t headerEnd = _readBuffer.find("\r\n\r\n");
 	if (headerEnd == std::string::npos)
-		return (false);
+		return (false); //header not fully received
 
 	size_t contentLengthPos = _readBuffer.find("Content-Length:");
 	if (contentLengthPos != std::string::npos) {

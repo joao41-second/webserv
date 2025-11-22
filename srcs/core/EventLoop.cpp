@@ -166,8 +166,8 @@ void EventLoop::run()
 						std::cout << entry.port << std::endl;
 						entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer(), entry.port));
 						entry.conn->setReadBuffer(""); // clear buffer for the next read operation.
-						entry.pfd.events = POLLOUT;
-						//HttpResponse::get_chunks_status();
+						if (!HttpResponse::get_chunks_status())
+							entry.pfd.events = POLLOUT;
 					}
 				}
 			}

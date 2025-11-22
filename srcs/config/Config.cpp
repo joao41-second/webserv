@@ -6,7 +6,7 @@
 // | HELPER FUNCTIONS
 // |----------------------
 
-void validatePath(const std::string &path, bool cgi_pass)
+/*void validatePath(const std::string &path, bool cgi_pass)
 {
 	if (path == "")
 	{
@@ -46,7 +46,7 @@ void validatePath(const std::string &path, bool cgi_pass)
 		throw Config::BadConfigException("File for cgi_pass lacks execution permission: ", path);
 	}
 	// PARA TESTAR, COMENTAR ATÉ AQUI
-}
+}*/
 
 bool wildcardCompare(const std::string &str, const std::string &wld)
 {

@@ -83,7 +83,7 @@ private:
 std::string 	capitalize(std::string str);
 bool			isDelim(char c);
 const std::string	trim_whitespace(const std::string& str);
-void			validatePath(const std::string &path, bool cgi_pass);
+//void			validatePath(const std::string &path, bool cgi_pass);
 std::string		formatFakePath(const std::string& str);
 bool			wildcardCompare(const std::string &str, const std::string &wld);
 

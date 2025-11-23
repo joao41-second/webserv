@@ -40,13 +40,14 @@ class HttpParser
 		static std::string  mensage;
 		static bool 	    _request;
 	private:
-		static void parsing_env(std::string buffer);
-		static void parsing_request_line(std::string buffer);
+		void parsing_env(std::string buffer);
+		void parsing_request_line(std::string buffer);
+	
+	public:   
 		HttpParser();
 	       ~HttpParser();
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
-	public:   
 
 	      static int 	 _is_chunk;
 	      static std::string _type;
@@ -56,11 +57,11 @@ class HttpParser
 	      static std::string _host;
 	      static int 	 _port;
 		
-	      static std::string 		chek_and_add_header(std::string response,std::string error);
-	      static void        		new_request(std::string buffer); 
-	      static std::string        	get_request_msg();
-	      static std::vector<char *>	get_request_env();
-	      static void 			set_request_msg(std::string);
+	      std::string 		chek_and_add_header(std::string response,std::string error);
+	      void        		new_request(std::string buffer); 
+	      std::string        	get_request_msg();
+	      std::vector<char *>	get_request_env();
+	      void 			set_request_msg(std::string);
 };
 
 

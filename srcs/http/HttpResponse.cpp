@@ -292,6 +292,8 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 
 std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 {
+	//TODO lembrar de remover tambem
+	HttpParser	_parser;
 
 	std::map<std::string, LocationConfig>	_locations = conf.getLocMap();
 	std::map<std::string , LocationConfig>::iterator it = _locations.begin();
@@ -303,7 +305,7 @@ std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
 
 			if(it->second._cgi_pass != "")
 			{
-			   return ( HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), it->second._cgi_pass),""));
+			   return ( _parser.chek_and_add_header(cgi.execute( _parser.get_request_msg(), it->second._cgi_pass),""));
 			}
 			else if(it->second.getRoot().find('.') == std::string::npos
 					|| it->second.getRoot().rfind('.') < it->second.getRoot().rfind('/'))
@@ -346,6 +348,11 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	ServerConfig 	config;
  	static 	Cgi 		cgi;
 
+// TODO trucar isto 
+HttpParser	_parser;
+//	
+
+
 	HttpParser::_http_page_error = 0;
 	_pg = "";
 	HttpParser::_port = port;
@@ -376,11 +383,11 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		}
 
 		if(_new_request != true)
-			HttpParser::new_request(request);
+			_parser.new_request(request);
 		else 
-			HttpParser::set_request_msg(request);
+			_parser.set_request_msg(request);
 
-		cgi.create_env(_env, HttpParser::get_request_env());
+		cgi.create_env(_env, _parser.get_request_env());
 		config = get_config(port);		
 
 		T_MSG(  "_pach is = " << HttpParser::_pach_info << " type is =" << HttpParser::_type  , YELLOW);
@@ -390,7 +397,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		else if (chek_cig_or_static(HttpParser::_pach_info, config))
 		{
 			_new_request = true;
-			response =  HttpParser::chek_and_add_header(cgi.execute( HttpParser::get_request_msg(), _pg),"");
+			response =  _parser.chek_and_add_header(cgi.execute( _parser.get_request_msg(), _pg),"");
 		}
 		else
 		{
@@ -427,7 +434,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 				chek_cig_or_static( config.getErrorPage(error),config);
 				_new_request = true;
 				HttpParser::_is_chunk = 0;
-					return (response = HttpParser::chek_and_add_header(
+					return (response = _parser.chek_and_add_header(
 								cgi.execute( config.getErrorPage(error), _pg),  e.what()));
 				}	
 				return (gener_erro_page(error, e.what()));

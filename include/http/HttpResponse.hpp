@@ -49,6 +49,7 @@ public:
 	static bool _new_request;
 	static bool _new_response;
 	static bool _request_status;
+	HttpParser  _parser;
 	static std::map<std::string, std::string> _types;
 	static void set_config(std::vector<ServerConfig> &conf, char **env);
 	static std::string request_and_response(std::string request, int port);

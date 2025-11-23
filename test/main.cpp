@@ -101,6 +101,8 @@ void init_config( char **envp)
 
 void CGI_request_in_chunk_and_response_in_chun()
 {
+
+    	HttpResponse request;
 	std::string headers =
         "POST /main.py HTTP/1.1\r\n"
         "Host: www.example.com\r\n"
@@ -119,37 +121,37 @@ void CGI_request_in_chunk_and_response_in_chun()
     std::string final_chunk = "0\r\n\r\n";
 
 	try {
-	MSG_T(  HttpResponse::request_and_response( headers, 8022),BLUE);
+	MSG_T(  request.request_and_response( headers, 8022),BLUE);
 	
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
-  		HttpResponse::request_and_response( chunk1 , 8022);
+  		request.request_and_response( chunk1 , 8022);
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk1 , 8022));
 	}
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
 
-  		HttpResponse::request_and_response( chunk2 , 8022);
+  		request.request_and_response( chunk2 , 8022);
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk2 , 8022));
 	}
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
 
-  		HttpResponse::request_and_response( chunk3 , 8022);
+  		request.request_and_response( chunk3 , 8022);
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk3 , 8022));
 	}
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
 
 	
 	
-	std::string respnse = HttpResponse::request_and_response( final_chunk , 8022);
+	std::string respnse = request.request_and_response( final_chunk , 8022);
 
 	MSG_T (respnse,BLUE);
 	//
 		while (HttpResponse::_new_response == true) {
 
-		respnse =   HttpResponse::request_and_response( final_chunk , 8022);
+		respnse =   request.request_and_response( final_chunk , 8022);
 
 		MSG_T (respnse,BLUE);
 		
@@ -177,10 +179,11 @@ void CGI_request_and_response_in_chunks()
 
     // Chunk final indicando fim
     std::string final_chunk = "0\r\n\r\n";
+    HttpResponse request;
 
 	try {
 
-	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));	
+	HTTP_MSG(  request.request_and_response( headers, 8022));	
 
 
 	//	HttpResponse::request_and_response( final_chunk , 8022);
@@ -188,7 +191,7 @@ void CGI_request_and_response_in_chunks()
 	
 		while (HttpResponse::_new_response == true) {
 
-			HTTP_MSG(  HttpResponse::request_and_response( "NULL" , 8022));
+			HTTP_MSG(  request.request_and_response( "NULL" , 8022));
 		}
 		
 
@@ -209,6 +212,8 @@ std::string body = "Hello this is achunkedmessage.\r\n\r\n";
 
 // Calcula o tamanho do corpo
 
+    HttpResponse request;
+
 std::string headers =
     "POST /main.py HTTP/1.1\r\n"
     "Host: www.example.com\r\n"
@@ -220,11 +225,11 @@ std::string headers =
 
 	try {
 
-	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
+	HTTP_MSG(  request.request_and_response( headers, 8022));
 	
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
-		HTTP_MSG(  HttpResponse::request_and_response( body , 8022));
+		HTTP_MSG(  request.request_and_response( body , 8022));
 	}
 	
 	}

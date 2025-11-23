@@ -31,7 +31,7 @@
 #define HTTP_EMPTY 0
 
 
-
+class HttpResponse;
 
 class HttpParser
 {
@@ -41,10 +41,11 @@ class HttpParser
 		static bool 	    _request;
 	private:
 		void parsing_env(std::string buffer);
-		void parsing_request_line(std::string buffer);
+		void parsing_request_line(std::string buffer);	
+		HttpResponse 	* _requst_c;
 	
 	public:   
-		HttpParser();
+		HttpParser(HttpResponse *);
 	       ~HttpParser();
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);

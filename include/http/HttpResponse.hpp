@@ -26,6 +26,9 @@
 #include <cgi/cgi.hpp>
 #include "HttpParser.hpp"
 
+
+class Cgi;
+class HttpParser;
 class HttpResponse
 {
 
@@ -35,29 +38,34 @@ private:
 	static std::vector<ServerConfig> _configs;
 	static ServerConfig get_config(int port);
 	static std::string _pg;
-	HttpResponse();
-	~HttpResponse();
-	static std::string search_folder_file(std::string file, std::string path, std::map<std::string, LocationConfig> loc);
-	static std::string get_folder_index(ServerConfig, Cgi &cgi);
-	static std::string Delete(std::string file);
-	static std::string gener_erro_page(int error, std::string status);
-	static std::string rediect_path(std::string,int);
-	static std::string return_path_use();
-	static bool	   chek_cig_or_static(std::string, ServerConfig);
+	Cgi 		cgi;
+	HttpParser  _parser;
+
+		std::string search_folder_file(std::string file, std::string path, std::map<std::string, LocationConfig> loc);
+		std::string get_folder_index(ServerConfig);
+		std::string Delete(std::string file);
+		std::string gener_erro_page(int error, std::string status);
+		std::string rediect_path(std::string,int);
+		std::string return_path_use();
+		bool	   chek_cig_or_static(std::string, ServerConfig);
 
 public:
+	HttpResponse();
+	~HttpResponse();
 	static bool _new_request;
 	static bool _new_response;
 	static bool _request_status;
-	HttpParser  _parser;
-	static std::map<std::string, std::string> _types;
-	static void set_config(std::vector<ServerConfig> &conf, char **env);
-	static std::string request_and_response(std::string request, int port);
-	static bool get_chunks_status();
-	static bool get_chunks_in_response();
-	static bool get_chunks_status_response();
 
-	static std::string open_static_file(std::string feile );
+	static std::map<std::string, std::string> _types;
+
+	static void set_config(std::vector<ServerConfig> &conf, char **env);
+
+	std::string request_and_response(std::string request, int port);
+	bool get_chunks_status();
+static 	bool get_chunks_in_response();
+static	bool get_chunks_status_response();
+
+	std::string open_static_file(std::string feile );
 };
 
 #endif

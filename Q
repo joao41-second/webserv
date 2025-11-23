@@ -14,13 +14,13 @@
 #ifndef CGI_HPP
 #define CGI_HPP
 
+#include "http/HttpResponse.hpp"
 #include <http/HttpParser.hpp>
 #include <config/debug.hpp>
 #include <core/Server.hpp>
 #include <string>
 
 
-class HttpResponse;
 class Cgi
 {
 	private:
@@ -30,12 +30,12 @@ class Cgi
 		std::string 	chek_program_pach(std::string program);
 		std::vector	<std::string> _path;
 		int 	    	save_chunk_fd(std::string);
-		HttpResponse 	* _requst_c;
+		HttpResponse 	&_requst_c;
 		
 	public:
 		std::vector<char *> _envs;
-		Cgi (HttpResponse * var);
-		Cgi(const Cgi *copy);
+		Cgi();
+		Cgi(const Cgi &copy);
 		~Cgi();
 		Cgi &operator=(const Cgi &copy);		
 		bool chek_program(std::string porgram);

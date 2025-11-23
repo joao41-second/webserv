@@ -34,7 +34,7 @@ std::string 	HttpParser::_methods 		= "";
 int 		HttpParser::_port = 0;
 
 
-HttpParser::HttpParser(void)
+HttpParser::HttpParser(HttpResponse *var):_requst_c(var)
 {
 	HTTP_MSG("start_parser");
 }
@@ -213,7 +213,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 {
 	(void )error;
 
-	if(HttpResponse::get_chunks_status() == true)
+	if(_requst_c->get_chunks_status() == true)
 	{
 		HTTP_MSG("sairi")
 		return response;

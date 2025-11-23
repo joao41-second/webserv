@@ -40,6 +40,15 @@ std::vector<ServerConfig> 		HttpResponse::_configs;
 std::map<std::string,std::string> 	HttpResponse::_types;
 
 
+
+HttpResponse::HttpResponse():cgi(this),_parser(this)
+{
+
+}
+HttpResponse::~HttpResponse()
+{}
+
+
 bool HttpResponse::get_chunks_status()
 {
 	HTTP_MSG("BODY REQUEST IS =" << _new_request);
@@ -290,10 +299,9 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 	return (false);
 }
 
-std::string HttpResponse::get_folder_index( ServerConfig conf, Cgi &cgi)
+std::string HttpResponse::get_folder_index( ServerConfig conf)
 {
 	//TODO lembrar de remover tambem
-	HttpParser	_parser;
 
 	std::map<std::string, LocationConfig>	_locations = conf.getLocMap();
 	std::map<std::string , LocationConfig>::iterator it = _locations.begin();
@@ -346,11 +354,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	std::string 	response;
 	std::string 	path = "";
 	ServerConfig 	config;
- 	static 	Cgi 		cgi;
 
-// TODO trucar isto 
-HttpParser	_parser;
-//	
 
 
 	HttpParser::_http_page_error = 0;
@@ -393,7 +397,7 @@ HttpParser	_parser;
 		T_MSG(  "_pach is = " << HttpParser::_pach_info << " type is =" << HttpParser::_type  , YELLOW);
 
 		if( HttpParser::_pach_info == "/")
-			response = get_folder_index(config,cgi);
+			response = get_folder_index(config);
 		else if (chek_cig_or_static(HttpParser::_pach_info, config))
 		{
 			_new_request = true;

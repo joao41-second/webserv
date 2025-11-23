@@ -38,7 +38,10 @@
 
 
 
-Cgi::Cgi(){}
+Cgi::Cgi(HttpResponse *var)
+{
+	_requst_c = var;
+}
 Cgi::~Cgi(){}
 
 
@@ -200,7 +203,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 
 	if(HttpResponse::_request_status == true)
 	{
-		return (HttpResponse::open_static_file("NULL"));
+		return (_requst_c->open_static_file("NULL"));
 	}
 	HTTP_MSG("chunk_cgi")
 	if(file_name != "NULL")

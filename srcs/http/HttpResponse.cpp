@@ -30,11 +30,7 @@
 #include <unistd.h>
 
 
-bool   		HttpResponse::_request_status = false;
 int 		HttpResponse::size_max 		= 50000;
-std::string 	HttpResponse::_pg 		= "";
-bool 		HttpResponse::_new_request 	= false;
-bool 		HttpResponse::_new_response 	= false;
 char ** 	HttpResponse::_env;
 std::vector<ServerConfig> 		HttpResponse::_configs;
 std::map<std::string,std::string> 	HttpResponse::_types;

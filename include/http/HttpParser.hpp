@@ -42,7 +42,7 @@ class HttpParser
 	private:
 		void parsing_env(std::string buffer);
 		void parsing_request_line(std::string buffer);	
-		HttpResponse 	* _requst_c;
+		HttpResponse 	* _request_c;
 	
 	public:   
 		HttpParser(HttpResponse *);

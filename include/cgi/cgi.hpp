@@ -31,7 +31,7 @@ class Cgi
 		std::string 	chek_program_pach(std::string program);
 		std::vector	<std::string> _path;
 		int 	    	save_chunk_fd(std::string);
-		HttpResponse 	* _requst_c;
+		HttpResponse 	* _request_c;
 		HttpParser 	* _parser;
 		
 	public:

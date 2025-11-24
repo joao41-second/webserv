@@ -40,7 +40,7 @@
 
 Cgi::Cgi(HttpResponse *var,HttpParser *parser)
 {
-	_requst_c = var;
+	_request_c = var;
 	_parser = parser;
 }
 Cgi::~Cgi(){}
@@ -202,9 +202,9 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 	static int 		status = 0;
 
 
-	if(HttpResponse::_request_status == true)
+	if(_request_c->_request_status == true)
 	{
-		return (_requst_c->open_static_file("NULL"));
+		return (_request_c->open_static_file("NULL"));
 	}
 	HTTP_MSG("chunk_cgi")
 	if(file_name != "NULL")
@@ -234,7 +234,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 			save = response.substr(status,response.size());
 			response = response.substr(0,status);
 			response.append("\r\n\r\n");
-			HttpResponse::_new_response = true;
+			_request_c->_new_response = true;
 			status = -1;
 			return ( response);
 		}
@@ -257,13 +257,13 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 				save = "";
 			}
 
-			HttpResponse::_new_response = true;
+			_request_c->_new_response = true;
 			value << response.size();	
 			response = value.str() + "\r\n"+response+"\r\n";
 			return (response);
 		}
 	}
-	HttpResponse::_new_response = false;
+	_request_c->_new_response = false;
 	save = "";
 	response.append("\r\n\r\n");
 	close(fd_out);
@@ -282,7 +282,7 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	char 		**end = NULL;
 	int 		fd =-1;
 
-	if(HttpResponse::_new_response == false)
+	if(_request_c->_new_response == false)
 			std::remove(_file_name_out.c_str());	
 	_envs.push_back(NULL);	
 	if((fd = Cgi::save_chunk_fd(_request)) == -1)
@@ -291,7 +291,7 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	}
 
 	fd_in = fd;	
-	HttpResponse::_new_request = false;
+	_request_c->_new_request = false;
 
 	std::stringstream port;
 	port << _parser->_port;

@@ -37,7 +37,7 @@ private:
 	static char **_env;
 	static std::vector<ServerConfig> _configs;
 	static ServerConfig get_config(int port);
-	static std::string _pg;
+	std::string _pg;
 	HttpParser  _parser;
 	Cgi 		cgi;
 
@@ -52,18 +52,18 @@ private:
 public:
 	HttpResponse();
 	~HttpResponse();
-	static bool _new_request;
-	static bool _new_response;
-	static bool _request_status;
+	 bool _new_request;
+	 bool _new_response;
+	 bool _request_status;
 
-	static std::map<std::string, std::string> _types;
+static	std::map<std::string, std::string> _types;
 
 	static void set_config(std::vector<ServerConfig> &conf, char **env);
 
 	std::string request_and_response(std::string request, int port);
 	bool get_chunks_status();
-static 	bool get_chunks_in_response();
-static	bool get_chunks_status_response();
+ 	bool get_chunks_in_response();
+	bool get_chunks_status_response();
 
 	std::string open_static_file(std::string feile );
 };

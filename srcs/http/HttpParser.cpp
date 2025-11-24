@@ -26,7 +26,7 @@ std::string 	HttpParser::_pach_info 		= "";
 int 		HttpParser::_http_page_error 	= 0;
 
 
-HttpParser::HttpParser(HttpResponse *var):_requst_c(var)
+HttpParser::HttpParser(HttpResponse *var):_request_c(var)
 {
 	HTTP_MSG("start_parser");
 }
@@ -205,7 +205,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 {
 	(void )error;
 
-	if(_requst_c->get_chunks_status() == true)
+	if(_request_c->get_chunks_status() == true)
 	{
 		HTTP_MSG("sairi")
 		return response;
@@ -233,7 +233,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 			std::stringstream len;
 
 			len <<  body.size();
-			if(HttpResponse::_new_response == true)
+			if(_request_c->_new_response == true)
 			{
 
 			 header += "Transfer-Encoding: chunked\r\n" ;
@@ -262,12 +262,12 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 		if(header.find("Content-Type:") == std::string::npos)
 		{
 
-			if(!HttpResponse::_types[_type].empty())
+			if(!_request_c->_types[_type].empty())
 			{
 				//TODO implement chunkes 
 				
 
-				header += "Content-Type: " + HttpResponse::_types[_type] +"\n";
+				header += "Content-Type: " + _request_c->_types[_type] +"\n";
 		
 			}
 			else

@@ -123,7 +123,8 @@ void EventLoop::run() {
 						clientEntry.pfd = pfd;
 						clientEntry.conn = conn;
 						clientEntry.socketAddr = entry.socketAddr;
-						clientEntry.port = entry.port; // Copy the port from the listening socket's PollEntry
+						clientEntry.port = entry.port;
+						clientEntry.lastActivity = time(NULL);
 
 						newClients.push_back(clientEntry);
 						std::cout << "New client accepted: fd " << clientFd << std::endl;
@@ -146,6 +147,8 @@ void EventLoop::run() {
 				if (entry.conn && !entry.conn->writeResponse()) {
 					closeConnection(entry);
 					entry.pfd.fd = -1;
+				} else {
+					entry.lastActivity = time(NULL); // Update activity time
 				}
 				entry.pfd.events = POLLIN;
 			}
@@ -165,6 +168,19 @@ void EventLoop::run() {
 				delete _pollEntries[k].conn;
 		}
 		_pollEntries.swap(remaining);
+
+		// Timeout handling
+		time_t currentTime = time(NULL);
+		for (size_t i = 0; i < _pollEntries.size(); ++i) {
+			if (_pollEntries[i].conn != NULL) {
+				// Timeout after 60 seconds of inactivity
+				if (currentTime - _pollEntries[i].lastActivity > 60) {
+					std::cout << "Connection timeout: fd " << _pollEntries[i].pfd.fd << std::endl;
+					closeConnection(_pollEntries[i]);
+					_pollEntries[i].pfd.fd = -1;
+				}
+			}
+		}
 	}
 }
 

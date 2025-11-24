@@ -21,6 +21,7 @@
 
 
 class HttpResponse;
+class HttpParser;
 class Cgi
 {
 	private:
@@ -31,10 +32,11 @@ class Cgi
 		std::vector	<std::string> _path;
 		int 	    	save_chunk_fd(std::string);
 		HttpResponse 	* _requst_c;
+		HttpParser 	* _parser;
 		
 	public:
 		std::vector<char *> _envs;
-		Cgi (HttpResponse * var);
+		Cgi (HttpResponse * var,HttpParser *parser);
 		Cgi(const Cgi *copy);
 		~Cgi();
 		Cgi &operator=(const Cgi &copy);		

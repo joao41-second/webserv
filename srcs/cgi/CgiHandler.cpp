@@ -38,9 +38,10 @@
 
 
 
-Cgi::Cgi(HttpResponse *var)
+Cgi::Cgi(HttpResponse *var,HttpParser *parser)
 {
 	_requst_c = var;
+	_parser = parser;
 }
 Cgi::~Cgi(){}
 
@@ -132,14 +133,14 @@ int Cgi::save_chunk_fd(std::string str)
 
 	
 	std::stringstream port;
-	port << HttpParser::_port;
+	port << _parser->_port;
 	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
-	if( HttpParser::_is_chunk == HTTP_EMPTY)
+	if( _parser->_is_chunk == HTTP_EMPTY)
 	{
 			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
 	}
 
-	if( HttpParser::_is_chunk == HTTP_CONTENT)
+	if( _parser->_is_chunk == HTTP_CONTENT)
 	{
 		if(body == 1)
 		{
@@ -160,7 +161,7 @@ int Cgi::save_chunk_fd(std::string str)
 		}
 	}
 
-	if(HttpParser::_is_chunk == HTTP_CHUNKS)
+	if(_parser->_is_chunk == HTTP_CHUNKS)
 	{
 		if(str.empty())
 		{
@@ -228,7 +229,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 		{
 			continue;
 		}
-		else if(status != -1 && status != 0 && HttpParser::_is_chunk != HTTP_EMPTY)
+		else if(status != -1 && status != 0 && _parser->_is_chunk != HTTP_EMPTY)
 		{
 			save = response.substr(status,response.size());
 			response = response.substr(0,status);
@@ -293,7 +294,7 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	HttpResponse::_new_request = false;
 
 	std::stringstream port;
-	port << HttpParser::_port;
+	port << _parser->_port;
 	_file_name_out =  "/tmp/out_"+ port.str() + ".txt";
 	fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
 

@@ -22,16 +22,8 @@
 #include <string>
 #include <sys/ucontext.h>
 
-std::vector <std::string> HttpParser::env;
-bool 		HttpParser::_request 		= false;
-int 		HttpParser::_is_chunk 		= 0;
-std::string 	HttpParser::mensage 		= "";
 std::string 	HttpParser::_pach_info 		= "";
-std::string 	HttpParser::_type 		= "";
 int 		HttpParser::_http_page_error 	= 0;
-std::string 	HttpParser::_host 		= "";
-std::string 	HttpParser::_methods 		= "";
-int 		HttpParser::_port = 0;
 
 
 HttpParser::HttpParser(HttpResponse *var):_requst_c(var)

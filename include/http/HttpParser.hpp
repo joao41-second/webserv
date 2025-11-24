@@ -36,9 +36,9 @@ class HttpResponse;
 class HttpParser
 {
 	protected: 
-	        static std::vector<std::string> env;
-		static std::string  mensage;
-		static bool 	    _request;
+	        std::vector<std::string> env;
+		std::string  mensage;
+		bool 	    _request;
 	private:
 		void parsing_env(std::string buffer);
 		void parsing_request_line(std::string buffer);	
@@ -50,13 +50,13 @@ class HttpParser
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
 
-	      static int 	 _is_chunk;
-	      static std::string _type;
-	      static std::string _methods;
-	      static std::string _pach_info; 
-	      static int 	 _http_page_error;
-	      static std::string _host;
-	      static int 	 _port;
+	       int 	 _is_chunk;
+	       std::string _type;
+	       std::string _methods;
+	       static std::string _pach_info; 
+	       static int 	 _http_page_error;
+	       std::string _host;
+	       int 	 _port;
 		
 	      std::string 		chek_and_add_header(std::string response,std::string error);
 	      void        		new_request(std::string buffer); 

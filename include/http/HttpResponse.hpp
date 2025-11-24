@@ -38,8 +38,8 @@ private:
 	static std::vector<ServerConfig> _configs;
 	static ServerConfig get_config(int port);
 	static std::string _pg;
-	Cgi 		cgi;
 	HttpParser  _parser;
+	Cgi 		cgi;
 
 		std::string search_folder_file(std::string file, std::string path, std::map<std::string, LocationConfig> loc);
 		std::string get_folder_index(ServerConfig);

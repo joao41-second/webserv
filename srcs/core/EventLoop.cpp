@@ -66,6 +66,19 @@ void EventLoop::run() {
 			}
 			break;
 		}
+		// Timeout handling - CHECK FIRST
+		time_t currentTime = time(NULL);
+		for (size_t i = 0; i < _pollEntries.size(); ++i) {
+			if (_pollEntries[i].conn != NULL) {
+				// Timeout after 60 seconds of inactivity
+				if (currentTime - _pollEntries[i].lastActivity > 60) {
+					std::cout << "Connection timeout: fd " << _pollEntries[i].pfd.fd << std::endl;
+					closeConnection(_pollEntries[i]);
+					_pollEntries[i].pfd.fd = -1;
+				}
+			}
+		}
+
 		// build contiguous temp pollfd array
 		std::vector<struct pollfd> pfdArray;
 		std::vector<size_t> indexMap;
@@ -164,23 +177,8 @@ void EventLoop::run() {
 		for (size_t k = 0; k < _pollEntries.size(); ++k) {
 			if (_pollEntries[k].pfd.fd >= 0)
 				remaining.push_back(_pollEntries[k]);
-			else if (_pollEntries[k].conn)
-				delete _pollEntries[k].conn;
 		}
 		_pollEntries.swap(remaining);
-
-		// Timeout handling
-		time_t currentTime = time(NULL);
-		for (size_t i = 0; i < _pollEntries.size(); ++i) {
-			if (_pollEntries[i].conn != NULL) {
-				// Timeout after 60 seconds of inactivity
-				if (currentTime - _pollEntries[i].lastActivity > 60) {
-					std::cout << "Connection timeout: fd " << _pollEntries[i].pfd.fd << std::endl;
-					closeConnection(_pollEntries[i]);
-					_pollEntries[i].pfd.fd = -1;
-				}
-			}
-		}
 	}
 }
 

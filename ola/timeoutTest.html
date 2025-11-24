@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chunk Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Incomplete Chunks</h1>
+    
+    <button onclick="sendIncompleteRequest()">Send Incomplete Request (Hangs Forever)</button>
+    <button onclick="sendNormalRequest()">Send Normal Request</button>
+    
+    <div id="result">Click a button to test...</div>
+
+    <script>
+        function sendIncompleteRequest() {
+            document.getElementById('result').innerHTML = 'Sending partial request... (will NOT complete)';
+            
+            // Use XMLHttpRequest for low-level control
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/test', true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 0) {
+                        document.getElementById('result').innerHTML = '<span class="error">Connection closed by server (timeout or error)</span>';
+                    } else {
+                        document.getElementById('result').innerHTML = 'Response: ' + xhr.responseText;
+                    }
+                }
+            };
+            
+            xhr.onerror = function() {
+                document.getElementById('result').innerHTML = '<span class="error">Connection error/timeout</span>';
+            };
+            
+            xhr.ontimeout = function() {
+                document.getElementById('result').innerHTML = '<span class="error">Request timeout</span>';
+            };
+            
+            // Set a header indicating we'll send data
+            xhr.setRequestHeader('Content-Type', 'text/plain');
+            
+            // Send partial data - this simulates sending chunks but never finishing
+            // The connection stays open waiting for more data
+            const partialData = 'This is partial data';
+            
+            // We tell the server we'll send more data than we actually send
+            xhr.setRequestHeader('Content-Length', '1000'); // Say we'll send 1000 bytes
+            
+            // But only send a small amount - server will wait for the rest
+            xhr.send(partialData); // Only sends ~20 bytes, server expects 1000
+            
+            document.getElementById('result').innerHTML += '<br>Sent ' + partialData.length + ' bytes, but promised 1000 bytes.<br>Server should timeout after 60 seconds...';
+        }
+
+        function sendNormalRequest() {
+            document.getElementById('result').innerHTML = 'Sending normal request...';
+            
+            fetch('/test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: 'This is a complete normal request'
+            })
+            .then(r => r.text())
+            .then(t => {
+                document.getElementById('result').innerHTML = 'Success! Response: ' + t;
+            })
+            .catch(e => {
+                document.getElementById('result').innerHTML = '<span class="error">Error: ' + e + '</span>';
+            });
+        }
+    </script>
+</body>
+</html>

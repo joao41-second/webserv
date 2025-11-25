@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <ctime>
 
 class Server;
 class Connection;
@@ -33,12 +34,12 @@ public:
 	void run();
 
 private:
-	struct PollEntry
-	{
-		struct pollfd pfd;
-		struct sockaddr_in socketAddr;
-		Connection *conn;
-		int port; // Added field to store the port of the server socket
+	struct PollEntry {
+		struct pollfd		pfd;
+		struct sockaddr_in	socketAddr;
+		Connection			*conn;
+		int					port;
+		time_t				lastActivity;
 	};
 
 	std::vector<PollEntry> _pollEntries;

@@ -16,8 +16,8 @@
 #include <config/Config.hpp>
 #include <net/Socket.hpp>
 
-int	main(int argc, char **argv, char **envp)
-{
+int	main(int argc, char **argv, char **envp) {
+
 	if (argc != 2) {
 		std::cout << "The program should use the template './webserv [configuration file]'" << std::endl;
 		exit(EXIT_FAILURE);
@@ -26,14 +26,11 @@ int	main(int argc, char **argv, char **envp)
 	try {
 
 		Config conf_info(argv[1], envp);
+		std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+		std::vector<Socket*>		sockets = conf_info.getSocketVector();
+		HttpResponse::set_config(configs,envp);
 
-	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-	std::vector<Socket*>		sockets = conf_info.getSocketVector();
-	HttpResponse::set_config(configs,envp);
-
-	Server server(configs, sockets);
-	server.launch();
-
+		Server server(configs, sockets);
 		server.launch();
 	} catch (const std::exception &e) {
 		std::cerr << "Error: " << e.what() << std::endl;

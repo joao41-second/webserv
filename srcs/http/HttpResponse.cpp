@@ -43,6 +43,21 @@ HttpResponse::~HttpResponse()
 {}
 
 
+HttpResponse & HttpResponse::operator=(const HttpResponse & var)
+{
+	if(this != &var )
+	{
+		this->_new_request = var._new_request;
+		this->_pg = var._pg;
+		this->_parser = var._parser;
+		this->cgi = var.cgi;
+		this->_new_response = var._new_response;
+		this->_request_status = var._request_status;
+
+		return  *this;
+	}
+	return *this;
+}
 bool HttpResponse::get_chunks_status()
 {
 	HTTP_MSG("BODY REQUEST IS =" << _new_request);

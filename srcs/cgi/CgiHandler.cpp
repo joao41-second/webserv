@@ -45,6 +45,22 @@ Cgi::Cgi(HttpResponse *var,HttpParser *parser)
 }
 Cgi::~Cgi(){}
 
+Cgi & Cgi::operator=(const Cgi &copy)
+{
+	if(this != &copy)
+	{
+
+		 this->_request = copy._request;
+		 this->_file_name = copy._file_name;
+		 this->_file_name_out = copy._file_name;
+		 this->_path = copy._path;
+		 this->_request_c = copy._request_c;
+		 this->_parser = copy._parser;
+		this->_envs = copy._envs;
+		return  *this;
+	}
+	return  *this;
+}	
 
 std::string Cgi::chek_program_pach(std::string porgram)
 {

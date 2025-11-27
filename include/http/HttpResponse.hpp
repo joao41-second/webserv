@@ -52,6 +52,7 @@ private:
 public:
 	HttpResponse();
 	~HttpResponse();
+	HttpResponse & operator=(const HttpResponse &);
 	 bool _new_request;
 	 bool _new_response;
 	 bool _request_status;

@@ -150,7 +150,8 @@ int Cgi::save_chunk_fd(std::string str)
 	static int fd=  -1;
 	static int body = 0;
 
-	
+
+	HTTP_MSG("port" << _request_c->_parser._port );
 	std::stringstream port;
 	port << _parser->_port;
 	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
@@ -313,9 +314,10 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 
 	_envs.push_back(NULL);	
 
+	
 	if((fd = Cgi::save_chunk_fd(_request)) == -1)
 	{
-		throw Not_found_404();
+		return "";
 	}
 
 	fd_in = fd;	

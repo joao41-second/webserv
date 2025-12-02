@@ -30,6 +30,7 @@ HttpParser::HttpParser(HttpResponse *var):_request_c(var)
 {
 //	HTTP_MSG("start_parser");
 	_is_chunk = 0;
+	_port = 0;
 }
 
 HttpParser::HttpParser(const HttpParser &value)
@@ -154,14 +155,14 @@ void HttpParser::parsing_env(std::string buffer)
 			_is_chunk = 1;
 		}
 		else 
-		//	_is_chunk = 0;
+			_is_chunk = 0;
 			
 		if(var == "Transfer_Encoding" && trim(content) == "chunked") 
 		{		
 			_is_chunk = 2;
 		}
 		else
-		//	_is_chunk = 0;
+		    _is_chunk = 0;
 
 		for (int i =0; i < (int)var.size(); ++i) {
 			int char_ = var[i];

@@ -38,8 +38,7 @@ private:
 	static std::vector<ServerConfig> _configs;
 	static ServerConfig get_config(int port);
 	std::string _pg;
-	HttpParser  _parser;
-	Cgi 		cgi;
+
 
 		std::string search_folder_file(std::string file, std::string path, std::map<std::string, LocationConfig> loc);
 		std::string get_folder_index(ServerConfig);
@@ -50,6 +49,8 @@ private:
 		bool	   chek_cig_or_static(std::string, ServerConfig);
 
 public:
+	HttpParser  _parser;
+	Cgi 		cgi;
 	HttpResponse();
 	~HttpResponse();
 	HttpResponse & operator=(const HttpResponse &);

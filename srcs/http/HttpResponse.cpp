@@ -381,6 +381,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	_parser._http_page_error = 0;
 	_pg = "";
 	_parser._port = port;
+	HTTP_MSG("port is " << _parser._port);
 	
 	T_MSG("Start request\n", YELLOW)
 	try
@@ -410,8 +411,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 			_parser.new_request(request);
 		else 
 			_parser.set_request_msg(request);
-		cgi._parser = &_parser;
-
+	
 		cgi.create_env(_env, _parser.get_request_env());
 		config = get_config(port);		
 

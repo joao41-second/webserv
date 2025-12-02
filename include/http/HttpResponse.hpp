@@ -57,7 +57,7 @@ public:
 	 bool _new_response;
 	 bool _request_status;
 
-static	std::map<std::string, std::string> _types;
+	static	std::map<std::string, std::string> _types;
 
 	static void set_config(std::vector<ServerConfig> &conf, char **env);
 

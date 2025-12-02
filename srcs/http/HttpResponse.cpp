@@ -102,7 +102,7 @@ std::string HttpResponse::open_static_file(std::string file)
 	char 			buffer[1024];
 	int 			read_bits;
 	int 			size = 100000;
-	static int 		fd;
+	static int 		fd = -1;
 	std::string 		body = "";
 	static std::string 	temp;
 	static bool 		loop = true;
@@ -115,10 +115,9 @@ std::string HttpResponse::open_static_file(std::string file)
 
 	if(HttpResponse::_new_response == false)
 	{
+		HTTP_MSG("id is " << fd);
 		if((fd = open(file.c_str(),O_RDWR , 0644) )== -1)
 			throw Not_found_404();
-
-		HTTP_MSG("id is " << fd);
 	}
 
 	body = temp;

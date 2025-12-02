@@ -28,18 +28,18 @@ int 		HttpParser::_http_page_error 	= 0;
 
 HttpParser::HttpParser(HttpResponse *var):_request_c(var)
 {
-	HTTP_MSG("start_parser");
+//	HTTP_MSG("start_parser");
 }
 
 HttpParser::HttpParser(const HttpParser &value)
 {
-	HTTP_MSG("start_parser_used_privios_HttpParser");
+//	HTTP_MSG("start_parser_used_privios_HttpParser");
 	(void) value;
 }
 
 HttpParser& HttpParser::operator=(const HttpParser &value)
 {
-	HTTP_MSG("iqual operator used");
+//	HTTP_MSG("iqual operator used");
 	if(&value == this)
 		return (*this);
 	return (*this);
@@ -47,7 +47,7 @@ HttpParser& HttpParser::operator=(const HttpParser &value)
 
 HttpParser::~HttpParser()
 {
-	HTTP_MSG("end parser");
+//	HTTP_MSG("end parser");
 }
 
 

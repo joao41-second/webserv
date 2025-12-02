@@ -151,9 +151,13 @@ void EventLoop::run() {
 					else if (entry.conn->isRequestComplete())
 					{
 						// std::cout << entry.conn->getReadBuffer() << std::endl;
-						std::cout << "---------------------------------------------" << std::endl;
-						std::cout << entry.port << std::endl;
-						entry.conn->setWriteBuffer(entry.request.request_and_response(entry.conn->getReadBuffer(), entry.port)); entry.conn->setReadBuffer(""); // clear buffer for the next read operation.
+						std::cout << "port is " << entry.port << "status request "  << entry.request.get_chunks_status() << "" << std::endl;
+						entry.conn->setWriteBuffer(entry.request.request_and_response(entry.conn->getReadBuffer(), 
+									entry.port)); entry.conn->setReadBuffer(""); 
+
+						std::cout << " status request " <<  entry.request.get_chunks_status() << std::endl;
+						// clear buffer for the next read operation.
+						
 						if (!entry.request.get_chunks_status())
 							entry.pfd.events = POLLOUT;
 					}

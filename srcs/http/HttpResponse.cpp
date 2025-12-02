@@ -38,9 +38,16 @@ std::map<std::string,std::string> 	HttpResponse::_types;
 HttpResponse::HttpResponse():_parser(this),cgi(this,&_parser)
 {
 
+		this->_new_request = false;
+		this->_new_response = false;
+
 }
 HttpResponse::~HttpResponse()
-{}
+{
+
+		this->_new_request = false;
+		this->_new_response = false;
+}
 
 
 HttpResponse & HttpResponse::operator=(const HttpResponse & var)
@@ -60,7 +67,6 @@ HttpResponse & HttpResponse::operator=(const HttpResponse & var)
 }
 bool HttpResponse::get_chunks_status()
 {
-	HTTP_MSG("BODY REQUEST IS =" << _new_request);
 	return(_new_request);
 }
 

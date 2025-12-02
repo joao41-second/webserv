@@ -29,13 +29,14 @@ class Cgi
 		std::string 	_file_name;
 		std::string 	_file_name_out;
 		std::vector	<std::string> _path;
-		HttpResponse 	* _request_c;
-		HttpParser 	* _parser;
+		
 
 		std::string 	chek_program_pach(std::string program);
 		int 	    	save_chunk_fd(std::string);
 		
 	public:
+		HttpResponse 	* _request_c;
+		HttpParser 	* _parser;
 		std::vector<char *> _envs;
 		Cgi (HttpResponse * var,HttpParser *parser);
 		Cgi(const Cgi *copy);

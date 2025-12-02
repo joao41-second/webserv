@@ -42,6 +42,10 @@ Cgi::Cgi(HttpResponse *var,HttpParser *parser)
 {
 	_request_c = var;
 	_parser = parser;
+	_request = "" ;
+	_file_name_out = "";
+	_file_name = "";
+
 }
 Cgi::~Cgi(){}
 
@@ -146,7 +150,6 @@ int Cgi::save_chunk_fd(std::string str)
 	static int fd=  -1;
 	static int body = 0;
 
-
 	
 	std::stringstream port;
 	port << _parser->_port;
@@ -177,6 +180,7 @@ int Cgi::save_chunk_fd(std::string str)
 		}
 	}
 
+
 	if(_parser->_is_chunk == HTTP_CHUNKS)
 	{
 		if(str.empty())
@@ -202,6 +206,7 @@ int Cgi::save_chunk_fd(std::string str)
 		write(fd,al.c_str(),bits);
 		close(fd);
 	}
+
 	return -1;
 }
 #include <http/HttpResponse.hpp>
@@ -218,11 +223,12 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 	static int 		status = 0;
 
 
+	HTTP_MSG("chunk_cgi" )
 	if(_request_c->_request_status == true)
 	{
 		return (_request_c->open_static_file("NULL"));
 	}
-	HTTP_MSG("chunk_cgi")
+	
 	if(file_name != "NULL")
 		fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
 	response = save;
@@ -298,12 +304,18 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	char 		**end = NULL;
 	int 		fd =-1;
 
+	HTTP_MSG(_request)
+	if(!_request.empty())
+		_request = "";
+
 	if(_request_c->_new_response == false)
 			std::remove(_file_name_out.c_str());	
+
 	_envs.push_back(NULL);	
+
 	if((fd = Cgi::save_chunk_fd(_request)) == -1)
 	{
-		return "";
+		throw Not_found_404();
 	}
 
 	fd_in = fd;	

@@ -29,6 +29,7 @@ int 		HttpParser::_http_page_error 	= 0;
 HttpParser::HttpParser(HttpResponse *var):_request_c(var)
 {
 //	HTTP_MSG("start_parser");
+	_is_chunk = 0;
 }
 
 HttpParser::HttpParser(const HttpParser &value)
@@ -47,7 +48,6 @@ HttpParser& HttpParser::operator=(const HttpParser &value)
 
 HttpParser::~HttpParser()
 {
-//	HTTP_MSG("end parser");
 }
 
 

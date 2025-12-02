@@ -37,9 +37,12 @@ std::map<std::string,std::string> 	HttpResponse::_types;
 
 HttpResponse::HttpResponse():_parser(this),cgi(this,&_parser)
 {
-
 		this->_new_request = false;
 		this->_new_response = false;
+		this->_new_request = false;
+		this->_pg = "";
+	//	this->_new_response = "";
+		this->_request_status = "";
 
 }
 HttpResponse::~HttpResponse()
@@ -47,6 +50,10 @@ HttpResponse::~HttpResponse()
 
 		this->_new_request = false;
 		this->_new_response = false;
+		this->_new_request = false;
+		this->_pg = "";
+	//	this->_new_response = "";
+		this->_request_status = "";
 }
 
 
@@ -374,7 +381,6 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	_parser._http_page_error = 0;
 	_pg = "";
 	_parser._port = port;
-
 	
 	T_MSG("Start request\n", YELLOW)
 	try
@@ -404,6 +410,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 			_parser.new_request(request);
 		else 
 			_parser.set_request_msg(request);
+		cgi._parser = &_parser;
 
 		cgi.create_env(_env, _parser.get_request_env());
 		config = get_config(port);		
@@ -431,34 +438,49 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	{
 		error = _parser._http_page_error;
 
-		T_MSG("Finich request - error:"  << e.what() << "->" <<_parser._http_page_error  , RED);
+		T_MSG("Finich request - error: "  << e.what() << "->" <<_parser._http_page_error  , RED);
 
 		try
 
 		{
-
 			if(!config.getErrorPage(error).empty())
+			{
 			   response = HttpResponse::open_static_file(config.getErrorPage(error));
-			else 
+
+			}
+			else {
+				HTTP_MSG("saida");
 				return (gener_erro_page(error, e.what()));
+			}
 
 		}
 		catch(std::exception &d)
 		{
 
-
+			
+			HTTP_MSG("saida");
+			try 
+			{
 				if(!config.getErrorPage(error).empty())
 				{
 				chek_cig_or_static( config.getErrorPage(error),config);
 				_new_request = true;
 				_parser._is_chunk = 0;
+					
 					return (response = _parser.chek_and_add_header(
 								cgi.execute( config.getErrorPage(error), _pg),  e.what()));
-				}	
+				}
+			}
+			catch(std::exception &f)
+			{
 				return (gener_erro_page(error, e.what()));
 
+			}
+			}	
+			return (gener_erro_page(error, e.what()));
+
 		}		
-	}
+	
 
 	T_MSG("Finich request \n", GREEN)
 	_parser._http_page_error = 0;
@@ -471,7 +493,7 @@ std::string HttpResponse::gener_erro_page(int error, std::string status)
 	std::stringstream ok;
 	std::stringstream size;
 	ok << error;
-
+	_new_request = false;
 	response = "HTTP/1.1 " + ok.str() + " " + status + "\n";
 	response += "Content-Type: text/html; charset=UTF-8 \n";
 	// response = TODO add host the server

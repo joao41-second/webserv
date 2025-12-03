@@ -36,12 +36,22 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-
-
-Cgi::Cgi(HttpResponse *var,HttpParser *parser)
+HttpResponse *create_var()
 {
-	_request_c = var;
-	_parser = parser;
+	HttpResponse * var = new HttpResponse;
+	HttpParser*   par = new HttpParser;
+	Cgi*	     cgi = new Cgi;
+	var->cgi = cgi;
+	var->_parser = par;
+	par->_request_c = var;
+	cgi->_request_c = var;
+	cgi->_parser = par;
+	
+	return  (var);
+}
+
+Cgi::Cgi():_path(),_envs()
+{
 	_request = "" ;
 	_file_name_out = "";
 	_file_name = "";

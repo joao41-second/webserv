@@ -35,7 +35,7 @@ char ** 	HttpResponse::_env;
 std::vector<ServerConfig> 		HttpResponse::_configs;
 std::map<std::string,std::string> 	HttpResponse::_types;
 
-HttpResponse::HttpResponse()
+HttpResponse::HttpResponse() 
 {
 		this->_new_request = false;
 		this->_new_response = false;
@@ -401,11 +401,6 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 	ServerConfig 	config;
 
-	static HttpParser 	paser = HttpParser(this);
-	static Cgi 		cgi_ = Cgi(this,&paser);
-
-	_parser = &paser;
-	cgi = &cgi_;
 	T_MSG("Start request\n", YELLOW)
 
 
@@ -419,14 +414,21 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 	if(HttpResponse::_new_response == true)
 	{
+
 		response =  cgi->chek_and_return_chunks("NULL");
+
 		if(_new_response == false && _new_response == false)
 		{
 		}
 		return (response);
 	}	
+
 		if(_new_request != true)
+		{
+
 			_parser->new_request(request);
+
+		}
 		else 
 			_parser->set_request_msg(request);
 	

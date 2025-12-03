@@ -22,6 +22,10 @@
 
 class HttpResponse;
 class HttpParser;
+
+
+HttpResponse *create_var();
+
 class Cgi
 {
 	private:
@@ -38,7 +42,8 @@ class Cgi
 		HttpResponse 	* _request_c;
 		HttpParser 	* _parser;
 		std::vector<char *> _envs;
-		Cgi (HttpResponse * var,HttpParser *parser);
+//		Cgi (HttpResponse * var,HttpParser *parser);
+		Cgi();
 		Cgi(const Cgi *copy);
 		~Cgi();
 		Cgi &operator=(const Cgi &copy);		

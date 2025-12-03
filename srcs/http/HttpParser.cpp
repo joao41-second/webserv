@@ -26,11 +26,19 @@ std::string 	HttpParser::_pach_info 		= "";
 int 		HttpParser::_http_page_error 	= -1;
 
 
-HttpParser::HttpParser(HttpResponse *var):_request_c(var)
+HttpParser::HttpParser(): env(), _methods_allow() 
 {
 //	HTTP_MSG("start_parser");
+	mensage = "";
+	_request = false;
 	_is_chunk = 0;
 	_port = 0;
+	_pach_info 	= "";
+	_type 		= "";
+	_host 		= "";
+	_methods 	= "";
+	_request 	= false;
+	_is_chunk  	= 0;
 }
 
 HttpParser::HttpParser(const HttpParser &value)
@@ -187,14 +195,21 @@ void HttpParser::parsing_env(std::string buffer)
 void HttpParser::new_request(std::string buffer)
 {
 
-	env.clear();
+	
 	mensage 	= ""; 
+	
 	_pach_info 	= "";
+
+	T_MSG("Parse the new request end" , BLUE);
 	_type 		= "";
+
+	T_MSG("Parse the new request end" , BLUE);
 	_host 		= "";
 	_methods 	= "";
 	_request 	= false;
 	_is_chunk  	= 0;
+
+
 	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
 	parsing_env(buffer);
 

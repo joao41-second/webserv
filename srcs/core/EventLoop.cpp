@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "cgi/cgi.hpp"
 #include <core/EventLoop.hpp>
 #include <core/Server.hpp>
 #include <core/Connection.hpp>
@@ -138,7 +139,7 @@ void EventLoop::run() {
 						clientEntry.socketAddr = entry.socketAddr;
 						clientEntry.port = entry.port;
 						clientEntry.lastActivity = time(NULL);
-						clientEntry.request =  HttpResponse();
+						clientEntry.request =  *create_var();
 
 						newClients.push_back(clientEntry);
 						std::cout << "New client accepted: fd " << clientFd << std::endl;

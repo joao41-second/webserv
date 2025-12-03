@@ -85,10 +85,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 
 	if (size == std::string::npos || size == 0)
 		throw  Badd_Request_400();
-	if(method != "GET" && method != "POST" && method != "DELETE")
-	{
-		throw Method_Not_Allowed_405();
-	}
+	
 	_methods = method;
 	env.push_back("REQUEST_METHOD=" + method );	
 	buffer = buffer.substr(size+1,buffer.size());

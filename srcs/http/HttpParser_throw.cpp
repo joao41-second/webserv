@@ -13,6 +13,14 @@
 #include <http/HttpParser.hpp>
 #include <http/Http_throw.hpp>
 
+
+
+const char *Director_Open_200::what(void) const throw()
+{
+	HttpParser::_pach_info = "/";
+	HttpParser::_http_page_error = 200;
+	return "OK";
+}
 const char *Badd_Request_400::what(void) const throw()
 {
 	HttpParser::_pach_info = "/400.html";

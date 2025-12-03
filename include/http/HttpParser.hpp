@@ -12,6 +12,7 @@
 
 #ifndef  HTTPPARSER_HPP
 #define  HTTPPARSER_HPP
+#include "config/LocationConfig.hpp"
 #include <config/debug.hpp>
 
 #include <exception>
@@ -51,6 +52,7 @@ class HttpParser
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
 
+		std::vector<t_methods> _methods_allow;
 	       int 	 _is_chunk;
 	       std::string _type;
 	       std::string _methods;

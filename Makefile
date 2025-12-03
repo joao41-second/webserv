@@ -51,4 +51,4 @@ tests:
 	./$(T_NAME)
 	
 run:
-	make re && ./webserv ./test/youpi.conf
+	make re && ./webserv ./site_tester/setings.conf

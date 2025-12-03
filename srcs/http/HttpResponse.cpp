@@ -274,6 +274,11 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 
 	// TODO impemente check the path
 	HTTP_MSG(file) 
+	 if(server.getLocMap().find(file) != server.getLocMap().end())
+	 {
+		 throw Director_Open_200();
+	 }
+
 	int size = file.find('.');
 
 
@@ -332,7 +337,9 @@ void HttpResponse::chek_valid_request_methods(std::string path)
 					return;
 			}
 
+			_parser->_methods_allow = loc[path].getMethods();
 			throw Method_Not_Allowed_405();
+
 
 }
 
@@ -364,8 +371,7 @@ std::string HttpResponse::get_folder_index( ServerConfig conf)
 		}
 		++it;
 	}
-
-	return (file =  gener_erro_page(200,"OK"));
+	throw Director_Open_200();
 	
 	return "";	
 }
@@ -505,6 +511,21 @@ std::string HttpResponse::gener_erro_page(int error, std::string status)
 	ok << error;
 	_new_request = false;
 	response = "HTTP/1.1 " + ok.str() + " " + status + "\n";
+	if(error == 405)
+	{
+		std::string method;
+		for(int i =0 ; i < (int)_parser->_methods_allow.size();i++)
+		{
+			if(_parser->_methods_allow[i] == GET)
+				method = " GET";
+			if(_parser->_methods_allow[i] == POST)
+				method += " POST";
+			if(_parser->_methods_allow[i] == DELETE)
+				method += " DELETE";
+
+		}
+		response += "Allow:" + method + "\n"; 
+	}
 	if(error == 200)
 	{
 	 response += "Content-Length: 0 \n\n";

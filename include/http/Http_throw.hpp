@@ -39,3 +39,11 @@
 		public:
 			virtual const char *what()const throw();
 	};
+
+	class   Method_Not_Allowed_405: public std::exception
+	{
+		public:
+			virtual const char *what()const throw();
+	};
+
+

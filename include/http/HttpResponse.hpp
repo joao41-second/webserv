@@ -63,6 +63,7 @@ public:
 	static void set_config(std::vector<ServerConfig> &conf, char **env);
 
 	std::string request_and_response(std::string request, int port);
+	void chek_valid_request_methods(std::string);
 	bool get_chunks_status();
  	bool get_chunks_in_response();
 	bool get_chunks_status_response();

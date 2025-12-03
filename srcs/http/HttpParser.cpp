@@ -23,7 +23,7 @@
 #include <sys/ucontext.h>
 
 std::string 	HttpParser::_pach_info 		= "";
-int 		HttpParser::_http_page_error 	= 0;
+int 		HttpParser::_http_page_error 	= -1;
 
 
 HttpParser::HttpParser(HttpResponse *var):_request_c(var)
@@ -53,7 +53,6 @@ HttpParser& HttpParser::operator=(const HttpParser &value)
 	_type = value._type;
 	_methods = value._methods;
 	_pach_info = value._pach_info;
-	_http_page_error = value._http_page_error;
 	_host = value._host;
 
 	return (*this);
@@ -87,7 +86,9 @@ void HttpParser::parsing_request_line(std::string buffer)
 	if (size == std::string::npos || size == 0)
 		throw  Badd_Request_400();
 	if(method != "GET" && method != "POST" && method != "DELETE")
-		throw Not_Implemented_501();
+	{
+		throw Method_Not_Allowed_405();
+	}
 	_methods = method;
 	env.push_back("REQUEST_METHOD=" + method );	
 	buffer = buffer.substr(size+1,buffer.size());
@@ -190,7 +191,8 @@ void HttpParser::new_request(std::string buffer)
 {
 
 	env.clear();
-	mensage 	= ""; _pach_info 	= "";
+	mensage 	= ""; 
+	_pach_info 	= "";
 	_type 		= "";
 	_host 		= "";
 	_methods 	= "";
@@ -198,6 +200,9 @@ void HttpParser::new_request(std::string buffer)
 	_is_chunk  	= 0;
 	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
 	parsing_env(buffer);
+
+	T_MSG("Parse the new request end" , BLUE);
+	
 
 }
 

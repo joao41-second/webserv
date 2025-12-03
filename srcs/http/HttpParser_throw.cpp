@@ -27,6 +27,14 @@ const char *Forbidden_403::what(void) const throw()
 	return "Forbidden";
 };
 
+
+const char *Method_Not_Allowed_405::what(void) const throw()
+{
+	HttpParser::_pach_info = "/405.html";
+	HttpParser::_http_page_error = 405;
+	return "Method Not Allowed";
+};
+
 const char *Not_Implemented_501::what(void) const throw()
 {
 	HttpParser::_pach_info = "/501.html";

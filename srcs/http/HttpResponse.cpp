@@ -42,18 +42,12 @@ HttpResponse::HttpResponse()
 		this->_new_request = false;
 		this->_pg = "";
 	//	this->_new_response = "";
-		this->_request_status = "";
+		this->_request_status = false;
 
 }
 HttpResponse::~HttpResponse()
 {
 
-		this->_new_request = false;
-		this->_new_response = false;
-		this->_new_request = false;
-		this->_pg = "";
-	//	this->_new_response = "";
-		this->_request_status = "";
 }
 
 

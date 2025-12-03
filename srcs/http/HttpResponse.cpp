@@ -35,7 +35,7 @@ char ** 	HttpResponse::_env;
 std::vector<ServerConfig> 		HttpResponse::_configs;
 std::map<std::string,std::string> 	HttpResponse::_types;
 
-HttpResponse::HttpResponse():_parser(this),cgi(this,&_parser)
+HttpResponse::HttpResponse()
 {
 		this->_new_request = false;
 		this->_new_response = false;
@@ -208,7 +208,7 @@ std::string HttpResponse::rediect_path(std::string file_path,int port)
 	int 		size;	
 	int 		i = -1;
 
-	_parser._host.find(':');
+	_parser->_host.find(':');
 	if(port == 0)
 		throw Not_found_404();
 	while (++i < (int)_configs.size())
@@ -236,11 +236,11 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 	
 		if(loc[path].getRoot() != "" )
 		{
-			if(_parser._methods ==  "GET")
+			if(_parser->_methods ==  "GET")
 				size = 0; 
-			else  if(_parser._methods ==  "POST")
+			else  if(_parser->_methods ==  "POST")
 				size = 2; 
-			else  if(_parser._methods ==  "DELETE")
+			else  if(_parser->_methods ==  "DELETE")
 				size = 4; 
 			for(int i =0 ; i < (int)loc[path].getMethods().size();i++)
 			{
@@ -289,7 +289,7 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 		throw Badd_Request_400();
 
 	std::string type =  file.substr(size,file.size()); 
-	_parser._type = type;
+	_parser->_type = type;
 
 	size = file.rfind('/');
 	if(  file.rfind('/') == std::string::npos)	
@@ -334,7 +334,7 @@ std::string HttpResponse::get_folder_index( ServerConfig conf)
 
 			if(it->second._cgi_pass != "")
 			{
-			   return ( _parser.chek_and_add_header(cgi.execute( _parser.get_request_msg(), it->second._cgi_pass),""));
+			   return ( _parser->chek_and_add_header(cgi->execute( _parser->get_request_msg(), it->second._cgi_pass),""));
 			}
 			else if(it->second.getRoot().find('.') == std::string::npos
 					|| it->second.getRoot().rfind('.') < it->second.getRoot().rfind('/'))
@@ -375,32 +375,36 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	std::string 	response;
 	std::string 	path = "";
 	ServerConfig 	config;
+	static HttpParser 	paser = HttpParser(this);
+	static Cgi 		cgi_ = Cgi(this,&paser);
 
-
-
-	_parser._http_page_error = 0;
-	_pg = "";
-	_parser._port = port;
-	HTTP_MSG("port is " << _parser._port);
-	
+	_parser = &paser;
+	cgi = &cgi_;
 	T_MSG("Start request\n", YELLOW)
+
+
+	_parser->_http_page_error = 0;
+	_pg = "";
+	_parser->_port = port;
+	HTTP_MSG("port is " << _parser->_port);
+	
 	try
 	{	
 
 	if(HttpResponse::_new_response == true)
 	{
 		HTTP_MSG("raiva");
-		response =  cgi.chek_and_return_chunks("NULL");
+		response =  cgi->chek_and_return_chunks("NULL");
 		if(_new_response == false && _new_response == false)
 		{
-			_parser._http_page_error = 0;
+			_parser->_http_page_error = 0;
 		}
 			
 
 		return (response);
 	}
 	
-		int port_ = std::atoi(_parser._host.substr(_parser._host.find(':')+1,_parser._host.size()).c_str());
+		int port_ = std::atoi(_parser->_host.substr(_parser->_host.find(':')+1,_parser->_host.size()).c_str());
 
 		if(port != port_)
 		{
@@ -408,27 +412,28 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		}
 
 		if(_new_request != true)
-			_parser.new_request(request);
+			_parser->new_request(request);
 		else 
-			_parser.set_request_msg(request);
+			_parser->set_request_msg(request);
+//		*cgi->_parser = _parser;
 	
-		cgi.create_env(_env, _parser.get_request_env());
+		cgi->create_env(_env, _parser->get_request_env());
 		config = get_config(port);		
 
-		T_MSG(  "_pach is = " << _parser._pach_info << " type is =" << _parser._type  , YELLOW);
+		T_MSG(  "_pach is = " << _parser->_pach_info << " type is =" << _parser->_type  , YELLOW);
 
-		if( _parser._pach_info == "/")
+		if( _parser->_pach_info == "/")
 			response = get_folder_index(config);
-		else if (chek_cig_or_static(_parser._pach_info, config))
+		else if (chek_cig_or_static(_parser->_pach_info, config))
 		{
 			_new_request = true;
-			response =  _parser.chek_and_add_header(cgi.execute( _parser.get_request_msg(), _pg),"");
+			response =  _parser->chek_and_add_header(cgi->execute( _parser->get_request_msg(), _pg),"");
 		}
 		else
 		{
 			// open static file
-			path = rediect_path(_parser._pach_info,port);
-			if(_parser._methods == "DELETE")
+			path = rediect_path(_parser->_pach_info,port);
+			if(_parser->_methods == "DELETE")
 				response = Delete(path);
 			else
 				response = HttpResponse::open_static_file(path);
@@ -436,9 +441,9 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	}
 	catch (std::exception &e)
 	{
-		error = _parser._http_page_error;
+		error = _parser->_http_page_error;
 
-		T_MSG("Finich request - error: "  << e.what() << "->" <<_parser._http_page_error  , RED);
+		T_MSG("Finich request - error: "  << e.what() << "->" <<_parser->_http_page_error  , RED);
 
 		try
 
@@ -465,10 +470,10 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 				{
 				chek_cig_or_static( config.getErrorPage(error),config);
 				_new_request = true;
-				_parser._is_chunk = 0;
+				_parser->_is_chunk = 0;
 					
-					return (response = _parser.chek_and_add_header(
-								cgi.execute( config.getErrorPage(error), _pg),  e.what()));
+					return (response = _parser->chek_and_add_header(
+								cgi->execute( config.getErrorPage(error), _pg),  e.what()));
 				}
 			}
 			catch(std::exception &f)
@@ -483,7 +488,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	
 
 	T_MSG("Finich request \n", GREEN)
-	_parser._http_page_error = 0;
+	_parser->_http_page_error = 0;
 	return (response);
 }
 

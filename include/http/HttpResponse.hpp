@@ -49,8 +49,8 @@ private:
 		bool	   chek_cig_or_static(std::string, ServerConfig);
 
 public:
-	HttpParser  _parser;
-	Cgi 		cgi;
+	HttpParser *_parser;
+	Cgi 		*cgi;
 	HttpResponse();
 	~HttpResponse();
 	HttpResponse & operator=(const HttpResponse &);

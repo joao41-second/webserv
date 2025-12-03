@@ -151,7 +151,7 @@ int Cgi::save_chunk_fd(std::string str)
 	static int body = 0;
 
 
-	HTTP_MSG("port" << _request_c->_parser._port );
+	HTTP_MSG("port" << _request_c->_parser->_port );
 	std::stringstream port;
 	port << _parser->_port;
 	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
@@ -223,8 +223,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 	std::stringstream 	value;
 	static int 		status = 0;
 
-
-	HTTP_MSG("chunk_cgi" )
+	HTTP_MSG("var check is true" << _request_c->_request_status)
 	if(_request_c->_request_status == true)
 	{
 		return (_request_c->open_static_file("NULL"));
@@ -312,9 +311,7 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	if(_request_c->_new_response == false)
 			std::remove(_file_name_out.c_str());	
 
-	_envs.push_back(NULL);	
-
-	
+	_envs.push_back(NULL);		
 	if((fd = Cgi::save_chunk_fd(_request)) == -1)
 	{
 		return "";

@@ -46,6 +46,7 @@ class HttpParser
 	
 	public:   
 		HttpParser(HttpResponse *);
+		HttpParser();
 	       ~HttpParser();
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);

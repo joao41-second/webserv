@@ -44,6 +44,18 @@ HttpParser& HttpParser::operator=(const HttpParser &value)
 //	HTTP_MSG("iqual operator used");
 	if(&value == this)
 		return (*this);
+
+	env = value.env;
+	mensage = value.mensage;
+	_request = value._request;
+	_is_chunk = value._is_chunk;
+	_port = value._port;	
+	_type = value._type;
+	_methods = value._methods;
+	_pach_info = value._pach_info;
+	_http_page_error = value._http_page_error;
+	_host = value._host;
+
 	return (*this);
 }
 

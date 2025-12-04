@@ -12,7 +12,7 @@ void validatePath(const std::string &path, bool cgi_pass)
 	{
 		return ;
 	}
-
+	cgi_pass = cgi_pass;
 	// FOR TESTING, COMMENT THE FUNCTION HERE
 	/*if (path.find("//") != std::string::npos)
 	{

@@ -234,6 +234,8 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 				size = 2; 
 			else  if(_parser->_methods ==  "DELETE")
 				size = 4; 
+			else  if(_parser->_methods ==  "HEAD")
+				size = HEAD; 
 			for(int i =0 ; i < (int)loc[path].getMethods().size();i++)
 			{
 				HTTP_MSG( "_methods" << loc[path].getMethods()[i] )
@@ -256,14 +258,17 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
  ServerConfig HttpResponse::get_config(int port )
 {
 	int i = -1 ;
+	bool not_port = true;
 	while (++i < (int)_configs.size())
 	{
-
-		if( port == (int) _configs[i].getPort())
+		if( port == (int) _configs[i].getPort())\
+		{
+			not_port = false;		
 			break;
+		}
 	}
-
-	if( i == (int) _configs.size() )	
+	HTTP_MSG("index of config is " << i );
+	if( not_port == true)	
 		 throw Not_found_404();
 	return _configs[i];
 }
@@ -327,6 +332,8 @@ void HttpResponse::chek_valid_request_methods(std::string path)
 				size = 2; 
 			else  if(_parser->_methods ==  "DELETE")
 				size = 4; 
+			else  if(_parser->_methods ==  "HEAD")
+				size = HEAD; 			
 			else 
 				throw Method_Not_Allowed_405();
 				
@@ -399,7 +406,6 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	std::string 	response;
 	std::string 	path = "";
 
-	ServerConfig 	config;
 
 	T_MSG("Start request\n", YELLOW)
 
@@ -411,6 +417,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	
 	try
 	{	
+		 ServerConfig config = get_config(port);		
 
 	if(HttpResponse::_new_response == true)
 	{
@@ -433,7 +440,6 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 			_parser->set_request_msg(request);
 	
 		cgi->create_env(_env, _parser->get_request_env());
-		config = get_config(port);		
 
 		T_MSG(  "_pach is = " << _parser->_pach_info << " type is =" << _parser->_type  , YELLOW);
 
@@ -456,6 +462,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	}
 	catch (std::exception &e)
 	{
+
 		e.what();
 		error = HttpParser::_http_page_error;
 
@@ -463,22 +470,24 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 		try
 		{
-			if(!config.getErrorPage(error).empty())
+
+			ServerConfig config = get_config(port);		
+			if( !config.getErrorPage(error).empty())
 			{
-			   response = HttpResponse::open_static_file(config.getErrorPage(error));
+			  return( response = HttpResponse::open_static_file(config.getErrorPage(error)));
 			}
 			else {
+				
 				return (gener_erro_page(error, e.what()));
 			}
 		}
 		catch(std::exception &d)
 		{
 
-			
-
-				HTTP_MSG("saida -> " << error);
 			try 
 			{
+
+				ServerConfig config = get_config(port);		
 				if(!config.getErrorPage(error).empty())
 				{
 				chek_cig_or_static( config.getErrorPage(error),config);
@@ -491,6 +500,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 			}
 			catch(std::exception &f)
 			{
+
 				return (gener_erro_page(error, e.what()));
 
 			}
@@ -501,7 +511,6 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	
 
 	T_MSG("Finich request \n", GREEN)
-//	_parser->_http_page_error = 0;
 	return (response);
 }
 
@@ -530,7 +539,7 @@ std::string HttpResponse::gener_erro_page(int error, std::string status)
 	}
 	if(error == 200)
 	{
-	 response += "Content-Length: 0 \n\n";
+	 response += "Content-Length: 0 \n\n \r\n\r\n";
 	  return (response);
 	}
 	response += "Content-Type: text/html; charset=UTF-8 \n";

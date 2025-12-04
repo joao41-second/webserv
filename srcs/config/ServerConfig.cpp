@@ -320,15 +320,16 @@ size_t	ServerConfig::getLocNum(void) const
 	return(this->_locations.size());
 }
 
-std::string const		&ServerConfig::getErrorPage(int error_num) const
+std::string const		ServerConfig::getErrorPage(int error_num) const
 {
 	std::map<int, std::string>::const_iterator it = this->_error_pages.find(error_num);
+
 	if (it != this->_error_pages.end())
 	{
 		return (it->second);
 	}
 
-	return( this->_error_pages.end()->second); // Default error page
+	return(""); // Default error page
 }
 
 void	ServerConfig::validateErrorPage(const std::string &path)

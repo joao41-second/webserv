@@ -23,8 +23,6 @@
 #include <config/Config.hpp>
 #include <string>
 #include <config/debug.hpp>
-#include <cgi/cgi.hpp>
-#include "HttpParser.hpp"
 
 
 class Cgi;

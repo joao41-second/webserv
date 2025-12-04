@@ -139,8 +139,6 @@ void EventLoop::run() {
 						clientEntry.socketAddr = entry.socketAddr;
 						clientEntry.port = entry.port;
 						clientEntry.lastActivity = time(NULL);
-						clientEntry.request =  *create_var();
-
 						newClients.push_back(clientEntry);
 						std::cout << "New client accepted: fd " << clientFd << std::endl;
 					}
@@ -153,6 +151,7 @@ void EventLoop::run() {
 					{
 						// std::cout << entry.conn->getReadBuffer() << std::endl;
 						std::cout << "port is " << entry.port << "status request "  << entry.request.get_chunks_status() << "" << std::endl;
+					create_var(&entry.parser, &entry.request, &entry.cgi)	;
 						entry.conn->setWriteBuffer(entry.request.request_and_response(entry.conn->getReadBuffer(), 
 									entry.port)); entry.conn->setReadBuffer(""); 
 

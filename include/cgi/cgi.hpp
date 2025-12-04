@@ -24,7 +24,8 @@ class HttpResponse;
 class HttpParser;
 
 
-HttpResponse *create_var();
+class Cgi;
+void  create_var( HttpParser *par,HttpResponse *var ,Cgi *cgi);
 
 class Cgi
 {

@@ -36,14 +36,18 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-void  create_var( HttpParser *par,HttpResponse *var ,Cgi *cgi)
+HttpResponse *create_var()
 {
+	HttpResponse * var = new HttpResponse;
+	HttpParser*   par = new HttpParser;
+	Cgi*	     cgi = new Cgi;
 	var->cgi = cgi;
 	var->_parser = par;
 	par->_request_c = var;
 	cgi->_request_c = var;
 	cgi->_parser = par;
 	
+	return  (var);
 }
 
 Cgi::Cgi():_path(),_envs()
@@ -232,6 +236,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 	HTTP_MSG("var check is true" << _request_c->_request_status)
 	if(_request_c->_request_status == true)
 	{
+
 		return (_request_c->open_static_file("NULL"));
 	}
 	
@@ -266,8 +271,9 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 			status = -1;
 			return ( response);
 		}
-		if((int )response.size()-status > size  || (read_bits == 0 && save.size() != 0))
+		if((int )response.size()-status > size  || (read_bits != 1024 && save.size() != 0))
 		{
+
 			if(read_bits != 0)
 			{
 				save = response.substr(size,response.size());
@@ -291,7 +297,9 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 			return (response);
 		}
 	}
+
 	_request_c->_new_response = false;
+	HTTP_MSG( "var is " << _request_c->_new_response)
 	save = "";
 	response.append("\r\n\r\n");
 	close(fd_out);
@@ -323,7 +331,8 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 		return "";
 	}
 
-	fd_in = fd;	
+	fd_in = fd;
+	
 	_request_c->_new_request = false;
 
 	std::stringstream port;

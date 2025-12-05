@@ -419,9 +419,8 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	{	
 		 ServerConfig config = get_config(port);		
 
-	if(_new_response == true)
+	if(HttpResponse::_new_response == true)
 	{
-		HTTP_MSG( "_new_response is true")
 
 		response =  cgi->chek_and_return_chunks("NULL");
 
@@ -434,15 +433,11 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		if(_new_request != true)
 		{
 
-
 			_parser->new_request(request);
 
 		}
-		else {
-
-			HTTP_MSG( "_new_request is false")
+		else 
 			_parser->set_request_msg(request);
-		}
 	
 		cgi->create_env(_env, _parser->get_request_env());
 
@@ -497,7 +492,8 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 				{
 				chek_cig_or_static( config.getErrorPage(error),config);
 				_new_request = true;
-				_parser->_is_chunk = 0;	
+				_parser->_is_chunk = 0;
+					
 					return (response = _parser->chek_and_add_header(
 								cgi->execute( config.getErrorPage(error), _pg),  e.what()));
 				}
@@ -514,7 +510,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		}		
 	
 
-	T_MSG("Finich request ", GREEN)
+	T_MSG("Finich request \n", GREEN)
 	return (response);
 }
 
@@ -525,7 +521,6 @@ std::string HttpResponse::gener_erro_page(int error, std::string status)
 	std::stringstream size;
 	ok << error;
 	_new_request = false;
-	response = "";
 	response = "HTTP/1.1 " + ok.str() + " " + status + "\r\n";
 	if(error == 405)
 	{
@@ -544,9 +539,8 @@ std::string HttpResponse::gener_erro_page(int error, std::string status)
 	}
 	if(error == 200)
 	{
-	 response += "Content-Type: text/html\r\n";
-	 response += "Connection: close\r\n";
-	 response += "Content-Length: 0 \r\n\r\n";
+	 response += "Content-Type: text/html\n";
+	 response += "Content-Length: 0\n\n";
 	  return (response);
 	}
 	response += "Content-Type: text/html; charset=UTF-8 \n";

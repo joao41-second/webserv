@@ -158,7 +158,7 @@ void EventLoop::run() {
 						std::cout << " status request " <<  entry.request.get_chunks_status() << std::endl;
 						// clear buffer for the next read operation.
 						
-						if (!entry.request.get_chunks_status())
+						//if (!entry.request.get_chunks_status())
 							entry.pfd.events = POLLOUT;
 					}
 				}

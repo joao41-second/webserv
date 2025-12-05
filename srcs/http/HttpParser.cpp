@@ -171,17 +171,13 @@ void HttpParser::parsing_env(std::string buffer)
 		if(var == "Content_Length")
 		{
 			_is_chunk = 1;
-		}
-		else 
-			_is_chunk = 0;
-			
-		if(var == "Transfer_Encoding" && trim(content) == "chunked") 
+		}	
+		else if(var == "Transfer_Encoding" && trim(content) == "chunked") 
 		{		
 			_is_chunk = 2;
 		}
-		else
-		    _is_chunk = 0;
-
+		
+		HTTP_MSG( "status var detect is chunk  " << _is_chunk);
 		for (int i =0; i < (int)var.size(); ++i) {
 			int char_ = var[i];
 			var[i] = std::toupper(char_);

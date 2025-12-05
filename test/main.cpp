@@ -103,57 +103,67 @@ void CGI_request_in_chunk_and_response_in_chun()
 {
 
     	HttpResponse request;
+	HttpParser   parser;
+	Cgi 	     cgi;
 	std::string headers =
         "POST /main.py HTTP/1.1\r\n"
         "Host: www.example.com\r\n"
         "Transfer-Encoding: chunked\r\n"
         "Content-Type: text/plain\r\n"
-        "\r\n"; // separa cabeçalho do corpo
+        "\r\n";
 
     // Chunks (tamanho + dados juntos)
-    std::string chunk1 = "6\r\nHellokkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk\r\n";
+    std::string chunk1 = "6\r\nHello \r\n";
     std::string chunk2 = "5\r\nthis \r\n";
     std::string chunk3 = "4\r\nis a\r\n";
     std::string chunk4 = "7\r\nchunked\r\n";
     std::string chunk5 = "8\r\nmessage.\r\n";
 
     // Chunk final indicando fim
+   create_var (&parser, &request,&cgi);
     std::string final_chunk = "0\r\n\r\n";
 
 	try {
-	MSG_T(  request.request_and_response( headers, 8022),BLUE);
+	MSG_T(  request.request_and_response( headers, 8022),RED);
 	
 	if(request.get_chunks_status() == true)
 	{
   		request.request_and_response( chunk1 , 8022);
+		HTTP_MSG("chunk")
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk1 , 8022));
 	}
 	if(request.get_chunks_status() == true)
 	{
 
   		request.request_and_response( chunk2 , 8022);
+
+		HTTP_MSG("chunk")
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk2 , 8022));
 	}
 	if(request.get_chunks_status() == true)
 	{
 
   		request.request_and_response( chunk3 , 8022);
+
+		HTTP_MSG("chunk")
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk3 , 8022));
 	}
 	if(request.get_chunks_status() == true)
 	{
 
 	
+		HTTP_MSG("chunk end")
 	
 	std::string respnse = request.request_and_response( final_chunk , 8022);
 
-	MSG_T (respnse,BLUE);
+
+	MSG_T (respnse,RED);
 	//
-		while (HttpResponse::_new_response == true) {
+		while (request.get_chunks_status_response()) {
 
 		respnse =   request.request_and_response( final_chunk , 8022);
 
-		MSG_T (respnse,BLUE);
+		MSG_T (respnse,RED);
 		
 		
 		}
@@ -189,7 +199,7 @@ void CGI_request_and_response_in_chunks()
 	//	HttpResponse::request_and_response( final_chunk , 8022);
 	
 	
-		while (HttpResponse::_new_response == true) {
+		while (request.get_chunks_status() == true) {
 
 			HTTP_MSG(  request.request_and_response( "NULL" , 8022));
 		}
@@ -248,7 +258,8 @@ int main(int argc ,char ** argv,char**env)
 	//execute(env);
 	init_config(env);
 	//config_and_http_implemente(argc,argv,env);
-	CGI_request_and_response_in_chunks();
+//	CGI_request_and_response_in_chunks();
+CGI_request_in_chunk_and_response_in_chun();
 	//CGI_request_test_html();
 //	CGI_request_test_not_chunked(env);
 

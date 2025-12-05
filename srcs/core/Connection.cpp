@@ -104,7 +104,7 @@ std::string	Connection::getWriteBuffer() const {
 
 void	Connection::setWriteBuffer(std::string buffer) {
 	
-	HTTP_MSG("request->" << buffer);
+	HTTP_MSG("request-> \n" << buffer);
 	_writeBuffer = buffer;
 }
 

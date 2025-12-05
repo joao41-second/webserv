@@ -310,9 +310,7 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	char 		**end = NULL;
 	int 		fd =-1;
 
-	HTTP_MSG(_request)
-	if(!_request.empty())
-		_request = "";
+	HTTP_MSG("start _ cgi and :" << _request);
 
 	if(_request_c->_new_response == false)
 			std::remove(_file_name_out.c_str());	

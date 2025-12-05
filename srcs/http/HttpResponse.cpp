@@ -29,6 +29,8 @@
 #include <vector>
 #include <unistd.h>
 
+#include <dirent.h>
+
 
 int 		HttpResponse::size_max 		= 50000;
 char ** 	HttpResponse::_env;
@@ -43,6 +45,7 @@ HttpResponse::HttpResponse()
 		this->_pg = "";
 	//	this->_new_response = "";
 		this->_request_status = false;
+		this->is_path = false;
 
 }
 HttpResponse::~HttpResponse()
@@ -105,6 +108,49 @@ void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 
 	//TODO add the get cgi and create type of cgi 
 }
+
+std::string HttpResponse::open_static_path(std::string file)
+{
+	std::string 		request = "HTTP/1.1 200 OK\r\n";
+	size_t 			size_  = file.rfind('.');
+	std::string 		type_file = "";
+	static DIR 		*fd ;
+	std::string 		body = "";
+	static std::string 	temp;
+	struct dirent *entry;
+
+	T_MSG("start_open_path = " << file, YELLOW);
+
+	if(size_ != std::string::npos)
+	 		type_file = file.substr(size_,file.size());		 
+	_request_status = false;	
+
+	 if ((fd = opendir(file.c_str())) == NULL) 
+			throw Not_found_404();
+	body =  "</head><body><h1>Index of /uploads/</h1><table><tr>j<th>Nome do arquivo</th></tr>";
+    	while ((entry = readdir(fd)) != NULL) 
+	{
+		std::string path = file + "/" + entry->d_name;
+		std::string file  = entry->d_name;
+
+		body +=	"<tr><td><a href="+ path + ">"+ file+ "</a></td></tr>";
+
+	}
+	body += "  </tr></tbody></table></body></html>";
+
+		std::stringstream ss;
+		ss << body.size();
+		request += "Content-Length: " + ss.str() + "\r\n";
+
+		
+
+		request += "Content-Type: " + _types[".html"] +"\n";
+	request += "Connection: keep-alive\r\n\n";
+
+		request += body+ "\r\n\r\n";
+	return (request);
+}
+
 
 std::string HttpResponse::open_static_file(std::string file)
 {
@@ -244,6 +290,9 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 			for(int i =0 ; i < (int)loc[path].getMethods().size();i++)
 			{
 				HTTP_MSG( "_methods" << loc[path].getMethods()[i] )
+				if(is_path == true)
+					if(loc[path].getMethods()[i] ==  size) 
+						return( loc[path].getRoot() );
 				if(loc[path].getMethods()[i] ==  size) 
 					return( loc[path].getRoot() + file);
 			}
@@ -286,7 +335,8 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 	HTTP_MSG(file) 
 	 if(server.getLocMap().find(file) != server.getLocMap().end())
 	 {
-		 throw Director_Open_200();
+		 is_path = true;
+		 return false;	
 	 }
 
 	int size = file.find('.');
@@ -435,16 +485,11 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		}
 		return (response);
 	}	
-
 		if(_new_request != true)
 		{
-
-
 			_parser->new_request(request);
-
 		}
 		else {
-
 			HTTP_MSG( "_new_request is false")
 			_parser->set_request_msg(request);
 		}
@@ -455,6 +500,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 		if( _parser->_pach_info == "/")
 			response = get_folder_index(config);
+
 		else if (chek_cig_or_static(_parser->_pach_info, config))
 		{
 			_new_request = true;
@@ -464,8 +510,11 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		else
 		{
 			// open static file
+			HTTP_MSG("open static file ")
 			path = rediect_path(_parser->_pach_info,port);
-			if(_parser->_methods == "DELETE")
+			if(is_path == true)
+				response = HttpResponse::open_static_path(path);
+			else if(_parser->_methods == "DELETE")
 				response = Delete(path);
 			else
 				response = HttpResponse::open_static_file(path);

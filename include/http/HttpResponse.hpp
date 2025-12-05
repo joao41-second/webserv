@@ -45,6 +45,7 @@ private:
 		std::string rediect_path(std::string,int);
 		std::string return_path_use();
 		bool	   chek_cig_or_static(std::string, ServerConfig);
+		bool is_path;
 
 public:
 	HttpParser *_parser;
@@ -70,6 +71,7 @@ public:
 	bool get_chunks_status_response();
 
 	std::string open_static_file(std::string feile );
+	std::string open_static_path(std::string patc);
 };
 
 #endif

@@ -159,13 +159,16 @@ void EventLoop::run() {
 
 						std::cout << " status request " <<  entry.request.get_chunks_status() << std::endl;
 						// clear buffer for the next read operation.
-						
+						if(entry.request.get_chunks_status() == false)
+						{
+							closeConnection(entry);
+						}
 						if (!entry.request.get_chunks_status())
 							entry.pfd.events = POLLOUT;
 					}
 				}
 			}
-			if (entry.pfd.revents & POLLOUT || entry.request.get_chunks_status() == false ) {
+			if (entry.pfd.revents & POLLOUT) {
 				if (entry.conn && !entry.conn->writeResponse()) {
 					closeConnection(entry);
 					entry.pfd.fd = -1;

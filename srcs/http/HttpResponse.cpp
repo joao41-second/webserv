@@ -365,7 +365,7 @@ std::string HttpResponse::get_folder_index( ServerConfig conf)
 		{
 			if(it->second._cgi_pass != "")
 			{
-			   return ( _parser->chek_and_add_header(cgi->execute( _parser->get_request_msg(), it->second._cgi_pass),""));
+			   return ( _parser->chek_and_add_header(cgi->execute( _parser->get_request_msg(), it->second._cgi_pass,&_new_request),""));
 			}
 			else if(it->second.getRoot().find('.') == std::string::npos
 					|| it->second.getRoot().rfind('.') < it->second.getRoot().rfind('/'))
@@ -423,12 +423,12 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	{
 		HTTP_MSG( "_new_response is true")
 
-		response =  cgi->chek_and_return_chunks("NULL");
+	//	response =  cgi->chek_and_return_chunks("NULL");
 
 		if(_new_response == false && _new_response == false)
 		{
 		}
-		return (response);
+	//	return (response);
 	}	
 
 		if(_new_request != true)
@@ -453,7 +453,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		else if (chek_cig_or_static(_parser->_pach_info, config))
 		{
 			_new_request = true;
-			response =  _parser->chek_and_add_header(cgi->execute( _parser->get_request_msg(), _pg),"");
+			response =  _parser->chek_and_add_header(cgi->execute( _parser->get_request_msg(), _pg,&_new_request),"");
 		}
 		else
 		{
@@ -499,7 +499,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 				_new_request = true;
 				_parser->_is_chunk = 0;	
 					return (response = _parser->chek_and_add_header(
-								cgi->execute( config.getErrorPage(error), _pg),  e.what()));
+								cgi->execute( config.getErrorPage(error), _pg,&_new_request),  e.what()));
 				}
 			}
 			catch(std::exception &f)
@@ -514,7 +514,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		}		
 	
 
-	T_MSG("Finich request ", GREEN)
+	T_MSG("Finich request _new_request  = " << _new_request << " _new_response = " << _new_response , GREEN)
 	return (response);
 }
 

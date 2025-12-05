@@ -261,9 +261,9 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 			if(_request_c->_new_response == true)
 			{
 
-			 header += "Transfer-Encoding: chunked\r\n" ;
+			// header += "Transfer-Encoding: chunked\r\n" ;
 			}
-			else 
+			//else 
 
 			 header += "Content-Length: " + len.str() + "\r\n" ;
 		

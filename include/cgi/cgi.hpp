@@ -50,7 +50,7 @@ class Cgi
 		Cgi &operator=(const Cgi &copy);		
 		bool chek_program(std::string porgram);
 		void create_env(char **env,std::vector<char *> env_request);
-		std::string execute(std::string _request,std::string porgram);
+		std::string execute(std::string _request,std::string porgram , bool *request);
 		std::string 	chek_and_return_chunks(std::string file_name);
 };
 

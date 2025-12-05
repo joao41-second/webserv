@@ -154,10 +154,10 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 int Cgi::save_chunk_fd(std::string str)
 {
 	static int fd=  -1;
-	static int body = 0;
+	static int body = 1;
 
 
-	HTTP_MSG("port" << _request_c->_parser->_port );
+	HTTP_MSG("paser is chunk status" <<  _parser->_is_chunk);
 	std::stringstream port;
 	port << _parser->_port;
 	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
@@ -222,11 +222,11 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 {
 	int 			size= 10000;
 	static int 		fd_out = -1;
-	int 			read_bits;
+	int 			read_bits = 0;
 	char			buffer[1024];
-	std::string 		response;
-	static std::string 	save;
-	std::stringstream 	value;
+	std::string 		response = "";
+	static std::string 	save = "";
+	std::stringstream 	value ;
 	static int 		status = 0;
 
 	HTTP_MSG("var check is true" << _request_c->_request_status)
@@ -300,7 +300,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 
 }
 
-std::string Cgi::execute(std::string _request, std::string porgram)
+std::string Cgi::execute(std::string _request, std::string porgram, bool *request)
 {
 	int 		pid ;
 	int 		fd_in;
@@ -316,12 +316,14 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 			std::remove(_file_name_out.c_str());	
 
 	_envs.push_back(NULL);		
-	if((fd = Cgi::save_chunk_fd(_request)) == -1)
+	if((fd = save_chunk_fd(_request)) == -1)
 	{
+		*request = _request_c->_new_request;
 		return "";
 	}
 
 	fd_in = fd;	
+	HTTP_MSG("chage_type")
 	_request_c->_new_request = false;
 
 	std::stringstream port;
@@ -360,5 +362,9 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 			throw Not_found_404();
 		} 
 	}
+
+	*request = false;
+	_request_c->_new_request = false;
+	HTTP_MSG("foi setado a false")
 	return response;
 }

@@ -177,7 +177,6 @@ void HttpParser::parsing_env(std::string buffer)
 			_is_chunk = 2;
 		}
 		
-		HTTP_MSG( "status var detect is chunk  " << _is_chunk);
 		for (int i =0; i < (int)var.size(); ++i) {
 			int char_ = var[i];
 			var[i] = std::toupper(char_);
@@ -261,9 +260,9 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 			if(_request_c->_new_response == true)
 			{
 
-			// header += "Transfer-Encoding: chunked\r\n" ;
+			 header += "Transfer-Encoding: chunked\r\n" ;
 			}
-			//else 
+			else 
 
 			 header += "Content-Length: " + len.str() + "\r\n" ;
 		

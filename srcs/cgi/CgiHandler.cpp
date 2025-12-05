@@ -356,6 +356,11 @@ std::string Cgi::execute(std::string _request, std::string porgram, bool *reques
    		 int exit_code = WEXITSTATUS(status);
 		
 		response = chek_and_return_chunks(_file_name_out);
+		if(  _request_c->_new_response == true && 
+				(_parser->_is_chunk ==  HTTP_EMPTY ||   _parser->_is_chunk ==  HTTP_CONTENT ))
+		{
+		 response += chek_and_return_chunks(_file_name_out);
+		}
 		std::remove(_file_name.c_str());
 
 		if(exit_code == 33) // TODO change this value for 0 
@@ -363,8 +368,5 @@ std::string Cgi::execute(std::string _request, std::string porgram, bool *reques
 		} 
 	}
 
-	*request = false;
-	_request_c->_new_request = false;
-	HTTP_MSG("foi setado a false")
 	return response;
 }

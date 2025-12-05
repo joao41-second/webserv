@@ -160,12 +160,9 @@ int Cgi::save_chunk_fd(std::string str)
 	std::stringstream port;
 	port << _parser->_port << _request_c->fd;
 	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
-	if( _parser->_is_chunk == HTTP_EMPTY)
-	{
-			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
-	}
 
-	if( _parser->_is_chunk == HTTP_CONTENT)
+
+	if( _parser->_is_chunk == HTTP_CONTENT || _parser->_is_chunk == HTTP_EMPTY )
 	{
 
 			fd = open(_file_name.c_str(),O_RDWR | O_CREAT , 0644);
@@ -173,7 +170,7 @@ int Cgi::save_chunk_fd(std::string str)
 			{
 				throw Not_found_404();
 			}
-			write(fd,str.c_str(),str.size()-4);
+			write(fd,str.c_str(),str.size());
 			close(fd);
 			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
 		
@@ -212,7 +209,7 @@ int Cgi::save_chunk_fd(std::string str)
 
 std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 {
-	int 			size= 10000;
+	int 			size= 100000;
 	static int 		fd_out = -1;
 	int 			read_bits = 0;
 	char			buffer[1024];
@@ -232,6 +229,8 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 	response = save;
 	while ((read_bits = read(fd_out,buffer,1024)) > 0 || save.size() > 0)
 	{
+		
+		T_MSG("read loop  =" << read_bits , RED);
 		response.append(buffer,read_bits);
 		if((int)response.find("\n\n")  != -1 && status == 0)
 		{
@@ -255,6 +254,8 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 			response = response.substr(0,status);
 			response.append("\r\n\r\n");
 			_request_c->_new_response = true;
+			if(read_bits == 0)
+				_request_c->_new_response = false;
 			status = -1;
 			return ( response);
 		}
@@ -276,8 +277,10 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 				response = save;
 				save = "";
 			}
-
-			_request_c->_new_response = true;
+			if(read_bits == 0)
+				_request_c->_new_response = false;
+			else
+				_request_c->_new_response = true;
 			value << response.size();	
 			response = value.str() + "\r\n"+response+"\r\n";
 			return (response);

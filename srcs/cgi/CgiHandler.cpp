@@ -154,7 +154,6 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 int Cgi::save_chunk_fd(std::string str)
 {
 	static int fd=  -1;
-	static int body = 1;
 
 
 	HTTP_MSG("paser is chunk status" <<  _parser->_is_chunk);
@@ -168,9 +167,7 @@ int Cgi::save_chunk_fd(std::string str)
 
 	if( _parser->_is_chunk == HTTP_CONTENT)
 	{
-		if(body == 1)
-		{
-			body = 0;
+
 			fd = open(_file_name.c_str(),O_RDWR | O_CREAT , 0644);
 			if(fd == -1)
 			{
@@ -179,12 +176,7 @@ int Cgi::save_chunk_fd(std::string str)
 			write(fd,str.c_str(),str.size()-4);
 			close(fd);
 			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
-		}
-		if(body == 0)
-		{ 
-			body = 1;
-			return(-1);
-		}
+		
 	}
 
 

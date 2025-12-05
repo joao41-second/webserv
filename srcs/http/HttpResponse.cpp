@@ -423,12 +423,12 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	{
 		HTTP_MSG( "_new_response is true")
 
-	//	response =  cgi->chek_and_return_chunks("NULL");
+		response =  cgi->chek_and_return_chunks("NULL");
 
 		if(_new_response == false && _new_response == false)
 		{
 		}
-	//	return (response);
+		return (response);
 	}	
 
 		if(_new_request != true)
@@ -453,6 +453,7 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 		else if (chek_cig_or_static(_parser->_pach_info, config))
 		{
 			_new_request = true;
+			
 			response =  _parser->chek_and_add_header(cgi->execute( _parser->get_request_msg(), _pg,&_new_request),"");
 		}
 		else

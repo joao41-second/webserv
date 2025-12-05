@@ -154,6 +154,7 @@ void EventLoop::run() {
 							<< entry.request.get_chunks_status() << ""
 							<< "ture =" << true << std::endl;
 						create_var(&entry.parser, &entry.request, &entry.cgi)	;
+						entry.request.set_fd( entry.pfd.fd); 
 						entry.conn->setWriteBuffer(entry.request.request_and_response(entry.conn->getReadBuffer(), 
 									entry.port)); entry.conn->setReadBuffer(""); 
 

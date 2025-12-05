@@ -55,11 +55,14 @@ public:
 	 bool _new_request;
 	 bool _new_response;
 	 bool _request_status;
+	 int fd;
 
 	static	std::map<std::string, std::string> _types;
 
 	static void set_config(std::vector<ServerConfig> &conf, char **env);
 
+
+	void set_fd(int fd);
 	std::string request_and_response(std::string request, int port);
 	void chek_valid_request_methods(std::string);
 	bool get_chunks_status();

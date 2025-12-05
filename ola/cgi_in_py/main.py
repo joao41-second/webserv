@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 # -*- coding: utf-8 -*-
 
 import sys
@@ -38,10 +39,48 @@ textarea {{
     background: #f7f7f7;
     padding: 1rem;
 }}
+button {{
+    margin-top: 1rem;
+}}
 </style>
 </head>
 <body>
 {content}
+
+<hr>
+
+<h2>Enviar dados em chunks (fetch + ReadableStream)</h2>
+<button id="sendChunks">Enviar chunks</button>
+
+<script>
+document.getElementById("sendChunks").onclick = () => {{
+
+    const encoder = new TextEncoder();
+
+    const stream = new ReadableStream({{
+        start(controller) {{
+
+            controller.enqueue(encoder.encode("Primeiro chunk\\n"));
+
+            setTimeout(() => {{
+                controller.enqueue(encoder.encode("Segundo chunk\\n"));
+            }}, 1000);
+
+            setTimeout(() => {{
+                controller.enqueue(encoder.encode("Terceiro chunk\\n"));
+                controller.close();
+            }}, 2000);
+
+        }}
+    }});
+
+    fetch("", {{
+        method : "POST",
+        body   : stream
+    }}).then(r => console.log("Chunks enviados:", r.status));
+}};
+</script>
+
 </body>
 </html>
 """
@@ -57,12 +96,21 @@ def handle_get():
     print(html_page(form_html))
 
 def handle_post():
+    # Lê POST normalmente (mesmo vindo em chunked)
     form = cgi.FieldStorage()
     texto = form.getfirst("texto", "")
-    texto_safe = html.escape(texto)
+
+    if not texto:  # Caso tenha sido enviado via chunks
+        try:
+            raw = sys.stdin.read()
+            texto_safe = html.escape(raw)
+        except:
+            texto_safe = "(erro ao ler stdin)"
+    else:
+        texto_safe = html.escape(texto)
 
     result_html = f"""
-<h1>Texto enviado</h1>
+<h1>Texto recebido</h1>
 <div class="box">{texto_safe}</div>
 <br>
 <a href="">Voltar</a>

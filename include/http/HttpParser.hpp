@@ -52,15 +52,15 @@ class HttpParser
 	       ~HttpParser();
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
-
-		std::vector<t_methods> _methods_allow;
-	       int 	 _is_chunk;
+	
+	       std::vector<t_methods> _methods_allow;
 	       std::string _type;
 	       std::string _methods;
 	       static std::string _pach_info; 
 	       static int 	 _http_page_error;
 	       std::string _host;
 	       int 	 _port;
+	       int 	 _is_chunk;
 		
 	      std::string 		chek_and_add_header(std::string response,std::string error);
 	      void        		new_request(std::string buffer); 

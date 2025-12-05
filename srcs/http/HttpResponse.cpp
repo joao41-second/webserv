@@ -78,6 +78,11 @@ bool HttpResponse::get_chunks_status_response()
 	return(_new_response);
 }
 
+void HttpResponse::set_fd(int i)
+{
+ fd = i;
+}
+
 void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 {
 	HttpResponse::_env = env;

@@ -158,7 +158,7 @@ int Cgi::save_chunk_fd(std::string str)
 
 	HTTP_MSG("paser is chunk status" <<  _parser->_is_chunk);
 	std::stringstream port;
-	port << _parser->_port;
+	port << _parser->_port << _request_c->fd;
 	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
 	if( _parser->_is_chunk == HTTP_EMPTY)
 	{
@@ -319,8 +319,8 @@ std::string Cgi::execute(std::string _request, std::string porgram, bool *reques
 	_request_c->_new_request = false;
 
 	std::stringstream port;
-	port << _parser->_port;
-	_file_name_out =  "/tmp/out_"+ port.str() + ".txt";
+	port << _parser->_port << _request_c->fd;
+	_file_name_out =  "/tmp/out_"+  port.str() + ".txt";
 	fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
 
 	pid = fork();

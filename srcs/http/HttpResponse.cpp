@@ -130,7 +130,7 @@ std::string HttpResponse::open_static_path(std::string file)
 	body =  "</head><body><h1>Index of /uploads/</h1><table><tr>j<th>Nome do arquivo</th></tr>";
     	while ((entry = readdir(fd)) != NULL) 
 	{
-		std::string path = file + "/" + entry->d_name;
+		std::string path = _parser->_pach_info + "/" + entry->d_name;
 		std::string file  = entry->d_name;
 
 		body +=	"<tr><td><a href="+ path + ">"+ file+ "</a></td></tr>";
@@ -259,8 +259,9 @@ std::string HttpResponse::rediect_path(std::string file_path,int port)
 			break;
 	std::map<std::string, LocationConfig>	_locations = _configs[i].getLocMap();
 	size = file_path.rfind('/'); 
-	file = file_path.substr(size, file_path.size());
-	path = file_path.substr(0,size+1);
+	HTTP_MSG("find pat  = " << file_path );
+	file = file_path.substr(size+1, file_path.size());
+	path = file_path.substr(0,size);
 	return (search_folder_file(file, path, _locations));
 }
 
@@ -289,16 +290,18 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 				size = HEAD; 
 			for(int i =0 ; i < (int)loc[path].getMethods().size();i++)
 			{
-				HTTP_MSG( "_methods" << loc[path].getMethods()[i] )
-				if(is_path == true)
-					if(loc[path].getMethods()[i] ==  size) 
-						return( loc[path].getRoot() );
+				HTTP_MSG( "_methods" << loc[path].getMethods()[i]  << " path= "<< path << " file = "<< file )
+				//if(is_path == true)
+					//if(loc[path].getMethods()[i] ==  size) 
+					//	return( loc[path].getRoot() );
 				if(loc[path].getMethods()[i] ==  size) 
+				{
 					return( loc[path].getRoot() + file);
+				}
 			}
 			throw Method_Not_Allowed_405();
 		}
-		size =path.rfind('/');
+		size = path.rfind('/');
 		file = path.substr(size,path.size()-1) + file;
 		path = path.substr(0,size);
 
@@ -343,7 +346,11 @@ bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 
 
 	if( file.rfind('.') == std::string::npos)
-		throw Badd_Request_400();
+	{
+		 is_path = true;
+		 return false;	
+
+	}
 
 	std::string type =  file.substr(size,file.size()); 
 	_parser->_type = type;

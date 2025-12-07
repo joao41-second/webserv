@@ -15,9 +15,9 @@
 #include <core/Connection.hpp>
 #include <http/HttpResponse.hpp>
 
-volatile sig_atomic_t stopServer = 0;
+volatile sig_atomic_t	stopServer = 0;
 
-static void signalHandler(int signum) {
+static void	signalHandler(int signum) {
 
 	if (signum == SIGINT) {
 		std::cout << "\nShutting down the server gracefully...\n"
@@ -39,7 +39,7 @@ EventLoop::~EventLoop() {
 	}
 }
 
-void EventLoop::addListeningSocket(const Socket *socket) {
+void	EventLoop::addListeningSocket(const Socket *socket) {
 
 	struct pollfd pfd;
 	pfd.fd = socket->getFd();
@@ -55,7 +55,7 @@ void EventLoop::addListeningSocket(const Socket *socket) {
 	_pollEntries.push_back(entry);
 }
 
-void EventLoop::run() {
+void	EventLoop::run() {
 
 	signal(SIGINT, signalHandler);
 	while (true) {
@@ -151,24 +151,25 @@ void EventLoop::run() {
 						entry.lastActivity = time(NULL);
 						if (entry.conn->isRequestComplete()) {
 							std::cout << entry.port << std::endl;
+
 							entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer(), entry.port));
 							entry.conn->setReadBuffer(""); // clear buffer for the next read operation.
-							if (!HttpResponse::get_chunks_status())
-								entry.pfd.events = POLLOUT;
+							//if (!HttpResponse::get_chunks_status())
+							entry.pfd.events = POLLOUT;
+						}
 					}
 				}
 			}
-		}
 
 			if (entry.pfd.revents & POLLOUT) {
-				if (entry.conn && !entry.conn->writeResponse()) {
-					closeConnection(entry);
-					entry.pfd.fd = -1;
-				} else
-					entry.lastActivity = time(NULL); // Update activity time
-				entry.pfd.events = POLLIN;
+    			if (entry.conn) {
+       				bool allSent = entry.conn->writeResponse();
+        			entry.lastActivity = time(NULL);
+        
+        			if (allSent)
+            			entry.pfd.events = POLLIN;
+    			}
 			}
-			entry.pfd.revents = 0;
 		}
 
 		if (!newClients.empty())
@@ -185,7 +186,7 @@ void EventLoop::run() {
 	}
 }
 
-void EventLoop::closeConnection(PollEntry &entry) {
+void	EventLoop::closeConnection(PollEntry &entry) {
 	if (entry.pfd.fd >= 0)
 		close(entry.pfd.fd);
 	if (entry.conn)

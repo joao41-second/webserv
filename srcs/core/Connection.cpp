@@ -46,7 +46,7 @@ bool	Connection::readRequest() {
 }
 
 bool	Connection::writeResponse() {
-	
+
 	ssize_t	bytesWritten;
 
 	if (_writeBuffer.empty())
@@ -96,7 +96,7 @@ std::string	Connection::getWriteBuffer() const {
 
 void	Connection::setWriteBuffer(std::string buffer) {
 
-	_writeBuffer = buffer;
+		_writeBuffer = buffer;
 }
 
 void	Connection::setReadBuffer(std::string buffer) {

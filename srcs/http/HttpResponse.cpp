@@ -109,140 +109,7 @@ void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
 	//TODO add the get cgi and create type of cgi 
 }
 
-std::string HttpResponse::open_static_path(std::string file)
-{
-	std::string 		request = "HTTP/1.1 200 OK\r\n";
-	size_t 			size_  = file.rfind('.');
-	std::string 		type_file = "";
-	static DIR 		*fd ;
-	std::string 		body = "";
-	static std::string 	temp;
-	struct dirent *entry;
 
-	T_MSG("start_open_path = " << file, YELLOW);
-
-	if(size_ != std::string::npos)
-	 		type_file = file.substr(size_,file.size());		 
-	_request_status = false;	
-
-	 if ((fd = opendir(file.c_str())) == NULL) 
-			throw Not_found_404();
-	body =  "</head><body><h1>Index of /uploads/</h1><table><tr>j<th>Nome do arquivo</th></tr>";
-    	while ((entry = readdir(fd)) != NULL) 
-	{
-		std::string path = _parser->_pach_info + "/" + entry->d_name;
-		std::string file  = entry->d_name;
-
-		body +=	"<tr><td><a href="+ path + ">"+ file+ "</a></td></tr>";
-
-	}
-	body += "  </tr></tbody></table></body></html>";
-
-		std::stringstream ss;
-		ss << body.size();
-		request += "Content-Length: " + ss.str() + "\r\n";
-
-		
-
-		request += "Content-Type: " + _types[".html"] +"\n";
-	request += "Connection: keep-alive\r\n\n";
-
-		request += body+ "\r\n\r\n";
-	return (request);
-}
-
-
-std::string HttpResponse::open_static_file(std::string file)
-{
-	std::string 		request = "HTTP/1.1 200 OK\r\n";
-	size_t 			size_  = file.rfind('.');
-	std::string 		type_file = "";
-	char 			buffer[1024];
-	int 			read_bits;
-	int 			size = 100000;
-	static int 		fd = -1;
-	std::string 		body = "";
-	static std::string 	temp;
-	static bool 		loop = true;
-
-	T_MSG("start_open_file = " << file, YELLOW);
-
-	if(size_ != std::string::npos)
-	 		type_file = file.substr(size_,file.size());		 
-	_request_status = false;	
-
-	if(HttpResponse::_new_response == false)
-	{
-		if((fd = open(file.c_str(),O_RDWR , 0644) )== -1)
-			throw Not_found_404();
-	}
-
-	body = temp;
-
-	while ((read_bits = read(fd,buffer,1024)) > 0)
-	{
-		body.append(buffer,read_bits);
-		if((int)body.size() > size)
-			break;
-	}
-	if(read_bits != 0 && loop == true)
-	{
-		_request_status = true;	
-		loop = false;
-		HttpResponse::_new_response = true;
-		request += "Transfer-Encoding: chunked\r\n";
-		temp = body;
-		body = "";
-	}
-	else if(read_bits == 0 && loop == true )
-	{
-		std::stringstream ss;
-		ss << body.size();
-		request += "Content-Length: " + ss.str() + "\r\n";
-	}
-	else 
-	{
-		request = "0/r/n/r/n";
-		if(body.size() == 0)
-		{
-			_request_status = false;
-			close(fd);
-			fd = -1;
-			HttpResponse::_new_response = false;
-			return (request);
-		}
-		_request_status = true;	
-		HttpResponse::_new_response = true;
-		request = body.substr(0,size);
-		if((int)body.size() > size)
-			temp = body.substr(size,body.size());
-		else
-			temp = "";
-		std::stringstream ss;
-		ss << request.size();
-		request = ss.str() + "\r\n" +request + "\r\n";
-		return (request);
-	}
-		
-	if(!_types[type_file].empty())
-
-		request += "Content-Type: " + _types[type_file] +"\n";
-	else
-	{
-		//TODO this vereficasion no finic
-		request += "Content-Disposition: attachment; filename= " +   file+ '\n' ;
-		request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
-	}	
-	request += "Connection: keep-alive\r\n\n";
-
-	if(read_bits == 0)
-	{
-		request += body+ "\r\n\r\n";
-		close(fd);
-		fd = -1;
-	}
-	return (request);
-}
 
 std::string HttpResponse::rediect_path(std::string file_path,int port)
 {
@@ -271,7 +138,11 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 {
 	std::string 	real_path = "";
 	int 		size = 0;
-
+	
+	if (path == "")
+		path ="/";
+	if(file[0] != '/')
+		file = "/" + file; 
 	if( loc[path+file].getRoot() != "")
 			return loc[path+file].getRoot();	
 	while (path.rfind('/') != std::string::npos) {
@@ -290,7 +161,7 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 				size = HEAD; 
 			for(int i =0 ; i < (int)loc[path].getMethods().size();i++)
 			{
-				HTTP_MSG( "_methods" << loc[path].getMethods()[i]  << " path= "<< path << " file = "<< file )
+				HTTP_MSG( "_methods = " << loc[path].getMethods()[i]  << " path= "<< path << " file = "<< file )
 				//if(is_path == true)
 					//if(loc[path].getMethods()[i] ==  size) 
 					//	return( loc[path].getRoot() );
@@ -523,6 +394,8 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 				response = HttpResponse::open_static_path(path);
 			else if(_parser->_methods == "DELETE")
 				response = Delete(path);
+			else if(_parser->_methods == "POST")
+				save_file_post(path, _parser->get_request_msg());
 			else
 				response = HttpResponse::open_static_file(path);
 		}
@@ -553,7 +426,6 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 
 			try 
 			{
-
 				ServerConfig config = get_config(port);		
 				if(!config.getErrorPage(error).empty())
 				{
@@ -580,53 +452,3 @@ std::string HttpResponse::request_and_response(std::string request, int port)
 	return (response);
 }
 
-std::string HttpResponse::gener_erro_page(int error, std::string status)
-{
-	std::string response, mens;
-	std::stringstream ok;
-	std::stringstream size;
-	ok << error;
-	_new_request = false;
-	response = "";
-	response = "HTTP/1.1 " + ok.str() + " " + status + "\r\n";
-	if(error == 405)
-	{
-		std::string method;
-		for(int i =0 ; i < (int)_parser->_methods_allow.size();i++)
-		{
-			if(_parser->_methods_allow[i] == GET)
-				method = " GET";
-			if(_parser->_methods_allow[i] == POST)
-				method += " POST";
-			if(_parser->_methods_allow[i] == DELETE)
-				method += " DELETE";
-
-		}
-		response += "Allow:" + method + "\n"; 
-	}
-	if(error == 200)
-	{
-	 response += "Content-Type: text/html\r\n";
-	 response += "Connection: close\r\n";
-	 response += "Content-Length: 0 \r\n\r\n";
-	  return (response);
-	}
-	response += "Content-Type: text/html; charset=UTF-8 \n";
-	// response = TODO add host the server
-	mens =
-		"<!DOCTYPE html>\n"
-		"<html>\n"
-		"<head><title>" +
-		ok.str() + status + "</title></head>\n"
-							"<body>\n"
-							"<h1>" +
-		status + "</h1>\n"
-				 "<hr>\n"
-				 "<p> " + ok.str() +"</p>"
-				 "</body>\n"
-				 "</html>\n";
-	size << mens.size();
-	response += "Content-Length: " + size.str() + "\n\n";
-	response += mens;
-	return response;
-}

@@ -166,7 +166,7 @@ void EventLoop::run() {
 					}
 				}
 			}
-			if (entry.pfd.revents & POLLOUT || entry.request.get_chunks_status() == false ) {
+			if (entry.pfd.revents & POLLOUT ) {
 				if (entry.conn && !entry.conn->writeResponse()) {
 					closeConnection(entry);
 					entry.pfd.fd = -1;

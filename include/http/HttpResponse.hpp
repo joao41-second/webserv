@@ -72,6 +72,7 @@ public:
 
 	std::string open_static_file(std::string feile );
 	std::string open_static_path(std::string patc);
+	std::string save_file_post(std::string file , std::string request);
 };
 
 #endif

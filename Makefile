@@ -12,6 +12,7 @@ SRCS_ALL :=	\
 		$(SRC_DIR)/config/Config.cpp $(SRC_DIR)/config/LocationConfig.cpp $(SRC_DIR)/config/ServerConfig.cpp \
 		$(SRC_DIR)/core/Connection.cpp $(SRC_DIR)/core/EventLoop.cpp $(SRC_DIR)/core/Server.cpp \
 		$(SRC_DIR)/http/HttpParser.cpp $(SRC_DIR)/http/HttpResponse.cpp $(SRC_DIR)/http/HttpParser_throw.cpp \
+		$(SRC_DIR)/http/HttpResponseOpenAndReadFiles.cpp \
 		$(SRC_DIR)/net/Socket.cpp \
 
 

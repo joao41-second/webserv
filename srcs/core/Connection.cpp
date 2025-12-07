@@ -39,15 +39,9 @@ bool	Connection::readRequest() {
 		_readBuffer.append(buffer, bytesRead);
 	}
 
-	if (bytesRead < 0) { 
-		if (errno == EAGAIN || errno == EWOULDBLOCK) 
-			return true;
-		perror("read");
-    	return (false);
-	}
-
 	if (bytesRead == 0)
-    	return (false); //client closed connection
+    	return (false);
+
 	return (true);
 }
 

@@ -51,14 +51,15 @@ void EventLoop::addListeningSocket(const Socket *socket) {
 	entry.conn = NULL;
 	entry.socketAddr = socket->getAddr();
 	entry.port = ntohs(socket->getAddr().sin_port);
+	entry.lastActivity = time(NULL);
 	_pollEntries.push_back(entry);
 }
 
 void EventLoop::run() {
 
+	signal(SIGINT, signalHandler);
 	while (true) {
 
-		signal(SIGINT, signalHandler);
 		if (stopServer) {
 			while (!_pollEntries.empty()) {
 				closeConnection(_pollEntries.back());
@@ -95,7 +96,7 @@ void EventLoop::run() {
 			int errorCode = poll(&pfdArray[0], pfdArray.size(), 5000);
 			if (errorCode < 0) {
 				if (errno == EINTR)
-					break;
+					break ;
 				perror("poll");
 				break;
 			}
@@ -117,7 +118,6 @@ void EventLoop::run() {
 
 			if (entry.pfd.revents & POLLIN) {
 				if (entry.conn == NULL) {
-
 					socklen_t addrLen = sizeof(entry.socketAddr);
 					int clientFd = accept(entry.pfd.fd, (sockaddr *)&entry.socketAddr, &addrLen);
 					if (clientFd < 0)
@@ -147,22 +147,25 @@ void EventLoop::run() {
 						closeConnection(entry);
 						entry.pfd.fd = -1;
 					}
-					else if (entry.conn->isRequestComplete()) {
-						std::cout << entry.port << std::endl;
-						entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer(), entry.port));
-						entry.conn->setReadBuffer(""); // clear buffer for the next read operation.
-						if (!HttpResponse::get_chunks_status())
-							entry.pfd.events = POLLOUT;
+					else {
+						entry.lastActivity = time(NULL);
+						if (entry.conn->isRequestComplete()) {
+							std::cout << entry.port << std::endl;
+							entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer(), entry.port));
+							entry.conn->setReadBuffer(""); // clear buffer for the next read operation.
+							if (!HttpResponse::get_chunks_status())
+								entry.pfd.events = POLLOUT;
 					}
 				}
 			}
+		}
+
 			if (entry.pfd.revents & POLLOUT) {
 				if (entry.conn && !entry.conn->writeResponse()) {
 					closeConnection(entry);
 					entry.pfd.fd = -1;
-				} else {
+				} else
 					entry.lastActivity = time(NULL); // Update activity time
-				}
 				entry.pfd.events = POLLIN;
 			}
 			entry.pfd.revents = 0;

@@ -3,7 +3,6 @@
 #ifndef SERVERCONFIG_H
 #define SERVERCONFIG_H
 
-// TODO Considerar meter estas libraries num unico ficheiro
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -18,8 +17,8 @@
 #include <algorithm>
 #include <typeinfo>
 
-#include <sys/socket.h> // TODO Ver se ha melhor
-#include <netinet/in.h> // TODO Ver se ha melhor
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 #include "./LocationConfig.hpp"
 

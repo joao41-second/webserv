@@ -12,11 +12,11 @@
 
 #include "color.hpp"
 
-#define TESTER 1
+#define TESTER 0
 
-#define DEBUG_HTTP 1
+#define DEBUG_HTTP 0
 
-#define DEBUG_CGI 1
+#define DEBUG_CGI 0
 
 
 

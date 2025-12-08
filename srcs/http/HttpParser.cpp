@@ -241,7 +241,7 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 	}
 	if(size == std::string::npos )
 	{
-		//TODO return error page
+		throw Not_found_404();
 	}	
 	std::string  body;
 	std::string  header;
@@ -285,20 +285,9 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 		}
 		if(header.find("Content-Type:") == std::string::npos)
 		{
-
 			if(!_request_c->_types[_type].empty())
 			{
-				//TODO implement chunkes 
-				
-
 				header += "Content-Type: " + _request_c->_types[_type] +"\n";
-		
-			}
-			else
-			{
-				//TODO this vereficasion no finic
-			//request += "Content-Disposition: attachment; filename= " +   file+ '\n' ;
-			//request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
 			}
 		}	
 	std::string end = header += "\r\n" + body +"\r\n";

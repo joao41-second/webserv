@@ -187,18 +187,18 @@ int Cgi::save_chunk_fd(std::string str)
 			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
 		fd = open(_file_name.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if(fd == -1)
-			throw Not_found_404(); //TODO nao e este o error  
+			throw Not_found_404();
 
 		int size =  str.find('\r');
 		if(size == (int)std::string::npos)
-			throw Not_found_404(); //TODO nao e este o error  
+			throw Not_found_404();
 		int bits;
 		std::string nb = str.substr(0,size);
 		std::string al = str.substr(size+2,str.rfind('\r'));
 		std::stringstream ss(str);
 		ss >> bits;
 		if(ss.fail())
-			throw Not_found_404(); //TODO nao e este o error  
+			throw Not_found_404();
 		write(fd,al.c_str(),bits);
 		close(fd);
 	}
@@ -239,10 +239,6 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 		else  if((int)response.find("\r\n\r\n")  != -1 && status == 0)
 		{
 			status =  response.find("\r\n\r\n");
-		}
-		else if(status == 0)
-		{
-			//TODO errorr;
 		}
 		if(status == 0)
 		{
@@ -358,7 +354,7 @@ std::string Cgi::execute(std::string _request, std::string porgram, bool *reques
 		}
 		std::remove(_file_name.c_str());
 
-		if(exit_code == 33) // TODO change this value for 0 
+		if(exit_code == 33)
 			throw Not_found_404();
 		} 
 	}

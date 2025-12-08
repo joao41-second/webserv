@@ -41,20 +41,14 @@ bool	Connection::readRequest() {
 		_readBuffer.append(buffer, bytesRead);
 	}
 
-	if (bytesRead < 0) { 
-		if (errno == EAGAIN || errno == EWOULDBLOCK) 
-			return true;
-		perror("read");
-    	return (false);
-	}
-
 	if (bytesRead == 0)
-    	return (false); //client closed connection
+    	return (false);
+
 	return (true);
 }
 
 bool	Connection::writeResponse() {
-	
+
 	ssize_t	bytesWritten;
 
 	if (_writeBuffer.empty())
@@ -106,6 +100,8 @@ void	Connection::setWriteBuffer(std::string buffer) {
 	
 	HTTP_MSG("request-> \n" << buffer);
 	_writeBuffer = buffer;
+
+		_writeBuffer = buffer;
 }
 
 void	Connection::setReadBuffer(std::string buffer) {

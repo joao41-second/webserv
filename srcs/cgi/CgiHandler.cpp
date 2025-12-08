@@ -334,6 +334,7 @@ std::string Cgi::execute(std::string _request, std::string porgram, bool *reques
 		close(fd_in);
 		close(fd_out);
 		int i  = execve( porgram.c_str(),end,_envs.data());
+		(void)i;
 		HTTP_MSG("merda = " << i)
 		perror("execve");
 		exit(33);

@@ -24,4 +24,5 @@
 #if  TESTER
     #define T_MSG(x,color) std::cerr << color  << x << RESET <<  std::endl;
 #else
+    #define T_MSG(x,color);
 #endif

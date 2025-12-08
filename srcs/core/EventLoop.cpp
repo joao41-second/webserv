@@ -174,6 +174,7 @@ void	EventLoop::run() {
 					entry.lastActivity = time(NULL);
 					if (allSent)
             			entry.pfd.events = POLLIN;
+				}
 			}
 		}
 

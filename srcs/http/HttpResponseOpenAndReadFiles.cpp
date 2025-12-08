@@ -35,6 +35,7 @@ std::string HttpResponse::open_static_path(std::string file)
 		body +=	"<tr><td><a href="+ path + ">"+ file+ "</a></td></tr>";
 
 	}
+	  closedir(fd);
 	body += "  </tr></tbody></table></body></html>";
 
 		std::stringstream ss;

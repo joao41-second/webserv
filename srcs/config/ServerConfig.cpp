@@ -280,7 +280,7 @@ void	ServerConfig::setIndex(std::string index)
 
 void	ServerConfig::setRoot(std::string root)
 {
-	//validatePath(root, false);
+	validatePath(root, false);
 	this->_root = root;
 }
 

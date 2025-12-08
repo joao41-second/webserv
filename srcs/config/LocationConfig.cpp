@@ -190,7 +190,7 @@ void	LocationConfig::setIndex(std::string index)
 
 void	LocationConfig::setRoot(std::string root)
 {
-	//validatePath(root, false);
+	validatePath(root, false);
 	this->_root = root;
 }
 
@@ -201,7 +201,7 @@ void	LocationConfig::setName(std::string name)
 
 void	LocationConfig::setPass(std::string pass)
 {
-	//validatePath(pass, true);
+	validatePath(pass, true);
 	this->_cgi_pass = pass;
 }
 

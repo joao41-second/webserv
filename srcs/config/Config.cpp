@@ -6,15 +6,15 @@
 // | HELPER FUNCTIONS
 // |----------------------
 
-/*void validatePath(const std::string &path, bool cgi_pass)
+void validatePath(const std::string &path, bool cgi_pass)
 {
 	if (path == "")
 	{
 		return ;
 	}
-
-	// PARA TESTAR, COMENTAR AQUI
-	if (path.find("//") != std::string::npos)
+	cgi_pass = cgi_pass;
+	// FOR TESTING, COMMENT THE FUNCTION HERE
+	/*if (path.find("//") != std::string::npos)
 	{
 		throw Config::BadConfigException("Invalid path name: ", path);
 	}
@@ -44,9 +44,9 @@
 	if (cgi_pass && access(path.c_str(), X_OK) != 0)
 	{
 		throw Config::BadConfigException("File for cgi_pass lacks execution permission: ", path);
-	}
-	// PARA TESTAR, COMENTAR ATÉ AQUI
-}*/
+	}*/
+	// FOR TESTING, COMMENT THE FUNCTION UP UNTIL HERE
+}
 
 bool wildcardCompare(const std::string &str, const std::string &wld)
 {

@@ -39,7 +39,7 @@ public:
 	std::string const		&getIndex(void) const;
 	uint16_t				getPort(void) const;
 	unsigned long			getClientMaxSize(void) const;
-	std::string const		&getErrorPage(int error_num) const;
+	std::string const		getErrorPage(int error_num) const;
 	void					validateErrorPage(const std::string &path);
 	size_t					getLocNum(void) const;
 	LocationConfig const	&getLocationConfig(unsigned int num) const;

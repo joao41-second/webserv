@@ -1,0 +1,62 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<title>Upload em chunks</title>
+</head>
+<body>
+<h1>Enviar arquivo em chunks</h1>
+<input type="file" id="fileInput"><br><br>
+<button id="sendChunks">Enviar</button>
+<pre id="log"></pre>
+
+<script>
+const log = document.getElementById("log");
+
+document.getElementById("sendChunks").onclick = async () => {
+  const file = document.getElementById("fileInput").files[0];
+  if (!file) {
+    alert("Selecione um arquivo primeiro!");
+    return;
+  }
+
+  const chunkSize = 1024 * 50; // 50 KB
+  let offset = 0;
+  const filename = encodeURIComponent(file.name);  
+
+  while (offset < file.size) {
+    const chunk = file.slice(offset, offset + chunkSize);
+
+    try {
+      const resp = await fetch("/" + filename, {  // URL = /nome_do_arquivo
+        method: "POST",
+        headers: {
+          "Content-Type": "application/octet-stream",
+          "X-Chunk-Offset": offset
+        },
+        body: chunk
+      });
+
+      log.textContent += `Chunk enviado: offset ${offset}, tamanho ${chunk.size}\n`;
+
+      if (!resp.ok) {
+        log.textContent += `Erro no servidor: ${resp.status}\n`;
+        return;
+      }
+
+    } catch (e) {
+      log.textContent += `Erro no chunk offset ${offset}: ${e}\n`;
+      return;
+    }
+
+    offset += chunkSize;
+  }
+
+  alert("Upload concluído!");
+};
+</script>
+</body>
+</html>
+

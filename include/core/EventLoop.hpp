@@ -14,6 +14,9 @@
 
 #include "Server.hpp"
 #include "Connection.hpp"
+#include "http/HttpParser.hpp"
+#include "http/HttpResponse.hpp"
+#include <cgi/cgi.hpp>
 #include <poll.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -40,6 +43,9 @@ private:
 		Connection			*conn;
 		int					port;
 		time_t				lastActivity;
+		HttpResponse			request; 
+		HttpParser 			parser;
+		Cgi 				cgi;
 	};
 
 	std::vector<PollEntry> _pollEntries;

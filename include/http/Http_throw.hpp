@@ -12,8 +12,15 @@
 
 
 #include <exception>
+#include <string>
+#include <vector>
 
 	class   Badd_Request_400 : public std::exception 
+	{
+		public:
+			virtual const char *what()const throw();
+	};
+	class   Director_Open_200 : public std::exception 
 	{
 		public:
 			virtual const char *what()const throw();
@@ -39,3 +46,11 @@
 		public:
 			virtual const char *what()const throw();
 	};
+
+	class   Method_Not_Allowed_405: public std::exception
+	{
+		public:
+			virtual const char *what()const throw();
+	};
+
+

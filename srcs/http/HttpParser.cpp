@@ -22,40 +22,52 @@
 #include <string>
 #include <sys/ucontext.h>
 
-std::vector <std::string> HttpParser::env;
-bool 		HttpParser::_request 		= false;
-int 		HttpParser::_is_chunk 		= 0;
-std::string 	HttpParser::mensage 		= "";
 std::string 	HttpParser::_pach_info 		= "";
-std::string 	HttpParser::_type 		= "";
-int 		HttpParser::_http_page_error 	= 0;
-std::string 	HttpParser::_host 		= "";
-std::string 	HttpParser::_methods 		= "";
-int 		HttpParser::_port = 0;
+int 		HttpParser::_http_page_error 	= -1;
 
 
-HttpParser::HttpParser(void)
+HttpParser::HttpParser(): env(), _methods_allow() 
 {
-	HTTP_MSG("start_parser");
+//	HTTP_MSG("start_parser");
+	mensage = "";
+	_request = false;
+	_is_chunk = 0;
+	_port = 0;
+	_pach_info 	= "";
+	_type 		= "";
+	_host 		= "";
+	_methods 	= "";
+	_request 	= false;
+	_is_chunk  	= 0;
 }
 
 HttpParser::HttpParser(const HttpParser &value)
 {
-	HTTP_MSG("start_parser_used_privios_HttpParser");
+//	HTTP_MSG("start_parser_used_privios_HttpParser");
 	(void) value;
 }
 
 HttpParser& HttpParser::operator=(const HttpParser &value)
 {
-	HTTP_MSG("iqual operator used");
+//	HTTP_MSG("iqual operator used");
 	if(&value == this)
 		return (*this);
+
+	env = value.env;
+	mensage = value.mensage;
+	_request = value._request;
+	_is_chunk = value._is_chunk;
+	_port = value._port;	
+	_type = value._type;
+	_methods = value._methods;
+	_pach_info = value._pach_info;
+	_host = value._host;
+
 	return (*this);
 }
 
 HttpParser::~HttpParser()
 {
-	HTTP_MSG("end parser");
 }
 
 
@@ -81,8 +93,7 @@ void HttpParser::parsing_request_line(std::string buffer)
 
 	if (size == std::string::npos || size == 0)
 		throw  Badd_Request_400();
-	if(method != "GET" && method != "POST" && method != "DELETE")
-		throw Not_Implemented_501();
+	
 	_methods = method;
 	env.push_back("REQUEST_METHOD=" + method );	
 	buffer = buffer.substr(size+1,buffer.size());
@@ -160,11 +171,12 @@ void HttpParser::parsing_env(std::string buffer)
 		if(var == "Content_Length")
 		{
 			_is_chunk = 1;
-		}
-		if(var == "Transfer_Encoding" && trim(content) == "chunked") 
+		}	
+		else if(var == "Transfer_Encoding" && trim(content) == "chunked") 
 		{		
 			_is_chunk = 2;
 		}
+		
 		for (int i =0; i < (int)var.size(); ++i) {
 			int char_ = var[i];
 			var[i] = std::toupper(char_);
@@ -178,16 +190,19 @@ void HttpParser::parsing_env(std::string buffer)
 void HttpParser::new_request(std::string buffer)
 {
 
-	env.clear();
-	mensage 	= "";
+	
+	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
+	mensage 	= ""; 	
 	_pach_info 	= "";
 	_type 		= "";
 	_host 		= "";
 	_methods 	= "";
 	_request 	= false;
 	_is_chunk  	= 0;
-	T_MSG("Parse the new request" << std::endl << std::endl << buffer, BLUE);
 	parsing_env(buffer);
+
+	T_MSG("Parse the new request end" , BLUE);
+	
 
 }
 
@@ -213,21 +228,21 @@ std::vector <char *> HttpParser::get_request_env()
 std::string HttpParser::chek_and_add_header(std::string response,std::string error)
 {
 	(void )error;
-	if(HttpResponse::get_chunks_status() == true)
+
+	if(_request_c->get_chunks_status() == true)
 	{
 		HTTP_MSG("sairi")
 		return response;
 	}
 	size_t size = response.find("\n\n");
 	if(size == std::string::npos )
+	{
 		 size = response.find("\r\n\r\n");
+	}
 	if(size == std::string::npos )
 	{
 		//TODO return error page
-	}
-		
-
-
+	}	
 	std::string  body;
 	std::string  header;
 
@@ -242,8 +257,15 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 			std::stringstream len;
 
 			len <<  body.size();
-			
+			if(_request_c->_new_response == true)
+			{
+
+			 header += "Transfer-Encoding: chunked\r\n" ;
+			}
+			else 
+
 			 header += "Content-Length: " + len.str() + "\r\n" ;
+		
 		}		
 		if(header.find("Connection:") == std::string::npos)
 		{
@@ -254,9 +276,9 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 		{
 			if(HttpParser::_http_page_error != 0)
 			{
-				std::stringstream ok;
-				ok << HttpParser::_http_page_error;
-				header = "HTTP/1.1 " +  ok.str( )+ " " + error+ "\n" + header; 
+				std::stringstream ss;
+				ss << HttpParser::_http_page_error;
+				header = "HTTP/1.1 " +  ss.str( )+ " " + error+ "\n" + header; 
 			}
 			else 
 				header = "HTTP/1.1 200 OK\r\n"+ header;
@@ -264,10 +286,12 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 		if(header.find("Content-Type:") == std::string::npos)
 		{
 
-			if(!HttpResponse::_types[_type].empty())
+			if(!_request_c->_types[_type].empty())
 			{
 				//TODO implement chunkes 
-				header += "Content-Type: " + HttpResponse::_types[_type] +"\n";
+				
+
+				header += "Content-Type: " + _request_c->_types[_type] +"\n";
 		
 			}
 			else
@@ -280,4 +304,5 @@ std::string HttpParser::chek_and_add_header(std::string response,std::string err
 	std::string end = header += "\r\n" + body +"\r\n";
 	return(end);	
 }
+
 

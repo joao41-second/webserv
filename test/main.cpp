@@ -13,6 +13,7 @@
 #include "config/Config.hpp"
 #include <exception>
 #include <http/HttpResponse.hpp>
+#include <string>
 #include "config/color.hpp"
 #include "http/HttpParser.hpp"
 #include "test.hpp"
@@ -82,61 +83,88 @@ void HTTP_test_request()
     closedir(dir);
 }
 
-
-void CGI_request_test(char **envp)
+void init_config( char **envp)
 {
+
+	try {
+	Config conf_info("./test/youpi.conf", envp);
+	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
+	std::vector<Socket*>		sockets = conf_info.getSocketVector();
+	HttpResponse::set_config(configs,envp);
+	} 
+	catch (const std::exception &e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+	}
+
+}
+
+
+void CGI_request_in_chunk_and_response_in_chun()
+{
+
+    	HttpResponse request;
+	HttpParser   parser;
+	Cgi 	     cgi;
 	std::string headers =
         "POST /main.py HTTP/1.1\r\n"
         "Host: www.example.com\r\n"
         "Transfer-Encoding: chunked\r\n"
         "Content-Type: text/plain\r\n"
-        "\r\n"; // separa cabeçalho do corpo
+        "\r\n";
 
     // Chunks (tamanho + dados juntos)
-    std::string chunk1 = "6\r\nHellokkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk\r\n";
+    std::string chunk1 = "6\r\nHello \r\n";
     std::string chunk2 = "5\r\nthis \r\n";
     std::string chunk3 = "4\r\nis a\r\n";
     std::string chunk4 = "7\r\nchunked\r\n";
     std::string chunk5 = "8\r\nmessage.\r\n";
 
     // Chunk final indicando fim
+   create_var (&parser, &request,&cgi);
     std::string final_chunk = "0\r\n\r\n";
 
 	try {
-
-	Config conf_info("./test/youpi.conf", envp);
-	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-	std::vector<Socket*>		sockets = conf_info.getSocketVector();
-	HttpResponse::set_config(configs,envp);
-	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
+	MSG_T(  request.request_and_response( headers, 8022),RED);
 	
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
-  		HttpResponse::request_and_response( chunk1 , 8022);
+  		request.request_and_response( chunk1 , 8022);
+		HTTP_MSG("chunk")
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk1 , 8022));
 	}
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
 
-  		HttpResponse::request_and_response( chunk2 , 8022);
+  		request.request_and_response( chunk2 , 8022);
+
+		HTTP_MSG("chunk")
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk2 , 8022));
 	}
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
 
-  		HttpResponse::request_and_response( chunk3 , 8022);
+  		request.request_and_response( chunk3 , 8022);
+
+		HTTP_MSG("chunk")
 	//	HTTP_MSG(  HttpResponse::request_and_response( chunk3 , 8022));
 	}
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
 
-	//	HttpResponse::request_and_response( final_chunk , 8022);
-	//
-	//
-		HTTP_MSG(  HttpResponse::request_and_response( final_chunk , 8022));
-		while (HttpResponse::_new_response == true) {
+	
+		HTTP_MSG("chunk end")
+	
+	std::string respnse = request.request_and_response( final_chunk , 8022);
 
-		HTTP_MSG(  HttpResponse::request_and_response( final_chunk , 8022));
+
+	MSG_T (respnse,RED);
+	//
+		while (request.get_chunks_status_response()) {
+
+		respnse =   request.request_and_response( final_chunk , 8022);
+
+		MSG_T (respnse,RED);
+		
 		
 		}
 
@@ -150,13 +178,51 @@ void CGI_request_test(char **envp)
 }
 
 
+void CGI_request_and_response_in_chunks()
+{
+	std::string headers =
+        "GET /index.html HTTP/1.1\r\n"
+        "Host: www.example.com\r\n"
+        "Content-Type: text/plain\r\n"
+        "\r\n"; // separa cabeçalho do corpo
 
-void CGI_request_test_not_chunked(char **envp)
+
+    // Chunk final indicando fim
+    std::string final_chunk = "0\r\n\r\n";
+    HttpResponse request;
+
+	try {
+
+	HTTP_MSG(  request.request_and_response( headers, 8022));	
+
+
+	//	HttpResponse::request_and_response( final_chunk , 8022);
+	
+	
+		while (request.get_chunks_status() == true) {
+
+			HTTP_MSG(  request.request_and_response( "NULL" , 8022));
+		}
+		
+
+
+
+	} 
+	catch (const std::exception &e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+	}
+}
+
+
+
+void CGI_request_fo_the_cgi_not_chunkd(char **envp)
 {
 
 std::string body = "Hello this is achunkedmessage.\r\n\r\n";
 
 // Calcula o tamanho do corpo
+
+    HttpResponse request;
 
 std::string headers =
     "POST /main.py HTTP/1.1\r\n"
@@ -165,22 +231,15 @@ std::string headers =
     "Content-Length: 1000 \r\n"
     "\r\n"; // separa cabeçalho do corpo
 
-// Request completo
 (void) envp;
-    // Chunk final indicando fim
 
 	try {
 
-//	Config conf_info("./test/youpi.conf", envp);
-//	std::vector<ServerConfig>	configs = conf_info.getServerConfigVector();
-//	std::vector<Socket*>		sockets = conf_info.getSocketVector();
-//	HttpResponse::set_config(configs,envp);
-	HTTP_MSG(  HttpResponse::request_and_response( headers, 8022));
+	HTTP_MSG(  request.request_and_response( headers, 8022));
 	
-	if(HttpResponse::get_chunks_status() == true)
+	if(request.get_chunks_status() == true)
 	{
-  //		HttpResponse::request_and_response(body , 8022);
-		HTTP_MSG(  HttpResponse::request_and_response( body , 8022));
+		HTTP_MSG(  request.request_and_response( body , 8022));
 	}
 	
 	}
@@ -197,9 +256,11 @@ int main(int argc ,char ** argv,char**env)
 	(void)argc;
 	(void)env;
 	//execute(env);
+	init_config(env);
 	//config_and_http_implemente(argc,argv,env);
-	//HTTP_test_request();
-	CGI_request_test(env);
+//	CGI_request_and_response_in_chunks();
+CGI_request_in_chunk_and_response_in_chun();
+	//CGI_request_test_html();
 //	CGI_request_test_not_chunked(env);
 
 

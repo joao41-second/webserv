@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "cgi/cgi.hpp"
 #include <core/EventLoop.hpp>
 #include <core/Server.hpp>
 #include <core/Connection.hpp>
@@ -138,7 +139,6 @@ void	EventLoop::run() {
 						clientEntry.socketAddr = entry.socketAddr;
 						clientEntry.port = entry.port;
 						clientEntry.lastActivity = time(NULL);
-
 						newClients.push_back(clientEntry);
 						std::cout << "New client accepted: fd " << clientFd << std::endl;
 					}
@@ -151,23 +151,29 @@ void	EventLoop::run() {
 						entry.lastActivity = time(NULL);
 						if (entry.conn->isRequestComplete()) {
 							std::cout << entry.port << std::endl;
+							std::cout << "port is " << entry.port << "status request "  
+								<< entry.request.get_chunks_status() << ""
+								<< "ture =" << true << std::endl;
+							create_var(&entry.parser, &entry.request, &entry.cgi)	;
+							entry.request.set_fd( entry.pfd.fd); 
+							entry.conn->setWriteBuffer(entry.request.request_and_response(entry.conn->getReadBuffer(), 
+									entry.port)); entry.conn->setReadBuffer(""); 
 
-							entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer(), entry.port));
-							entry.conn->setReadBuffer("");
-							entry.pfd.events = POLLOUT;
+							std::cout << " status request " <<  entry.request.get_chunks_status() << std::endl;
+							// clear buffer for the next read operation.
+						
+							if (!entry.request.get_chunks_status())
+								entry.pfd.events = POLLOUT;
 						}
 					}
 				}
 			}
-
-			if (entry.pfd.revents & POLLOUT) {
-    			if (entry.conn) {
-       				bool allSent = entry.conn->writeResponse();
-        			entry.lastActivity = time(NULL);
-        
-        			if (allSent)
+			if (entry.pfd.revents & POLLOUT ) {
+				if (entry.conn) {
+					bool allSent = entry.conn->writeResponse();
+					entry.lastActivity = time(NULL);
+					if (allSent)
             			entry.pfd.events = POLLIN;
-    			}
 			}
 		}
 

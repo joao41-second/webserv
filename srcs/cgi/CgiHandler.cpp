@@ -36,11 +36,41 @@
 #include <stdio.h>
 #include <fcntl.h>
 
+void  create_var( HttpParser *par,HttpResponse *var ,Cgi *cgi)
+{
+	var->cgi = cgi;
+	var->_parser = par;
+	par->_request_c = var;
+	cgi->_request_c = var;
+	cgi->_parser = par;
+	
+}
 
+Cgi::Cgi():_path(),_envs()
+{
+	_request = "" ;
+	_file_name_out = "";
+	_file_name = "";
 
-Cgi::Cgi(){}
+}
 Cgi::~Cgi(){}
 
+Cgi & Cgi::operator=(const Cgi &copy)
+{
+	if(this != &copy)
+	{
+
+		 this->_request = copy._request;
+		 this->_file_name = copy._file_name;
+		 this->_file_name_out = copy._file_name;
+		 this->_path = copy._path;
+		 this->_request_c = copy._request_c;
+		 this->_parser = copy._parser;
+		this->_envs = copy._envs;
+		return  *this;
+	}
+	return  *this;
+}	
 
 std::string Cgi::chek_program_pach(std::string porgram)
 {
@@ -124,31 +154,30 @@ void Cgi::create_env( char **env,std::vector<char *> env_request)
 int Cgi::save_chunk_fd(std::string str)
 {
 	static int fd=  -1;
-	static int body = 0;
 
 
-	
+	HTTP_MSG("paser is chunk status" <<  _parser->_is_chunk);
 	std::stringstream port;
-	port << HttpParser::_port;
+	port << _parser->_port << _request_c->fd;
 	_file_name =  "/tmp/saida_"+ port.str() + ".txt";
-	if( HttpParser::_is_chunk == HTTP_CONTENT)
+
+
+	if( _parser->_is_chunk == HTTP_CONTENT || _parser->_is_chunk == HTTP_EMPTY )
 	{
-		if(body == 1)
-		{
-			body = 0;
+
 			fd = open(_file_name.c_str(),O_RDWR | O_CREAT , 0644);
-			write(fd,str.c_str(),str.size()-4);
+			if(fd == -1)
+			{
+				throw Not_found_404();
+			}
+			write(fd,str.c_str(),str.size());
 			close(fd);
 			return (open(_file_name.c_str(),O_RDWR | O_CREAT , 0644));
-		}
-		if(body == 0)
-		{ 
-			body = 1;
-			return(-1);
-		}
+		
 	}
 
-	if(HttpParser::_is_chunk == HTTP_CHUNKS)
+
+	if(_parser->_is_chunk == HTTP_CHUNKS)
 	{
 		if(str.empty())
 		{
@@ -173,26 +202,35 @@ int Cgi::save_chunk_fd(std::string str)
 		write(fd,al.c_str(),bits);
 		close(fd);
 	}
+
 	return -1;
 }
-
+#include <http/HttpResponse.hpp>
 
 std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 {
-	int 			size= 1000000;
-	static int 		fd_out;
-	int 			read_bits;
+	int 			size= 100000;
+	static int 		fd_out = -1;
+	int 			read_bits = 0;
 	char			buffer[1024];
-	std::string 		response;
-	static std::string 	save;
-	std::stringstream 	value;
+	std::string 		response = "";
+	static std::string 	save = "";
+	std::stringstream 	value ;
 	static int 		status = 0;
+
+	HTTP_MSG("var check is true" << _request_c->_request_status)
+	if(_request_c->_request_status == true)
+	{
+		return (_request_c->open_static_file("NULL"));
+	}
 	
 	if(file_name != "NULL")
 		fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
 	response = save;
 	while ((read_bits = read(fd_out,buffer,1024)) > 0 || save.size() > 0)
 	{
+		
+		T_MSG("read loop  =" << read_bits , RED);
 		response.append(buffer,read_bits);
 		if((int)response.find("\n\n")  != -1 && status == 0)
 		{
@@ -210,12 +248,14 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 		{
 			continue;
 		}
-		else if(status != -1 && status != 0)
+		else if(status != -1 && status != 0 && _parser->_is_chunk != HTTP_EMPTY)
 		{
 			save = response.substr(status,response.size());
 			response = response.substr(0,status);
 			response.append("\r\n\r\n");
-			HttpResponse::_new_response = true;
+			_request_c->_new_response = true;
+			if(read_bits == 0)
+				_request_c->_new_response = false;
 			status = -1;
 			return ( response);
 		}
@@ -237,14 +277,16 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 				response = save;
 				save = "";
 			}
-
-			HttpResponse::_new_response = true;
+			if(read_bits == 0)
+				_request_c->_new_response = false;
+			else
+				_request_c->_new_response = true;
 			value << response.size();	
 			response = value.str() + "\r\n"+response+"\r\n";
 			return (response);
 		}
 	}
-	HttpResponse::_new_response = false;
+	_request_c->_new_response = false;
 	save = "";
 	response.append("\r\n\r\n");
 	close(fd_out);
@@ -253,7 +295,7 @@ std::string 	Cgi::chek_and_return_chunks(std::string file_name)
 
 }
 
-std::string Cgi::execute(std::string _request, std::string porgram)
+std::string Cgi::execute(std::string _request, std::string porgram, bool *request)
 {
 	int 		pid ;
 	int 		fd_in;
@@ -263,20 +305,25 @@ std::string Cgi::execute(std::string _request, std::string porgram)
 	char 		**end = NULL;
 	int 		fd =-1;
 
-	if(HttpResponse::_new_response == false)
+	HTTP_MSG("start _ cgi and :" << _request);
+
+	if(_request_c->_new_response == false)
 			std::remove(_file_name_out.c_str());	
-	_envs.push_back(NULL);	
-	if((fd = Cgi::save_chunk_fd(_request)) == -1)
+
+	_envs.push_back(NULL);		
+	if((fd = save_chunk_fd(_request)) == -1)
 	{
+		*request = _request_c->_new_request;
 		return "";
 	}
 
 	fd_in = fd;	
-	HttpResponse::_new_request = false;
+	HTTP_MSG("chage_type")
+	_request_c->_new_request = false;
 
 	std::stringstream port;
-	port << HttpParser::_port;
-	_file_name_out =  "/tmp/out_"+ port.str() + ".txt";
+	port << _parser->_port << _request_c->fd;
+	_file_name_out =  "/tmp/out_"+  port.str() + ".txt";
 	fd_out = open(_file_name_out.c_str(),O_RDWR | O_CREAT , 0644);
 
 	pid = fork();
@@ -304,11 +351,17 @@ std::string Cgi::execute(std::string _request, std::string porgram)
    		 int exit_code = WEXITSTATUS(status);
 		
 		response = chek_and_return_chunks(_file_name_out);
+		if(  _request_c->_new_response == true && 
+				(_parser->_is_chunk ==  HTTP_EMPTY ||   _parser->_is_chunk ==  HTTP_CONTENT ))
+		{
+		 response += chek_and_return_chunks(_file_name_out);
+		}
 		std::remove(_file_name.c_str());
 
 		if(exit_code == 33) // TODO change this value for 0 
 			throw Not_found_404();
 		} 
 	}
+
 	return response;
 }

@@ -105,8 +105,6 @@ void HttpResponse::set_config(std::vector<ServerConfig> &conf, char  **env)
         _types[".cgi"]  = "text/html;charset=UTF-8";
         _types[".py"]   = "text/html;charset=UTF-8";
         _types[".php"]  = "text/html;charset=UTF-8";
-
-	//TODO add the get cgi and create type of cgi 
 }
 
 
@@ -161,10 +159,7 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 				size = HEAD; 
 			for(int i =0 ; i < (int)loc[path].getMethods().size();i++)
 			{
-				HTTP_MSG( "_methods = " << loc[path].getMethods()[i]  << " path= "<< path << " file = "<< file )
-				//if(is_path == true)
-					//if(loc[path].getMethods()[i] ==  size) 
-					//	return( loc[path].getRoot() );
+				HTTP_MSG( "_methods = " << loc[path].getMethods()[i]  << " path= "<< path << " file = "<< file );
 				if(loc[path].getMethods()[i] ==  size) 
 				{
 					return( loc[path].getRoot() + file);
@@ -175,8 +170,6 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 		size = path.rfind('/');
 		file = path.substr(size,path.size()-1) + file;
 		path = path.substr(0,size);
-
-		//TODO duble alias not work
 	}
 
 
@@ -204,8 +197,6 @@ std::string HttpResponse::search_folder_file(std::string file ,std::string path 
 
 bool HttpResponse::chek_cig_or_static(std::string file, ServerConfig server)
 {
-
-	// TODO impemente check the path
 	HTTP_MSG(file) 
 	 if(server.getLocMap().find(file) != server.getLocMap().end())
 	 {
@@ -285,7 +276,6 @@ void HttpResponse::chek_valid_request_methods(std::string path)
 
 std::string HttpResponse::get_folder_index( ServerConfig conf)
 {
-	//TODO lembrar de remover tambem
 	std::map<std::string, LocationConfig>	_locations = conf.getLocMap();
 	std::map<std::string , LocationConfig>::iterator it = _locations.begin();
 	std::string file = "";

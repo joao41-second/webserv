@@ -3,7 +3,6 @@
 #ifndef LOCATIONCONFIG_H
 #define LOCATIONCONFIG_H
 
-// TODO Considerar meter estas libraries num unico ficheiro
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -18,8 +17,8 @@
 #include <algorithm>
 #include <typeinfo>
 
-#include <sys/socket.h> // TODO Ver se ha melhor
-#include <netinet/in.h> // TODO Ver se ha melhor
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 enum t_methods
 {
@@ -86,54 +85,6 @@ private:
 	std::vector<t_methods>		_methods;	// ex: GET
 
 	std::map<std::string, LocationConfig>	_sub_locations;
-
-	// maybe TODO ifs (cookies, bonus)
-	// if ($cookie_<name> [operator] <value>) { <action> }
 };
 
 #endif
-
-/*
-
-Quando um request é recebido e parseado:
-O servidor olha para a URI do request
-Procura dentro das locations uma LocationConfig cujo path combine ou seja prefixo da URI.
-Aplica as regras dessa location, por exemplo:
-Sobrescreve o root global para aquela rota.
-Decide se é CGI ou ficheiro estático.
-Define o index se for diretório.
-
-*/
-
-/*
-//Example 1
-if ($cookie_user) {
-    return 200 "Welcome back, $cookie_user!";
-}
-
-//Example 2
-if ($cookie_sessionid = "") {
-    return 403;
-}
-
-//Example 3
-if ($cookie_auth = "") {
-    return 302 /login;
-}
-
-//Example 4
-if ($cookie_sessionid = "") {
-    add_header Set-Cookie "sessionid=$request_id; Path=/;";
-}
-
-//Example 5
-if ($cookie_nocache) {
-    set $no_cache 1;
-}
-
-//Example 6
-if ($cookie_role = "admin") {
-    return 302 /admin_dashboard;
-}
-
-*/

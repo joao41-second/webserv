@@ -129,7 +129,6 @@ std::string HttpResponse::open_static_file(std::string file)
 		request += "Content-Type: " + _types[type_file] +"\n";
 	else
 	{
-		//TODO this vereficasion no finic
 		request += "Content-Disposition: attachment; filename= " +   file+ '\n' ;
 		request += "Content-Type: application/" + file.substr(file.size() - 4, file.size()) + ";\r\n";
 	}	
@@ -176,14 +175,6 @@ std::string HttpResponse::save_file_post(std::string file, std::string request)
 	std::string chunk;
 	
 	HTTP_MSG("create file in"  << file);
-	fd = open(file.c_str(), O_RDONLY );
-//	if(fd != -1 &&  _new_request == false)
-//	{
-	//	//TODO change the error 	
-	//	_new_request = false;
-	//	 throw Not_found_404();
-	//}else 
-	//	close(fd);
 
 	 fd = open(file.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if(fd == -1)
@@ -250,7 +241,6 @@ std::string HttpResponse::gener_erro_page(int error, std::string status)
 	  return (response);
 	}
 	response += "Content-Type: text/html; charset=UTF-8 \n";
-	// response = TODO add host the server
 	mens =
 		"<!DOCTYPE html>\n"
 		"<html>\n"

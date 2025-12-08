@@ -3,7 +3,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// TODO Considerar meter estas libraries num unico ficheiro
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -17,10 +16,10 @@
 #include <algorithm>
 #include <typeinfo>
 
-#include <fcntl.h>		// TODO Ver se ha melhor
-#include <sys/socket.h>	// TODO Ver se ha melhor
-#include <netinet/in.h>	// TODO Ver se ha melhor
-#include <sys/stat.h>	// TODO Ver se ha melhor
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/stat.h>
 
 #include <arpa/inet.h>
 #include <cstring>

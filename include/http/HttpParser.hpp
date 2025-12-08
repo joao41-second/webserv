@@ -12,6 +12,7 @@
 
 #ifndef  HTTPPARSER_HPP
 #define  HTTPPARSER_HPP
+#include "config/LocationConfig.hpp"
 #include <config/debug.hpp>
 
 #include <exception>
@@ -31,36 +32,41 @@
 #define HTTP_EMPTY 0
 
 
-
+class HttpResponse;
 
 class HttpParser
 {
 	protected: 
-	        static std::vector<std::string> env;
-		static std::string  mensage;
-		static bool 	    _request;
+	        std::vector<std::string> env;
+		std::string  mensage;
+		bool 	    _request;
 	private:
-		static void parsing_env(std::string buffer);
-		static void parsing_request_line(std::string buffer);
+		void parsing_env(std::string buffer);
+		void parsing_request_line(std::string buffer);	
+	
+	public:   
+
+		HttpResponse 	* _request_c;
+		HttpParser(HttpResponse *);
 		HttpParser();
 	       ~HttpParser();
 		HttpParser(const HttpParser &vuale);
 	      	HttpParser& operator=(const HttpParser &vuale);
-	public:   
-
-	      static int 	 _is_chunk;
-	      static std::string _type;
-	      static std::string _methods;
-	      static std::string _pach_info; 
-	      static int 	 _http_page_error;
-	      static std::string _host;
-	      static int 	 _port;
+	
+	       std::vector<t_methods> _methods_allow;
+	       std::string _type;
+	       std::string _methods;
+	       static std::string _pach_info; 
+	       static int 	 _http_page_error;
+	       std::string _host;
+	       int 	 _port;
+	       int 	 _is_chunk;
 		
-	      static std::string 		chek_and_add_header(std::string response,std::string error);
-	      static void        		new_request(std::string buffer); 
-	      static std::string        	get_request_msg();
-	      static std::vector<char *>	get_request_env();
-	      static void 			set_request_msg(std::string);
+	      std::string 		chek_and_add_header(std::string response,std::string error);
+	      void        		new_request(std::string buffer); 
+	      std::string        	get_request_msg();
+	      std::vector<char *>	get_request_env();
+	      void 			set_request_msg(std::string);
 };
 
 

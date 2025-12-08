@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "http/HttpParser.hpp"
+#include "http/HttpResponse.hpp"
 #include <core/Connection.hpp>
 #include <core/Server.hpp>
 #include <config/color.hpp>
@@ -101,7 +103,8 @@ std::string	Connection::getWriteBuffer() const {
 }
 
 void	Connection::setWriteBuffer(std::string buffer) {
-
+	
+	HTTP_MSG("request-> \n" << buffer);
 	_writeBuffer = buffer;
 }
 

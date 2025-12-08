@@ -20,25 +20,37 @@
 #include <string>
 
 
+class HttpResponse;
+class HttpParser;
+
+
+class Cgi;
+void  create_var( HttpParser *par,HttpResponse *var ,Cgi *cgi);
+
 class Cgi
 {
 	private:
 		std::string 	_request;
 		std::string 	_file_name;
 		std::string 	_file_name_out;
-		std::string 	chek_program_pach(std::string program);
 		std::vector	<std::string> _path;
+
+
+		std::string 	chek_program_pach(std::string program);
 		int 	    	save_chunk_fd(std::string);
 		
 	public:
+		HttpResponse 	* _request_c;
+		HttpParser 	* _parser;
 		std::vector<char *> _envs;
+//		Cgi (HttpResponse * var,HttpParser *parser);
 		Cgi();
-		Cgi(const Cgi &copy);
+		Cgi(const Cgi *copy);
 		~Cgi();
 		Cgi &operator=(const Cgi &copy);		
 		bool chek_program(std::string porgram);
 		void create_env(char **env,std::vector<char *> env_request);
-		std::string execute(std::string _request,std::string porgram);
+		std::string execute(std::string _request,std::string porgram , bool *request);
 		std::string 	chek_and_return_chunks(std::string file_name);
 };
 

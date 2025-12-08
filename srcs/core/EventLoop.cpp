@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "cgi/cgi.hpp"
 #include <core/EventLoop.hpp>
 #include <core/Server.hpp>
 #include <core/Connection.hpp>
@@ -138,7 +139,6 @@ void EventLoop::run() {
 						clientEntry.socketAddr = entry.socketAddr;
 						clientEntry.port = entry.port;
 						clientEntry.lastActivity = time(NULL);
-
 						newClients.push_back(clientEntry);
 						std::cout << "New client accepted: fd " << clientFd << std::endl;
 					}
@@ -147,16 +147,26 @@ void EventLoop::run() {
 						closeConnection(entry);
 						entry.pfd.fd = -1;
 					}
-					else if (entry.conn->isRequestComplete()) {
-						std::cout << entry.port << std::endl;
-						entry.conn->setWriteBuffer(HttpResponse::request_and_response(entry.conn->getReadBuffer(), entry.port));
-						entry.conn->setReadBuffer(""); // clear buffer for the next read operation.
-						if (!HttpResponse::get_chunks_status())
+					else if (entry.conn->isRequestComplete())
+					{
+						// std::cout << entry.conn->getReadBuffer() << std::endl;
+						std::cout << "port is " << entry.port << "status request "  
+							<< entry.request.get_chunks_status() << ""
+							<< "ture =" << true << std::endl;
+						create_var(&entry.parser, &entry.request, &entry.cgi)	;
+						entry.request.set_fd( entry.pfd.fd); 
+						entry.conn->setWriteBuffer(entry.request.request_and_response(entry.conn->getReadBuffer(), 
+									entry.port)); entry.conn->setReadBuffer(""); 
+
+						std::cout << " status request " <<  entry.request.get_chunks_status() << std::endl;
+						// clear buffer for the next read operation.
+						
+						if (!entry.request.get_chunks_status())
 							entry.pfd.events = POLLOUT;
 					}
 				}
 			}
-			if (entry.pfd.revents & POLLOUT) {
+			if (entry.pfd.revents & POLLOUT ) {
 				if (entry.conn && !entry.conn->writeResponse()) {
 					closeConnection(entry);
 					entry.pfd.fd = -1;

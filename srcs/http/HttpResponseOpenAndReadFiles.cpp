@@ -176,14 +176,15 @@ std::string HttpResponse::save_file_post(std::string file, std::string request)
 	
 	HTTP_MSG("create file in"  << file);
 	fd = open(file.c_str(), O_RDONLY );
-	if(fd != -1 &&  _new_request == false)
-	{
-		//TODO change the error 	
-		_new_request = false;
-		 throw Not_found_404();
-	}else 
-		close(fd);
-	fd = open( file.c_str(),O_RDWR | O_CREAT, 0644);
+//	if(fd != -1 &&  _new_request == false)
+//	{
+	//	//TODO change the error 	
+	//	_new_request = false;
+	//	 throw Not_found_404();
+	//}else 
+	//	close(fd);
+
+	 fd = open(file.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if(fd == -1)
 	{	
 		_new_request = false;
@@ -196,6 +197,7 @@ std::string HttpResponse::save_file_post(std::string file, std::string request)
 		_new_request = true;
 		if(request == "0/r/n/r/n")
 		{
+
 			_new_request = false;
 			value = 1;
 			throw Director_Open_200();
